@@ -6,7 +6,7 @@ export const MOCK_USERS: User[] = [
     name: "Alex Chen",
     email: "alex@example.com",
     username: "alexchen",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=alexchen&backgroundColor=b6e3f4",
+    avatar: "",
     role: "developer",
     reputation: 4820,
     badges: [
@@ -32,7 +32,7 @@ export const MOCK_USERS: User[] = [
     name: "Sarah Mitchell",
     email: "sarah@example.com",
     username: "sarahm",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sarahm&backgroundColor=ffdfbf",
+    avatar: "",
     role: "expert",
     reputation: 12350,
     badges: [
@@ -58,7 +58,7 @@ export const MOCK_USERS: User[] = [
     name: "TechForge Inc.",
     email: "hiring@techforge.com",
     username: "techforge",
-    avatar: "https://api.dicebear.com/7.x/shapes/svg?seed=techforge",
+    avatar: "",
     role: "recruiter",
     reputation: 890,
     badges: [
@@ -84,7 +84,7 @@ export const MOCK_USERS: User[] = [
     name: "Admin User",
     email: "admin@stacktruth.com",
     username: "admin",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=admin&backgroundColor=c0aede",
+    avatar: "",
     role: "admin",
     reputation: 99999,
     badges: [
@@ -109,7 +109,7 @@ export const MOCK_USERS: User[] = [
     name: "Jordan Rivera",
     email: "jordan@example.com",
     username: "jordanr",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jordanr&backgroundColor=d1f4e0",
+    avatar: "",
     role: "developer",
     reputation: 2340,
     badges: [
@@ -134,7 +134,7 @@ export const MOCK_USERS: User[] = [
     name: "Priya Sharma",
     email: "priya@example.com",
     username: "priyas",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priyas&backgroundColor=ffd5dc",
+    avatar: "",
     role: "expert",
     reputation: 8940,
     badges: [
@@ -197,6 +197,7 @@ export const MOCK_QUESTIONS: Question[] = [
     createdAt: "2024-05-13T16:45:00Z",
     isAnswered: false,
     isFeatured: true,
+    bounty: 0,
   },
   {
     id: "q4",
@@ -342,7 +343,7 @@ export const MOCK_JOBS: Job[] = [
     id: "j1",
     title: "Senior Full-Stack Engineer",
     company: "Vercel",
-    companyLogo: "https://api.dicebear.com/7.x/shapes/svg?seed=vercel",
+    companyLogo: "",
     location: "Remote (US)",
     type: "full-time",
     salary: "$180k - $240k",
@@ -361,7 +362,7 @@ export const MOCK_JOBS: Job[] = [
     id: "j2",
     title: "Staff Machine Learning Engineer",
     company: "Anthropic",
-    companyLogo: "https://api.dicebear.com/7.x/shapes/svg?seed=anthropic",
+    companyLogo: "",
     location: "San Francisco, CA",
     type: "full-time",
     salary: "$250k - $350k",
@@ -380,7 +381,7 @@ export const MOCK_JOBS: Job[] = [
     id: "j3",
     title: "Backend Engineer - Platform Infrastructure",
     company: "Linear",
-    companyLogo: "https://api.dicebear.com/7.x/shapes/svg?seed=linear",
+    companyLogo: "",
     location: "Remote (Global)",
     type: "full-time",
     salary: "$140k - $200k",
@@ -399,7 +400,7 @@ export const MOCK_JOBS: Job[] = [
     id: "j4",
     title: "Frontend Developer - React Specialist",
     company: "Figma",
-    companyLogo: "https://api.dicebear.com/7.x/shapes/svg?seed=figma",
+    companyLogo: "",
     location: "Remote (US/EU)",
     type: "contract",
     salary: "$120/hr",
@@ -418,7 +419,7 @@ export const MOCK_JOBS: Job[] = [
     id: "j5",
     title: "DevOps / Platform Engineer",
     company: "GitHub",
-    companyLogo: "https://api.dicebear.com/7.x/shapes/svg?seed=github",
+    companyLogo: "",
     location: "Remote (Global)",
     type: "full-time",
     salary: "$160k - $220k",
@@ -518,10 +519,10 @@ export const MOCK_LEADERBOARD: LeaderboardEntry[] = [
   { rank: 2, user: MOCK_USERS[5], score: 8940, change: -1, answers: 312, questions: 67, codeReviews: 89 },
   { rank: 3, user: MOCK_USERS[0], score: 4820, change: 1, answers: 198, questions: 124, codeReviews: 45 },
   { rank: 4, user: MOCK_USERS[4], score: 2340, change: 3, answers: 87, questions: 56, codeReviews: 12 },
-  { rank: 5, user: { ...MOCK_USERS[0], id: "u5", name: "Marcus Johnson", username: "marcusj", reputation: 1840, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=marcusj" }, score: 1840, change: -2, answers: 65, questions: 34, codeReviews: 8 },
-  { rank: 6, user: { ...MOCK_USERS[4], id: "u6", name: "Emily Zhang", username: "emilyzhang", reputation: 1590, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=emilyzhang" }, score: 1590, change: 5, answers: 58, questions: 28, codeReviews: 15 },
-  { rank: 7, user: { ...MOCK_USERS[0], id: "u7", name: "David Kim", username: "davidkim", reputation: 1320, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=davidkim" }, score: 1320, change: 0, answers: 45, questions: 22, codeReviews: 6 },
-  { rank: 8, user: { ...MOCK_USERS[4], id: "u8", name: "Aisha Patel", username: "aishap", reputation: 1180, avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=aishap" }, score: 1180, change: 4, answers: 38, questions: 18, codeReviews: 10 },
+  { rank: 5, user: { ...MOCK_USERS[0], id: "u5", name: "Marcus Johnson", username: "marcusj", reputation: 1840, avatar: "" }, score: 1840, change: -2, answers: 65, questions: 34, codeReviews: 8 },
+  { rank: 6, user: { ...MOCK_USERS[4], id: "u6", name: "Emily Zhang", username: "emilyzhang", reputation: 1590, avatar: "" }, score: 1590, change: 5, answers: 58, questions: 28, codeReviews: 15 },
+  { rank: 7, user: { ...MOCK_USERS[0], id: "u7", name: "David Kim", username: "davidkim", reputation: 1320, avatar: "" }, score: 1320, change: 0, answers: 45, questions: 22, codeReviews: 6 },
+  { rank: 8, user: { ...MOCK_USERS[4], id: "u8", name: "Aisha Patel", username: "aishap", reputation: 1180, avatar: "" }, score: 1180, change: 4, answers: 38, questions: 18, codeReviews: 10 },
 ];
 
 export const MOCK_ANALYTICS: AnalyticsData = {
@@ -690,8 +691,8 @@ export const FAQS = [
 ];
 
 export const TESTIMONIALS = [
-  { name: "Linus Torvalds Jr.", role: "Staff Engineer, Netflix", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=linus&backgroundColor=c0aede", text: "StackTruth's AI code review caught a critical security vulnerability I'd missed. The platform quality is outstanding — it's become essential to my daily workflow.", rating: 5 },
-  { name: "Ada Rodriguez", role: "Principal ML Engineer, OpenAI", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ada&backgroundColor=ffdfbf", text: "The expert community here is phenomenal. I've gotten better answers in 20 minutes than from hours of documentation hunting. The reputation system ensures quality.", rating: 5 },
-  { name: "Tony Chen", role: "CTO, YC Startup", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=tony&backgroundColor=d1f4e0", text: "We use StackTruth's team workspace for all technical discussions. The collaborative code review and live coding features have cut our code review time in half.", rating: 5 },
-  { name: "Mia Kovacs", role: "DevOps Lead, Stripe", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mia&backgroundColor=ffd5dc", text: "As a recruiter, finding developers through their StackTruth profiles and reputation scores is 10x more effective than traditional hiring. We've hired 8 engineers through the platform.", rating: 5 },
+  { name: "Linus Torvalds Jr.", role: "Staff Engineer, Netflix", avatar: "", text: "StackTruth's AI code review caught a critical security vulnerability I'd missed. The platform quality is outstanding — it's become essential to my daily workflow.", rating: 5 },
+  { name: "Ada Rodriguez", role: "Principal ML Engineer, OpenAI", avatar: "", text: "The expert community here is phenomenal. I've gotten better answers in 20 minutes than from hours of documentation hunting. The reputation system ensures quality.", rating: 5 },
+  { name: "Tony Chen", role: "CTO, YC Startup", avatar: "", text: "We use StackTruth's team workspace for all technical discussions. The collaborative code review and live coding features have cut our code review time in half.", rating: 5 },
+  { name: "Mia Kovacs", role: "DevOps Lead, Stripe", avatar: "", text: "As a recruiter, finding developers through their StackTruth profiles and reputation scores is 10x more effective than traditional hiring. We've hired 8 engineers through the platform.", rating: 5 },
 ];

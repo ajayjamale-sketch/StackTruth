@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Briefcase, Users, TrendingUp, Eye, Plus, Search, Star, MapPin, Zap, Clock, ArrowRight, CheckCircle, Calendar } from "lucide-react";
+import { Briefcase, Users, TrendingUp, Eye, Plus, Search, Star, MapPin, Zap, Clock, ArrowRight, CheckCircle, Calendar, Sparkles } from "lucide-react";
 import { MOCK_USERS, MOCK_JOBS } from "@/constants/mockData";
 import { StatCardSkeleton } from "@/components/ui/SkeletonLoader";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 import { useAuth } from "@/contexts/AuthContext";
-
-const STATS = [
-  { label: "Active Jobs", value: 8, icon: Briefcase, color: "text-blue-400", bg: "bg-blue-500/10", trend: "+2 this week" },
-  { label: "Total Applicants", value: 284, icon: Users, color: "text-green-400", bg: "bg-green-500/10", trend: "+34 this week" },
-  { label: "Shortlisted", value: 42, icon: CheckCircle, color: "text-amber-400", bg: "bg-amber-500/10", trend: "+8 this week" },
-  { label: "Interviews", value: 12, icon: Calendar, color: "text-purple-400", bg: "bg-purple-500/10", trend: "4 this week" },
-];
-
-const TOP_CANDIDATES = MOCK_USERS.filter(u => u.role === "developer" || u.role === "expert").slice(0, 4);
+import { useToast } from "@/contexts/ToastContext";
 
 const PIPELINE_DATA = [
-  { stage: "Applied", count: 284, color: "#2563EB" },
-  { stage: "Screened", count: 98, color: "#8B5CF6" },
-  { stage: "Interview", count: 42, color: "#F59E0B" },
-  { stage: "Offer", count: 12, color: "#22C55E" },
+  { stage: "Applied", count: 284, color: "#2f8d46" },
+  { stage: "Screened", count: 98, color: "#4ade80" },
+  { stage: "Interview", count: 42, color: "#94a3b8" },
+  { stage: "Offer", count: 12, color: "#1e293b" },
 ];
 
 const SKILL_DEMAND = [
@@ -32,134 +24,157 @@ const SKILL_DEMAND = [
 
 export default function RecruiterDashboard() {
   const { user } = useAuth();
+  const { success } = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => { setTimeout(() => setIsLoading(false), 900); }, []);
+  useEffect(() => { const t = setTimeout(() => setIsLoading(false), 800); return () => clearTimeout(t); }, []);
+
+  const TOP_CANDIDATES = MOCK_USERS.filter(u => u.role === "developer" || u.role === "expert").slice(0, 4);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Hiring Dashboard</h1>
-          <p className="text-slate-400 text-sm mt-1">{user?.company || "Your company"} · Talent Acquisition</p>
+    <div className="space-y-8 pb-12">
+      {/* Header - Hiring Portal Style */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Hiring Workspace</h1>
+          <p className="text-sm text-slate-500 font-medium">
+            <span className="text-primary font-bold">{user?.company || "TechForge Systems"}</span> • Active Talent Acquisition Portal
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Link to="/jobs" className="btn-secondary text-sm px-4 py-2 flex items-center gap-2">
-            <Eye className="w-4 h-4" /> View Candidates
-          </Link>
-          <Link to="/jobs" className="btn-primary text-sm px-4 py-2 flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Post Job
-          </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/jobs" className="btn-secondary text-sm px-6 py-2.5">Manage Roles</Link>
+          <button onClick={() => success("Job Editor Initialized", "Create a new technical mandate...")} className="btn-primary text-sm px-6 py-2.5">Post New Role</button>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {isLoading ? STATS.map((_, i) => <StatCardSkeleton key={i} />) : STATS.map((stat) => (
-          <div key={stat.label} className="stat-card">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-slate-500">{stat.label}</span>
-              <div className={`w-8 h-8 ${stat.bg} rounded-lg flex items-center justify-center`}>
-                <stat.icon className={`w-4 h-4 ${stat.color}`} />
+        {[
+          { label: "Active Roles", icon: Briefcase, value: 8, trend: "+2 this week" },
+          { label: "Total Applicants", icon: Users, value: 284, trend: "+34 new" },
+          { label: "Shortlisted", icon: Star, value: 42, trend: "+8 new" },
+          { label: "Scheduled", icon: Calendar, value: 12, trend: "4 today" },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-primary">
+                <stat.icon className="w-5 h-5" />
               </div>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.label}</span>
             </div>
-            <p className="text-2xl font-extrabold text-white">{stat.value}</p>
-            <p className={`text-xs mt-1 ${stat.color}`}>{stat.trend}</p>
+            <div>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{stat.value}</p>
+              <p className="text-[10px] font-bold text-primary mt-1 uppercase tracking-widest">{stat.trend}</p>
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Pipeline */}
-        <div className="glass-card p-5">
-          <h2 className="font-bold text-white mb-5">Hiring Pipeline</h2>
-          <ResponsiveContainer width="100%" height={180}>
-            <PieChart>
-              <Pie data={PIPELINE_DATA} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="count" paddingAngle={4}>
-                {PIPELINE_DATA.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-              </Pie>
-              <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="space-y-2 mt-2">
+      {/* Pipeline & Market Demand */}
+      <div className="grid lg:grid-cols-12 gap-6">
+        {/* Recruitment Pipeline */}
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm flex flex-col">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-8">Pipeline Distribution</h2>
+          <div className="h-[200px] mb-8">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={PIPELINE_DATA} cx="50%" cy="50%" innerRadius={60} outerRadius={80} dataKey="count" stroke="none" paddingAngle={4}>
+                  {PIPELINE_DATA.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="space-y-4">
             {PIPELINE_DATA.map((stage) => (
               <div key={stage.stage} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: stage.color }} />
-                  <span className="text-xs text-slate-400">{stage.stage}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: stage.color }} />
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400">{stage.stage}</span>
                 </div>
-                <span className="text-xs font-bold text-white">{stage.count}</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white">{stage.count}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Skill Demand */}
-        <div className="lg:col-span-2 glass-card p-5">
-          <h2 className="font-bold text-white mb-5">Most Demanded Skills in Your Jobs</h2>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={SKILL_DEMAND} layout="vertical">
-              <XAxis type="number" hide />
-              <YAxis dataKey="skill" type="category" tick={{ fill: "#94A3B8", fontSize: 12 }} axisLine={false} tickLine={false} width={70} />
-              <Tooltip contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: 8, color: "#fff", fontSize: 12 }} />
-              <Bar dataKey="demand" fill="#2563EB" radius={[0, 6, 6, 0]} name="Applicants" />
-            </BarChart>
-          </ResponsiveContainer>
+        {/* Skill Demand Market */}
+        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Technical Skill Demand</h2>
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
+               <TrendingUp className="w-4 h-4" /> Market Trends
+            </div>
+          </div>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={SKILL_DEMAND} layout="vertical" margin={{ left: 20, right: 40 }}>
+                <XAxis type="number" hide />
+                <YAxis dataKey="skill" type="category" tick={{ fill: "#64748b", fontSize: 11, fontWeight: 700 }} axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ fill: '#f8fafc' }} />
+                <Bar dataKey="demand" fill="#2f8d46" radius={[0, 4, 4, 0]} barSize={24} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
-      {/* Top Candidates */}
-      <div className="glass-card p-5">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-white">Recommended Candidates</h2>
-          <Link to="/leaderboard" className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">Browse all <ArrowRight className="w-3 h-3" /></Link>
+      {/* Top Candidates Feed */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Recommended Candidates</h2>
+          <Link to="/leaderboard" className="text-xs font-bold text-primary hover:underline">View Top Experts</Link>
         </div>
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {TOP_CANDIDATES.map((candidate) => (
-            <div key={candidate.id} className="p-4 bg-white/5 border border-border rounded-xl hover:border-blue-500/30 transition-all group">
-              <div className="flex items-start gap-3 mb-3">
-                <img src={candidate.avatar} alt={candidate.name} className="w-10 h-10 rounded-full bg-slate-700 ring-2 ring-border" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-white truncate">{candidate.name}</p>
-                  <p className="text-xs text-slate-500 truncate">{candidate.title}</p>
+            <div key={candidate.id} className="p-6 border border-slate-100 dark:border-slate-800 rounded-xl hover:border-primary transition-all group">
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-primary font-bold border border-slate-200 dark:border-slate-700">
+                  {candidate.name.charAt(0)}
                 </div>
-                {candidate.isVerified && <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />}
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{candidate.name}</p>
+                  <p className="text-[10px] text-slate-500 font-medium truncate uppercase tracking-widest">{candidate.title.split(" ")[0]}</p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-xs font-bold text-amber-400">{candidate.reputation.toLocaleString()} rep</span>
-                <MapPin className="w-3 h-3 text-slate-500 ml-auto" />
-                <span className="text-xs text-slate-500 truncate">{candidate.location.split(",")[0]}</span>
+              <div className="flex items-center justify-between text-xs font-bold mb-6 pt-4 border-t border-slate-50 dark:border-slate-800">
+                <div className="flex items-center gap-1 text-primary">
+                  <Sparkles className="w-3 h-3" />
+                  <span>{candidate.reputation.toLocaleString()}</span>
+                </div>
+                <span className="text-slate-400 font-medium">{candidate.location.split(",")[0]}</span>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3">
-                {candidate.skills.slice(0, 3).map((s) => <span key={s} className="tag-badge text-[10px]">{s}</span>)}
-              </div>
-              <button className="w-full text-xs bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-semibold py-1.5 rounded-lg transition-all">
-                Invite to Interview
+              <button 
+                onClick={() => success(`Opening Candidate Protocol: ${candidate.name}`, "Loading verified skill map and reputation history...")}
+                className="w-full py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white hover:border-primary transition-all"
+              >
+                View Protocol Profile
               </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Recent Jobs */}
-      <div className="glass-card p-5">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-white">Active Job Postings</h2>
-          <Link to="/jobs" className="text-xs text-blue-400 hover:text-blue-300">Manage →</Link>
+      {/* Recruitment Activity Log */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Job Postings</h2>
+          <Link to="/jobs" className="text-xs font-bold text-primary hover:underline">Manage All Listings</Link>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {MOCK_JOBS.slice(0, 3).map((job) => (
-            <div key={job.id} className="flex items-center gap-4 p-4 bg-white/5 border border-border rounded-xl">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{job.title}</p>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-xs text-slate-500 flex items-center gap-1"><Users className="w-3 h-3" />{job.applicants} applicants</span>
-                  <span className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" />Closes {new Date(job.deadline).toLocaleDateString()}</span>
+            <div key={job.id} className="p-5 border border-slate-50 dark:border-slate-800 rounded-xl flex items-center justify-between hover:border-primary/30 transition-all group">
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{job.title}</p>
+                <div className="flex items-center gap-4 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                  <span>{job.applicants} Applicants</span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3" /> Closes {new Date(job.deadline).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-medium text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-1 rounded">Active</span>
-                <Link to="/jobs" className="btn-ghost text-xs px-3 py-1.5">Manage</Link>
+              <div className="flex items-center gap-4">
+                <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded uppercase">Live</span>
+                <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
               </div>
             </div>
           ))}

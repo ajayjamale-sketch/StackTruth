@@ -1,432 +1,345 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Code2, MessageSquare, Shield, Users, Zap, Trophy, ArrowRight,
-  Star, CheckCircle, Github, Play, TrendingUp, Globe, ChevronDown,
-  Bot, Briefcase, BookOpen, Award,
+  Star, CheckCircle, Github, Search, TrendingUp, Globe, ChevronDown,
+  Bot, Briefcase, BookOpen, Award, Sparkles, Building, PlayCircle,
+  FileText, Clock, ExternalLink, Quote, Crown, ChevronRight, MapPin,
+  Terminal, Database, Cpu, Layout, Settings
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
-import { TESTIMONIALS, PRICING_PLANS, FAQS, TECH_TAGS } from "@/constants/mockData";
+import { TESTIMONIALS, PRICING_PLANS, TECH_TAGS, MOCK_JOBS } from "@/constants/mockData";
 
-const STATS = [
-  { value: "2.4M+", label: "Developers", icon: Users },
-  { value: "8.9M+", label: "Questions answered", icon: MessageSquare },
-  { value: "340K+", label: "Code reviews", icon: Code2 },
-  { value: "98%", label: "Expert satisfaction", icon: Star },
+
+const CATEGORIES = [
+  { label: "Data Structures", icon: <Database className="w-6 h-6" />, color: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400" },
+  { label: "Algorithms", icon: <Cpu className="w-6 h-6" />, color: "bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400" },
+  { label: "Web Dev", icon: <Layout className="w-6 h-6" />, color: "bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400" },
+  { label: "Python", icon: <Terminal className="w-6 h-6" />, color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400" },
+  { label: "Java", icon: <Settings className="w-6 h-6" />, color: "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400" },
+  { label: "C++", icon: <Code2 className="w-6 h-6" />, color: "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400" },
+  { label: "Machine Learning", icon: <Bot className="w-6 h-6" />, color: "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400" },
+  { label: "System Design", icon: <Building className="w-6 h-6" />, color: "bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400" },
 ];
-
-const FEATURES = [
-  { icon: MessageSquare, title: "Technical Q&A", description: "Stack Overflow-quality discussions with AI-enhanced answers and expert validation.", color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
-  { icon: Code2, title: "AI Code Review", description: "Automated security scanning, performance analysis, and best practice enforcement.", color: "text-green-400", bg: "bg-green-500/10 border-green-500/20" },
-  { icon: Bot, title: "AI Developer Assistant", description: "Context-aware AI that understands your codebase and provides actionable suggestions.", color: "text-purple-400", bg: "bg-purple-500/10 border-purple-500/20" },
-  { icon: Users, title: "Team Workspaces", description: "Private collaboration hubs with shared code, docs, and real-time communication.", color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
-  { icon: Play, title: "Live Coding Rooms", description: "Pair programming, technical interviews, and mentorship sessions in real-time.", color: "text-cyan-400", bg: "bg-cyan-500/10 border-cyan-500/20" },
-  { icon: Trophy, title: "Reputation System", description: "Gamified contribution tracking with expert badges, streaks, and community rankings.", color: "text-rose-400", bg: "bg-rose-500/10 border-rose-500/20" },
-  { icon: BookOpen, title: "Knowledge Base", description: "Curated tutorials, technical articles, and API documentation from industry experts.", color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/20" },
-  { icon: Briefcase, title: "Job Marketplace", description: "Developer-verified job listings with skill-matched opportunities and recruiter profiles.", color: "text-teal-400", bg: "bg-teal-500/10 border-teal-500/20" },
-];
-
-const COMPANY_LOGOS = ["Google", "Microsoft", "Stripe", "Vercel", "GitHub", "Cloudflare", "Figma", "Linear"];
-
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    const step = target / 60;
-    const timer = setInterval(() => {
-      setCount((c) => {
-        if (c >= target) { clearInterval(timer); return target; }
-        return Math.min(c + step, target);
-      });
-    }, 30);
-    return () => clearInterval(timer);
-  }, [target]);
-  return <>{Math.floor(count).toLocaleString()}{suffix}</>;
-}
-
-function HeroCodeBlock() {
-  const code = `// StackTruth AI Code Review
-const analyzeCode = async (code: string) => {
-  const analysis = await ai.review(code, {
-    checks: ['security', 'performance', 'style'],
-    autoFix: true
-  });
-  
-  return {
-    score: analysis.score,      // 94/100
-    issues: analysis.issues,    // 2 warnings
-    suggestions: analysis.tips  // 5 improvements
-  };
-};`;
-
-  const [displayed, setDisplayed] = useState("");
-  const [cursor, setCursor] = useState(true);
-
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i <= code.length) {
-        setDisplayed(code.slice(0, i));
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 20);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => setCursor((c) => !c), 500);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="relative">
-      <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-green-500/10 rounded-2xl blur-xl" />
-      <div className="relative bg-slate-950 border border-slate-700 rounded-xl overflow-hidden shadow-2xl">
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-700 bg-slate-900/50">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <div className="w-3 h-3 bg-amber-500 rounded-full" />
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-          </div>
-          <span className="text-xs text-slate-500 font-mono">analyze.ts</span>
-        </div>
-        <pre className="p-5 text-xs font-mono text-slate-300 leading-relaxed overflow-hidden">
-          <code>
-            {displayed}
-            {cursor && <span className="bg-blue-400 text-blue-400">|</span>}
-          </code>
-        </pre>
-        {/* Analysis result overlay */}
-        <div className="absolute bottom-4 right-4 bg-green-500/10 border border-green-500/30 rounded-lg p-2.5 text-xs font-mono">
-          <div className="flex items-center gap-2 text-green-400">
-            <CheckCircle className="w-3 h-3" />
-            <span>Score: 94/100</span>
-          </div>
-          <div className="text-slate-500 mt-0.5">2 warnings · 5 suggestions</div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function LandingPage() {
-  const { isAuthenticated, loginAsRole } = useAuth();
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activePricingPeriod, setActivePricingPeriod] = useState<"month" | "year">("month");
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (search.trim()) {
+      navigate(`/questions?q=${encodeURIComponent(search.trim())}`);
+    } else {
+      navigate("/questions");
+    }
+  };
+
+  const handleTagSearch = (tag: string) => {
+    navigate(`/questions?q=${encodeURIComponent(tag)}`);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 sm:py-32">
-        <div className="absolute inset-0 mesh-bg" />
-        <div className="absolute top-20 left-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-green-500/5 rounded-full blur-3xl" />
 
-        <div className="relative max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-1.5 text-sm text-blue-400 font-medium">
-                <Zap className="w-3.5 h-3.5" />
-                Now with AI-powered code analysis
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-
-              <div className="space-y-4">
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[0.95] tracking-tight">
-                  Where Developers{" "}
-                  <span className="gradient-text">Build Truth</span>
-                </h1>
-                <p className="text-lg text-slate-400 leading-relaxed max-w-lg">
-                  The premium developer platform combining expert Q&A, AI code review, live collaboration, and career growth — all in one technical workspace.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                {isAuthenticated ? (
-                  <Link to="/dashboard/developer" className="btn-primary flex items-center gap-2 text-base px-8 py-3">
-                    Go to Dashboard <ArrowRight className="w-4 h-4" />
-                  </Link>
-                ) : (
-                  <>
-                    <Link to="/register" className="btn-primary flex items-center gap-2 text-base px-8 py-3">
-                      Start for Free <ArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link to="/login" className="btn-secondary flex items-center gap-2 text-base px-6 py-3">
-                      Sign In
-                    </Link>
-                  </>
-                )}
-              </div>
-
-              {/* Social proof */}
-              <div className="flex items-center gap-4 pt-2">
-                <div className="flex -space-x-2">
-                  {[0, 1, 2, 3].map((i) => (
-                    <img
-                      key={i}
-                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=user${i}&backgroundColor=b6e3f4`}
-                      alt=""
-                      className="w-8 h-8 rounded-full ring-2 ring-background bg-slate-700"
-                    />
-                  ))}
-                </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-slate-500">Loved by <strong className="text-white">2.4M+</strong> developers</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hero code block */}
-            <div className="hidden lg:block">
-              <HeroCodeBlock />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-12 border-y border-border bg-slate-950/50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-3xl sm:text-4xl font-extrabold text-white">{stat.value}</p>
-                <p className="text-sm text-slate-500 mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trusted by */}
-      <section className="py-12 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-sm text-slate-600 font-medium uppercase tracking-widest mb-8">
-            Trusted by engineers at
-          </p>
-          <div className="flex flex-wrap justify-center gap-8 items-center">
-            {COMPANY_LOGOS.map((company) => (
-              <div key={company} className="text-slate-600 hover:text-slate-400 transition-colors font-bold text-lg tracking-tight">
-                {company}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
-              Everything a developer needs
-            </h2>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-              From technical Q&A to AI code analysis, live collaboration to job matching — one platform for your entire developer journey.
-            </p>
+      {/* 1. Hero Section - GFG Inspired Clean Search */}
+      <section className="relative pt-32 pb-24 border-b border-slate-100 dark:border-slate-800 overflow-hidden">
+        <div className="absolute inset-0 bg-[#f8f9fa] dark:bg-slate-950/50 pointer-events-none" />
+        <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              Hello, What Do You Want To <span className="text-primary">Learn?</span>
+            </h1>
+            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">Search from over 10,000+ technical articles and interview experiences.</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {FEATURES.map((feature, i) => (
-              <div
-                key={feature.title}
-                className={`glass-card-hover p-5 cursor-default animate-in stagger-${Math.min(i + 1, 5)}`}
-              >
-                <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${feature.bg}`}>
-                  <feature.icon className={`w-5 h-5 ${feature.color}`} />
-                </div>
-                <h3 className="font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Technology Tags */}
-      <section className="py-16 border-y border-border bg-slate-950/30">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold text-white mb-2">Covering Every Tech Stack</h2>
-            <p className="text-slate-400">Expert knowledge across the modern developer ecosystem</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-3">
-            {TECH_TAGS.map((tag) => (
-              <span key={tag} className="tag-badge text-sm px-3 py-1.5">{tag}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-white mb-4">Loved by developers worldwide</h2>
-            <p className="text-slate-400">Don't take our word for it — hear from the community</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="glass-card p-5 space-y-4">
-                <div className="flex gap-1">
-                  {Array.from({ length: t.rating }).map((_, s) => (
-                    <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed italic">"{t.text}"</p>
-                <div className="flex items-center gap-3 pt-2 border-t border-border">
-                  <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full bg-slate-700" />
-                  <div>
-                    <p className="text-sm font-semibold text-white">{t.name}</p>
-                    <p className="text-xs text-slate-500">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-24 bg-slate-950/50 border-y border-border" id="pricing">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-white mb-4">Simple, transparent pricing</h2>
-            <p className="text-slate-400 mb-8">Start free, scale with your team</p>
-            <div className="inline-flex items-center bg-white/5 border border-border rounded-xl p-1">
-              <button
-                onClick={() => setActivePricingPeriod("month")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activePricingPeriod === "month" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"}`}
-              >
-                Monthly
+          <div className="max-w-3xl mx-auto relative">
+            <form onSubmit={handleSearch} className="relative">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search tutorials, courses, or problems..."
+                className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-xl pl-6 pr-40 py-5 text-lg focus:outline-none focus:border-primary transition-all shadow-sm placeholder:text-slate-400 dark:text-white"
+              />
+              <button type="submit" className="absolute right-2 top-2 bottom-2 bg-primary text-white px-10 rounded-lg font-bold hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2">
+                <Search className="w-5 h-5" /> Search
               </button>
-              <button
-                onClick={() => setActivePricingPeriod("year")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activePricingPeriod === "year" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"}`}
-              >
-                Annual <span className="text-green-400 text-xs font-bold ml-1">-20%</span>
-              </button>
-            </div>
+            </form>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PRICING_PLANS.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative glass-card p-6 flex flex-col ${plan.isPopular ? "border-blue-500/50 shadow-xl shadow-blue-500/10" : ""}`}
-              >
-                {plan.isPopular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    MOST POPULAR
+          <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
+            <span>Trending:</span>
+            {["Array", "String", "Linked List", "Tree", "Dynamic Programming"].map(tag => (
+              <button key={tag} onClick={() => handleTagSearch(tag)} className="hover:text-primary transition-colors cursor-pointer">{tag}</button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <main className="flex-1">
+        {/* 2. Quick Access Categories - High Density Grid */}
+        <section className="py-16 bg-white dark:bg-slate-900 border-b border-slate-50 dark:border-slate-800">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+              {CATEGORIES.map((cat) => (
+                <Link key={cat.label} to="/knowledge" className="group flex flex-col items-center gap-4 p-6 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 hover:border-primary hover:shadow-lg transition-all duration-300 text-center">
+                  <div className={`w-14 h-14 ${cat.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    {cat.icon}
                   </div>
-                )}
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-4`}>
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-bold text-white text-lg mb-1">{plan.name}</h3>
-                <p className="text-xs text-slate-500 mb-4">{plan.description}</p>
-                <div className="mb-6">
-                  <span className="text-4xl font-extrabold text-white">
-                    ${activePricingPeriod === "year" ? Math.floor(plan.price * 0.8) : plan.price}
-                  </span>
-                  {plan.price > 0 && (
-                    <span className="text-slate-500 text-sm">/{activePricingPeriod === "year" ? "mo" : plan.period}</span>
-                  )}
-                </div>
-                <ul className="space-y-2 flex-1 mb-6">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-slate-400">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to={plan.cta === "Contact Sales" ? "/contact" : "/register"}
-                  className={`text-center py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                    plan.isPopular
-                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20"
-                      : "bg-white/10 hover:bg-white/20 text-white"
-                  }`}
-                >
-                  {plan.cta}
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors whitespace-nowrap">{cat.label}</span>
                 </Link>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FAQ */}
-      <section className="py-24">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-extrabold text-white mb-4">Frequently asked questions</h2>
-            <p className="text-slate-400">Everything you need to know about StackTruth</p>
-          </div>
-          <div className="space-y-3">
-            {FAQS.map((faq, i) => (
-              <div key={i} className="glass-card overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="flex items-center justify-between w-full px-5 py-4 text-left"
-                >
-                  <span className="font-semibold text-white text-sm">{faq.question}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0 ${openFaq === i ? "rotate-180" : ""}`}
+        {/* 3. Problem of the Day - Engagement Section */}
+        <section className="py-20 bg-slate-50 dark:bg-slate-900/50 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-10 flex flex-col lg:flex-row items-center gap-12 shadow-sm">
+               <div className="flex-1 space-y-6">
+                 <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-sm text-[10px] font-black uppercase tracking-widest border border-primary/20">
+                    <Zap className="w-4 h-4 fill-primary" /> Challenge Protocols
+                 </div>
+                 <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Problem of the Day</h2>
+                 <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">Implement an atomic broadcast protocol for high-concurrency clusters. Solve and earn 200 reputation points.</p>
+                 <div className="flex items-center gap-8 text-sm font-bold text-slate-400">
+                    <span className="flex items-center gap-2 text-primary"><Users className="w-5 h-5" /> 1,240+ Solved</span>
+                    <span className="flex items-center gap-2"><Trophy className="w-5 h-5" /> Rank: Medium</span>
+                 </div>
+                 <Link to="/questions" className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-lg flex items-center gap-3">
+                    Solve Problem <ArrowRight className="w-5 h-5" />
+                 </Link>
+               </div>
+                <div className="w-full lg:w-96 bg-white dark:bg-slate-900 rounded-xl p-8 font-mono text-xs text-slate-900 dark:text-slate-100 shadow-2xl relative overflow-hidden group min-h-[300px] border border-slate-100 dark:border-slate-800">
+                  <img 
+                    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80" 
+                    alt="Code Audit" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-5 group-hover:opacity-10 transition-opacity duration-700" 
                   />
-                </button>
-                {openFaq === i && (
-                  <div className="px-5 pb-4 border-t border-border">
-                    <p className="text-sm text-slate-400 leading-relaxed pt-4">{faq.answer}</p>
+                  <div className="relative z-10 space-y-4 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <p className="text-slate-400"># protocol_audit.py</p>
+                    <p className="text-primary font-bold">def <span className="text-slate-900 dark:text-slate-100">broadcast_message</span>(node_list):</p>
+                    <p className="pl-6 text-slate-600 dark:text-slate-400">for node in node_list:</p>
+                    <p className="pl-12 text-slate-600 dark:text-slate-400">if node.is_healthy():</p>
+                    <p className="pl-18 text-emerald-600 font-bold">node.transmit(msg)</p>
+                    <p className="pl-12 text-slate-600">else:</p>
+                    <p className="pl-18 text-red-500 font-bold">initiate_recovery(node)</p>
+                    <p className="mt-8 animate-pulse text-primary font-black">_ _ _ _ _</p>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-24 border-t border-border">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-green-500/10 rounded-3xl blur-3xl" />
-            <div className="relative glass-card p-12 space-y-6">
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-white">
-                Ready to level up your{" "}
-                <span className="gradient-text">developer game?</span>
-              </h2>
-              <p className="text-lg text-slate-400 max-w-xl mx-auto">
-                Join 2.4 million developers building, learning, and growing their careers on StackTruth.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link to="/register" className="btn-primary flex items-center gap-2 text-base px-8 py-3">
-                  Get Started Free <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link to="/about" className="btn-secondary flex items-center gap-2 text-base px-6 py-3">
-                  Learn More
-                </Link>
-              </div>
-              <p className="text-xs text-slate-600">No credit card required · Free forever plan available</p>
+               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <Footer />
-    </div>
+        {/* 4. Statistics - Trust Metrics */}
+        <section className="py-20 bg-white dark:bg-slate-900 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid md:grid-cols-4 gap-12 text-center">
+               {[
+                 { label: "Verified Experts", value: "48k+", icon: Users, color: "text-blue-600" },
+                 { label: "Solutions Shared", value: "1.2M+", icon: MessageSquare, color: "text-emerald-600" },
+                 { label: "Technical Articles", value: "10k+", icon: BookOpen, color: "text-indigo-600" },
+                 { label: "Daily Active Users", value: "250k+", icon: Zap, color: "text-amber-600" },
+               ].map((stat) => (
+                 <div key={stat.label} className="space-y-4">
+                   <div className={`w-16 h-16 ${stat.color} bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto border border-slate-100 dark:border-slate-800`}>
+                     <stat.icon className="w-8 h-8" />
+                   </div>
+                   <div className="space-y-1">
+                     <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">{stat.value}</p>
+                     <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                   </div>
+                 </div>
+               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. Tutorial Paths - Structured Learning */}
+        <section className="py-24 bg-slate-50 dark:bg-slate-950/50 border-y border-slate-100 dark:border-slate-800 transition-colors duration-300">
+          <div className="max-w-7xl mx-auto px-6 space-y-16">
+            <div className="text-center space-y-4">
+              <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Structured Tutorial Paths</h2>
+              <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">Master any domain with our community-verified roadmaps.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { title: "Complete DS & Algo", count: "120 Chapters", image: "https://images.unsplash.com/photo-1509228468518-180dd4805a46?auto=format&fit=crop&w=600&q=80", color: "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20" },
+                { title: "MERN Stack Mastery", count: "85 Chapters", image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=600&q=80", color: "border-indigo-200 dark:border-indigo-900/40 bg-indigo-50 dark:bg-indigo-950/20" },
+                { title: "Python for Data Science", count: "64 Chapters", image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20" },
+              ].map((path) => (
+                <Link key={path.title} to="/knowledge" className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
+                   <img src={path.image} alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity duration-700" />
+                   <div className="relative z-10 p-10 h-full flex flex-col gap-6">
+                     <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                       {path.title.includes("DS") ? <Database className="w-8 h-8 text-emerald-600" /> : path.title.includes("MERN") ? <Layout className="w-8 h-8 text-indigo-600" /> : <Terminal className="w-8 h-8 text-amber-600" />}
+                     </div>
+                     <div className="space-y-2">
+                       <h3 className="text-2xl font-black text-slate-950 dark:text-white leading-tight group-hover:text-primary transition-colors">{path.title}</h3>
+                       <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{path.count}</p>
+                     </div>
+                     <div className="mt-auto flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest">
+                       Start Learning <ChevronRight className="w-4 h-4" />
+                     </div>
+                   </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 6. Popular Courses - Skill Up */}
+        <section className="py-24 bg-white dark:bg-slate-900">
+          <div className="max-w-7xl mx-auto px-6 space-y-16">
+             <div className="flex items-center justify-between">
+               <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Certification & Mastery</h2>
+               <Link to="/pricing" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">View All Courses</Link>
+             </div>
+             <div className="grid md:grid-cols-4 gap-8">
+               {[
+                 { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=600&q=80" },
+                 { title: "Advanced Java Protocols", students: "8k+", price: "$49", rating: 4.8, img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" },
+                 { title: "AI Infrastructure Lab", students: "5k+", price: "$99", rating: 4.7, img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80" },
+                 { title: "Security Audit Mastery", students: "3k+", price: "$79", rating: 4.9, img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" },
+               ].map((course) => (
+                 <div key={course.title} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer">
+                    <div className="h-48 bg-slate-50 rounded-lg mb-8 overflow-hidden border border-slate-50 relative">
+                       <img 
+                         src={course.img} 
+                         alt={course.title} 
+                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                         onError={(e) => {
+                           (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80";
+                         }}
+                       />
+                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-60" />
+                       <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm border border-slate-50 dark:border-slate-800 flex items-center gap-1.5">
+                         <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                         <span className="text-[10px] font-black">{course.rating}</span>
+                       </div>
+                    </div>
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-tight mb-4">{course.title}</h3>
+                    <div className="flex items-center justify-between pt-6 border-t border-slate-50 dark:border-slate-800">
+                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{course.students} Students</span>
+                       <span className="text-lg font-black text-slate-900 dark:text-white">{course.price}</span>
+                    </div>
+                 </div>
+               ))}
+             </div>
+          </div>
+        </section>
+
+        {/* 7. Jobs Portal Spotlight - Career Growth */}
+        <section className="py-24 bg-slate-50 dark:bg-slate-900/30 border-y border-slate-100 dark:border-slate-800">
+           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+              <div className="space-y-10">
+                <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-widest border border-primary/20">
+                  <Briefcase className="w-5 h-5" /> Career Protocols
+                </div>
+                <h2 className="text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">Elite Jobs From <br /> Global Companies.</h2>
+                <p className="text-xl text-slate-500 font-medium leading-relaxed tracking-tight">Your verified reputation score unlocks exclusive mandates from the world's most innovative technology labs.</p>
+                <div className="flex flex-col sm:flex-row gap-6">
+                  <Link to="/jobs" className="bg-slate-900 text-white px-10 py-5 rounded-xl font-bold hover:bg-primary transition-all shadow-xl flex items-center justify-center gap-3">
+                    Explore Mandates <ChevronRight className="w-5 h-5" />
+                  </Link>
+                  <Link to="/jobs" className="bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 px-10 py-5 rounded-xl font-bold hover:border-primary transition-all dark:text-white">Post a Job</Link>
+                </div>
+              </div>
+              <div className="space-y-6">
+                {MOCK_JOBS.slice(0, 3).map(job => (
+                  <div key={job.id} className="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-xl transition-all duration-500 group flex items-center justify-between">
+                     <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-100">
+                           <Building className="w-8 h-8 text-slate-300 group-hover:text-primary transition-colors" />
+                        </div>
+                        <div>
+                           <h4 className="text-xl font-black text-slate-900 dark:text-white">{job.title}</h4>
+                           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{job.company} • {job.location}</p>
+                        </div>
+                     </div>
+                     <ArrowRight className="w-6 h-6 text-slate-200 group-hover:text-primary transition-colors" />
+                  </div>
+                ))}
+              </div>
+           </div>
+        </section>
+
+        {/* 8. Technical Articles - Global Knowledge Base */}
+        <section className="py-24 bg-white dark:bg-slate-900">
+          <div className="max-w-7xl mx-auto px-6 space-y-16">
+             <div className="flex items-center justify-between">
+               <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Recent Technical Index</h2>
+               <Link to="/knowledge" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">Read All Articles</Link>
+             </div>
+             <div className="grid md:grid-cols-3 gap-10">
+               {[
+                 { title: "Microservices: Implementing Atomic Consensus", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", tag: "Architecture" },
+                 { title: "Blockchain Infrastructure: Node Coordination", img: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80", tag: "Security" },
+                 { title: "High-Scale Systems: The 2026 Blueprint", img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=800&q=80", tag: "System Design" },
+               ].map((article, i) => (
+                 <div key={i} className="flex flex-col gap-6 group cursor-pointer">
+                    <div className="h-64 bg-slate-100 rounded-xl overflow-hidden relative">
+                       <img src={article.img} alt={article.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-60" />
+                    </div>
+                    <div className="space-y-4">
+                       <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                          <span className="text-primary">{article.tag}</span>
+                          <span>15 Min Read</span>
+                       </div>
+                       <h3 className="text-2xl font-black text-slate-950 dark:text-white group-hover:text-primary transition-colors leading-tight tracking-tight">{article.title}</h3>
+                       <p className="text-slate-500 font-medium leading-relaxed line-clamp-2">A technical deep-dive into distributed coordination and eventual consistency patterns in high-scale systems.</p>
+                    </div>
+                 </div>
+               ))}
+             </div>
+          </div>
+        </section>
+
+        {/* 9. Hall of Sovereignty - Community Spotlight */}
+        <section className="py-24 bg-slate-50 dark:bg-slate-950/50 text-slate-950 dark:text-white relative overflow-hidden border-t border-slate-100 dark:border-slate-800">
+           <div className="absolute inset-0 bg-[radial-gradient(#2f8d46_1px,transparent_1px)] [background-size:32px:32px] opacity-5 pointer-events-none" />
+           <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-20 relative z-10">
+              <div className="space-y-10 max-w-2xl text-center lg:text-left">
+                <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-widest border border-primary/20">
+                  <Trophy className="w-5 h-5" /> Technical Hall of Fame
+                </div>
+                <h2 className="text-5xl font-black tracking-tight leading-tight">The Hall of <br /> <span className="text-primary">Sovereignty.</span></h2>
+                <p className="text-xl text-slate-500 font-medium leading-relaxed">Commemorating the elite 0.1% of global contributors who define the standards of modern engineering.</p>
+                <div className="flex flex-wrap justify-center lg:justify-start gap-8">
+                   <div className="text-center lg:text-left">
+                     <p className="text-4xl font-black text-slate-950 dark:text-white tracking-tighter">48k+</p>
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Verified Experts</p>
+                   </div>
+                   <div className="w-px h-12 bg-slate-200 hidden lg:block" />
+                   <div className="text-center lg:text-left">
+                     <p className="text-4xl font-black text-primary tracking-tighter">1.2M+</p>
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Solutions Shared</p>
+                   </div>
+                </div>
+                <Link to="/leaderboard" className="inline-flex bg-primary text-white px-12 py-5 rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-2xl shadow-primary/30">View Global Rankings</Link>
+              </div>
+              <div className="grid grid-cols-2 gap-8 w-full lg:w-auto">
+                 {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-6 group hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-4">
+                       <div className="w-20 h-20 bg-primary/5 rounded-xl flex items-center justify-center text-primary font-black text-3xl group-hover:scale-110 transition-transform">
+                          {String.fromCharCode(64 + i)}
+                       </div>
+                       <div className="text-center">
+                          <p className="text-xl font-black text-slate-950 dark:text-white">Auditor_0{i}</p>
+                          <p className="text-[10px] font-black text-primary uppercase tracking-widest mt-1">Reputation: {15 - i}k</p>
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        </section>
+      </main>
+
+    </>
   );
 }

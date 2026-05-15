@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   MessageSquare, Code2, TrendingUp, Award, ArrowRight, Flame,
   ThumbsUp, Eye, BookmarkCheck, Zap, Star, Clock, CheckCircle,
-  Users, Briefcase, Bot, Play,
+  Users, Briefcase, Bot, Play, Sparkles, ChevronRight,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MOCK_QUESTIONS, MOCK_CODE_REVIEWS, MOCK_NOTIFICATIONS, MOCK_ANALYTICS } from "@/constants/mockData";
@@ -12,38 +12,23 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis,
 } from "recharts";
 
-const STATS = [
-  { label: "Reputation", key: "reputation", icon: Zap, color: "text-amber-400", bgColor: "bg-amber-500/10", trend: "+248 this week" },
-  { label: "Questions", value: 124, icon: MessageSquare, color: "text-blue-400", bgColor: "bg-blue-500/10", trend: "+8 this month" },
-  { label: "Code Reviews", value: 45, icon: Code2, color: "text-green-400", bgColor: "bg-green-500/10", trend: "+12 this month" },
-  { label: "Day Streak", key: "streak", icon: Flame, color: "text-rose-400", bgColor: "bg-rose-500/10", trend: "Best: 128 days" },
-];
-
 const QUICK_ACTIONS = [
-  { label: "Ask Question", icon: MessageSquare, path: "/questions/ask", color: "from-blue-600 to-blue-700" },
-  { label: "Submit Code", icon: Code2, path: "/code-review", color: "from-green-600 to-green-700" },
-  { label: "AI Assistant", icon: Bot, path: "/ai-assistant", color: "from-purple-600 to-purple-700" },
-  { label: "Live Coding", icon: Play, path: "/live-coding", color: "from-amber-600 to-orange-600" },
+  { label: "Post Question", icon: MessageSquare, path: "/questions/ask", accent: "primary" },
+  { label: "Review Code", icon: Code2, path: "/code-review", accent: "primary" },
+  { label: "AI Sandbox", icon: Bot, path: "/ai-assistant", accent: "primary" },
+  { label: "Live Coding", icon: Play, path: "/live-coding", accent: "primary" },
 ];
-
-const CONTRIBUTION_DATA = Array.from({ length: 52 }, (_, week) => ({
-  week: `W${week + 1}`,
-  commits: Math.floor(Math.random() * 15),
-  answers: Math.floor(Math.random() * 8),
-  reviews: Math.floor(Math.random() * 5),
-})).slice(40);
 
 export default function DeveloperDashboard() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 1000);
+    const t = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(t);
   }, []);
 
   const recentQuestions = MOCK_QUESTIONS.slice(0, 4);
-  const recentReviews = MOCK_CODE_REVIEWS.slice(0, 2);
 
   const radarData = MOCK_ANALYTICS.skillGrowth.map((s) => ({
     skill: s.skill,
@@ -51,192 +36,161 @@ export default function DeveloperDashboard() {
   }));
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-start justify-between flex-wrap gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-2xl font-bold text-white">
-              Good morning, {user?.name?.split(" ")[0]} 👋
-            </h1>
-          </div>
-          <p className="text-slate-400 text-sm">Your developer workspace is ready. Keep the streak going!</p>
+    <div className="space-y-8 pb-12">
+      {/* Header - GFG Style */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Hello, <span className="text-primary">{user?.name?.split(" ")[0]}!</span>
+          </h1>
+          <p className="text-sm text-slate-500 font-medium">
+            Continue your learning journey. You have <span className="text-primary font-bold">4 active reviews</span> pending.
+          </p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2">
-            <Flame className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-bold text-amber-400">{user?.streak} day streak</span>
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reputation Score</span>
+            <span className="text-2xl font-bold text-primary">{user?.reputation.toLocaleString()}</span>
           </div>
-          <Link to="/profile" className="btn-secondary text-sm px-4 py-2">View Profile</Link>
+          <Link to="/profile" className="btn-secondary text-xs px-6 py-2.5">My Profile</Link>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* Quick Actions - Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {QUICK_ACTIONS.map((action) => (
           <Link
             key={action.label}
             to={action.path}
-            className={`flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br ${action.color} hover:opacity-90 transition-all hover:shadow-lg group`}
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl hover:border-primary transition-all text-center group"
           >
-            <action.icon className="w-5 h-5 text-white" />
-            <span className="text-sm font-semibold text-white">{action.label}</span>
-            <ArrowRight className="w-4 h-4 text-white/60 ml-auto group-hover:translate-x-0.5 transition-transform" />
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+              <action.icon className="w-6 h-6" />
+            </div>
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors">{action.label}</span>
           </Link>
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {isLoading
-          ? STATS.map((_, i) => <StatCardSkeleton key={i} />)
-          : STATS.map((stat) => (
-              <div key={stat.label} className="stat-card">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-slate-500 font-medium">{stat.label}</span>
-                  <div className={`w-8 h-8 ${stat.bgColor} rounded-lg flex items-center justify-center`}>
-                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                  </div>
-                </div>
-                <p className="text-2xl font-extrabold text-white">
-                  {stat.key === "reputation" ? user?.reputation.toLocaleString() : stat.key === "streak" ? user?.streak : stat.value}
-                </p>
-                <p className={`text-xs mt-1 ${stat.color}`}>{stat.trend}</p>
+      {/* Main Stats Grid */}
+      <div className="grid lg:grid-cols-12 gap-6">
+        {/* Learning Progress */}
+        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-8">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              Activity Index
+            </h2>
+            <div className="flex gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-primary" />
+                <span className="text-xs font-bold text-slate-500">Votes</span>
               </div>
-            ))}
-      </div>
-
-      {/* Main Grid */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Activity Chart */}
-        <div className="lg:col-span-2 glass-card p-5">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-bold text-white">Activity Overview</h2>
-            <div className="flex gap-3 text-xs text-slate-500">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400" />Answers</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-400" />Reviews</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded bg-slate-300" />
+                <span className="text-xs font-bold text-slate-500">Answers</span>
+              </div>
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={MOCK_ANALYTICS.engagement}>
-              <defs>
-                <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorAnswers" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="week" tick={{ fill: "#64748B", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip
-                contentStyle={{ background: "#1E293B", border: "1px solid #334155", borderRadius: 8, color: "#F8FAFC", fontSize: 12 }}
-              />
-              <Area type="monotone" dataKey="votes" stroke="#2563EB" strokeWidth={2} fill="url(#colorViews)" name="Votes" />
-              <Area type="monotone" dataKey="answers" stroke="#22C55E" strokeWidth={2} fill="url(#colorAnswers)" name="Answers" />
-            </AreaChart>
-          </ResponsiveContainer>
+          
+          <div className="h-[260px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={MOCK_ANALYTICS.engagement}>
+                <XAxis dataKey="week" stroke="#94a3b8" fontSize={10} fontWeight={600} />
+                <YAxis stroke="#94a3b8" fontSize={10} fontWeight={600} />
+                <Tooltip
+                  contentStyle={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 8 }}
+                />
+                <Area type="monotone" dataKey="votes" stroke="#2f8d46" strokeWidth={3} fill="#2f8d46" fillOpacity={0.1} />
+                <Area type="monotone" dataKey="answers" stroke="#94a3b8" strokeWidth={3} fill="transparent" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Skill Radar */}
-        <div className="glass-card p-5">
-          <h2 className="font-bold text-white mb-5">Skill Levels</h2>
-          <ResponsiveContainer width="100%" height={180}>
-            <RadarChart data={radarData}>
-              <PolarGrid stroke="#334155" />
-              <PolarAngleAxis dataKey="skill" tick={{ fill: "#64748B", fontSize: 10 }} />
-              <Radar name="Level" dataKey="level" stroke="#2563EB" fill="#2563EB" fillOpacity={0.15} strokeWidth={2} />
-            </RadarChart>
-          </ResponsiveContainer>
-          <div className="space-y-2 mt-4">
-            {MOCK_ANALYTICS.skillGrowth.slice(0, 4).map((skill) => (
-              <div key={skill.skill} className="flex items-center gap-2">
-                <span className="text-xs text-slate-400 w-20 flex-shrink-0">{skill.skill}</span>
-                <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-green-400 rounded-full"
-                    style={{ width: `${skill.level}%` }}
-                  />
+        {/* Skill Set */}
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Zap className="w-5 h-5 text-amber-500" />
+            Top Skills
+          </h2>
+          
+          <div className="space-y-4">
+            {MOCK_ANALYTICS.skillGrowth.slice(0, 5).map((skill) => (
+              <div key={skill.skill} className="space-y-1.5">
+                <div className="flex justify-between text-xs font-bold">
+                  <span className="text-slate-600 dark:text-slate-400">{skill.skill}</span>
+                  <span className="text-primary">{skill.level}%</span>
                 </div>
-                <span className="text-xs text-slate-500 w-8">{skill.level}%</span>
+                <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: `${skill.level}%` }} />
+                </div>
               </div>
             ))}
           </div>
+          
+          <Link to="/profile" className="block text-center text-xs font-bold text-primary hover:underline pt-4 border-t border-slate-100 dark:border-slate-800">
+            View Complete Skill Map
+          </Link>
         </div>
       </div>
 
-      {/* Recent Questions */}
-      <div className="glass-card p-5">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-white">Recent Discussions</h2>
-          <Link to="/questions" className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
-            View all <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-        <div className="space-y-3">
-          {isLoading
-            ? [1, 2].map((i) => <QuestionSkeleton key={i} />)
-            : recentQuestions.map((q) => (
-                <Link
-                  key={q.id}
-                  to={`/questions/${q.id}`}
-                  className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-all group border border-transparent hover:border-border"
-                >
-                  <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                    <div className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-bold ${q.isAnswered ? "bg-green-500/10 text-green-400" : "bg-white/5 text-slate-400"}`}>
-                      <ThumbsUp className="w-3 h-3" />
-                      {q.votes}
-                    </div>
-                    <span className="text-[10px] text-slate-600">{q.answers} ans</span>
+      {/* Feed Section */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Recommended Questions */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recommended for You</h2>
+            <Link to="/questions" className="text-xs font-bold text-primary hover:underline">Explore More</Link>
+          </div>
+          <div className="space-y-4">
+            {recentQuestions.map((q) => (
+              <Link
+                key={q.id}
+                to={`/questions/${q.id}`}
+                className="flex items-start gap-4 p-4 border border-slate-100 dark:border-slate-800 rounded-lg hover:border-primary transition-all group"
+              >
+                <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded flex flex-col items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                  <span className="text-xs font-bold text-primary">{q.votes}</span>
+                  <span className="text-[8px] font-bold text-slate-400 uppercase">Votes</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-primary transition-colors">{q.title}</h3>
+                  <div className="flex gap-2 mt-2">
+                    {q.tags.slice(0, 3).map(tag => (
+                      <span key={tag} className="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded">{tag}</span>
+                    ))}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{q.title}</h3>
-                    <div className="flex items-center gap-3 mt-2">
-                      <div className="flex gap-1.5">
-                        {q.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="tag-badge text-[10px]">{tag}</span>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-1 text-[10px] text-slate-600 ml-auto">
-                        <Eye className="w-3 h-3" />
-                        {q.views.toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-                  {q.isAnswered && <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />}
-                </Link>
-              ))}
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Badges */}
-      <div className="glass-card p-5">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-white">Badges & Achievements</h2>
-          <Link to="/profile" className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
-            All badges <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {user?.badges.map((badge) => (
-            <div key={badge.id} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-border hover:border-blue-500/30 transition-all">
-              <span className="text-3xl">{badge.icon}</span>
-              <div className="text-center">
-                <p className="text-xs font-bold text-white">{badge.name}</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">{badge.description}</p>
-                <span className={`text-[10px] font-bold mt-1 inline-block ${
-                  badge.rarity === "legendary" ? "text-amber-400" : badge.rarity === "epic" ? "text-purple-400" : badge.rarity === "rare" ? "text-blue-400" : "text-slate-400"
-                }`}>
-                  {badge.rarity.toUpperCase()}
-                </span>
+        {/* Community Badges */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Achievements</h2>
+            <Award className="w-5 h-5 text-amber-500" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {user?.badges.slice(0, 3).map((badge) => (
+              <div key={badge.id} className="text-center space-y-2 group cursor-help">
+                <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 rounded-full flex items-center justify-center mx-auto group-hover:border-primary group-hover:scale-105 transition-all">
+                  <span className="text-3xl">{badge.icon}</span>
+                </div>
+                <p className="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase truncate">{badge.name}</p>
               </div>
+            ))}
+          </div>
+          <div className="p-4 bg-primary/5 rounded-lg border border-primary/10 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-xs font-bold text-primary uppercase">Next Milestone</p>
+              <p className="text-[10px] text-slate-500">Expert Reviewer (12/50 reviews)</p>
             </div>
-          ))}
-          <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-dashed border-border opacity-50">
-            <Star className="w-8 h-8 text-slate-600" />
-            <p className="text-xs text-slate-600 text-center">Keep contributing to unlock more!</p>
+            <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-full bg-primary" style={{ width: "24%" }} />
+            </div>
           </div>
         </div>
       </div>

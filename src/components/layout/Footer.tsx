@@ -1,97 +1,104 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Code2, Github, Twitter, Linkedin, Heart } from "lucide-react";
+import { Github, Twitter, Linkedin, Heart, ExternalLink, Mail, MessageSquare, Shield, Globe, Terminal, Database, Layout, Settings, Cpu, Zap, Award, BookOpen, Users, Trophy } from "lucide-react";
 
 const FOOTER_LINKS = {
-  Platform: [
-    { label: "Questions", path: "/questions" },
-    { label: "Code Reviews", path: "/code-review" },
+  "Trending Now": [
+    { label: "Data Structures", path: "/knowledge" },
+    { label: "Algorithms", path: "/knowledge" },
+    { label: "System Design", path: "/knowledge" },
+    { label: "Python Tutorial", path: "/knowledge" },
+    { label: "MERN Stack", path: "/knowledge" },
+  ],
+  "Practice": [
+    { label: "All Questions", path: "/questions" },
+    { label: "Company Wise", path: "/questions" },
+    { label: "Topic Wise", path: "/questions" },
+    { label: "Contests", path: "/leaderboard" },
+    { label: "Code Audits", path: "/code-review" },
+  ],
+  "Community": [
+    { label: "Tutorials", path: "/tutorials" },
+    { label: "Leaderboard", path: "/leaderboard" },
+    { label: "Jobs Portal", path: "/jobs" },
     { label: "Knowledge Base", path: "/knowledge" },
     { label: "AI Assistant", path: "/ai-assistant" },
-    { label: "Jobs", path: "/jobs" },
   ],
-  Community: [
-    { label: "Leaderboard", path: "/leaderboard" },
-    { label: "Expert Program", path: "/about" },
-    { label: "Blog", path: "/knowledge" },
-    { label: "Discussions", path: "/questions" },
-    { label: "Events", path: "/about" },
-  ],
-  Company: [
-    { label: "About", path: "/about" },
+  "Company": [
+    { label: "About Us", path: "/about" },
+    { label: "Contact Us", path: "/contact" },
+    { label: "Careers", path: "/jobs" },
     { label: "Pricing", path: "/pricing" },
-    { label: "Contact", path: "/contact" },
-    { label: "Privacy Policy", path: "/" },
-    { label: "Terms of Service", path: "/" },
-  ],
-  Developers: [
-    { label: "API Docs", path: "/knowledge" },
-    { label: "Status", path: "/" },
-    { label: "GitHub", path: "/" },
-    { label: "Changelog", path: "/" },
-    { label: "Open Source", path: "/" },
+    { label: "Partner Program", path: "/contact" },
   ],
 };
 
-const TECH_BADGES = ["React", "TypeScript", "Go", "Rust", "Python", "GraphQL", "K8s", "Terraform"];
+const SOCIAL_LINKS = [
+  { icon: Github, label: "GitHub", url: "https://github.com/stacktruth" },
+  { icon: Twitter, label: "Twitter", url: "https://twitter.com/stacktruth" },
+  { icon: Linkedin, label: "LinkedIn", url: "https://linkedin.com/company/stacktruth" },
+  { icon: MessageSquare, label: "Discord", url: "https://discord.gg/stacktruth" },
+];
 
 export default function Footer() {
-  return (
-    <footer className="border-t border-border bg-slate-950/80 mt-12">
-      {/* Tech community strip */}
-      <div className="border-b border-border py-4 overflow-hidden">
-        <div className="flex gap-3 animate-marquee whitespace-nowrap">
-          {[...TECH_BADGES, ...TECH_BADGES, ...TECH_BADGES].map((tech, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center px-3 py-1 rounded-md text-xs font-mono font-medium bg-white/5 border border-border text-slate-400 flex-shrink-0"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      </div>
+  const handleSocialClick = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
-          {/* Brand */}
-          <div className="col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
-                <Code2 className="w-4 h-4 text-white" />
+  return (
+    <footer className="bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 pt-20 pb-10 border-t border-slate-100 dark:border-slate-800/50 transition-colors duration-300">
+      <div className="max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
+          {/* Brand Section */}
+          <div className="col-span-2 space-y-8">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
               </div>
-              <span className="font-bold text-lg text-white">
-                Stack<span className="text-blue-400">Truth</span>
-              </span>
+              <div className="flex flex-col leading-none">
+                <span className="logo-font text-2xl text-slate-900 dark:text-white tracking-tight">StackTruth</span>
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mt-1">Industrial Intelligence</span>
+              </div>
             </Link>
-            <p className="text-sm text-slate-500 leading-relaxed mb-4">
-              The premium developer community for technical validation, knowledge sharing, and career growth.
+            
+            <p className="text-sm leading-relaxed max-w-sm font-medium">
+              The premium engineering portal for technical sovereignty. Master distributed systems, high-concurrency protocols, and deep-kernel optimizations with verified intelligence.
             </p>
-            <div className="flex gap-3">
-              <a href="#" className="w-8 h-8 bg-white/5 hover:bg-white/10 border border-border rounded-lg flex items-center justify-center text-slate-500 hover:text-white transition-all">
-                <Github className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-white/5 hover:bg-white/10 border border-border rounded-lg flex items-center justify-center text-slate-500 hover:text-white transition-all">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-white/5 hover:bg-white/10 border border-border rounded-lg flex items-center justify-center text-slate-500 hover:text-white transition-all">
-                <Linkedin className="w-4 h-4" />
-              </a>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-3">
+                {SOCIAL_LINKS.map((social) => (
+                  <button
+                    key={social.label}
+                    onClick={() => handleSocialClick(social.url)}
+                    aria-label={social.label}
+                    className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-900 hover:bg-primary hover:text-white transition-all rounded-xl border border-slate-100 dark:border-slate-800 group"
+                  >
+                    <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  </button>
+                ))}
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-sm w-fit">
+                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Protocol Operational</span>
+              </div>
             </div>
           </div>
 
-          {/* Links */}
+          {/* Links Grid */}
           {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <div key={section}>
-              <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{section}</h4>
-              <ul className="space-y-2">
+            <div key={section} className="space-y-6">
+              <h4 className="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-[0.2em]">{section}</h4>
+              <ul className="space-y-4 text-sm">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      to={link.path}
-                      className="text-sm text-slate-500 hover:text-white transition-colors"
-                    >
+                    <Link to={link.path} className="hover:text-primary flex items-center gap-2 transition-colors group font-medium">
                       {link.label}
+                      <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
                     </Link>
                   </li>
                 ))}
@@ -100,13 +107,29 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-border mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-600">
-            © 2025 StackTruth. All rights reserved.
-          </p>
-          <p className="text-xs text-slate-600 flex items-center gap-1">
-            Built with <Heart className="w-3 h-3 text-red-500" /> for developers, by developers
-          </p>
+        {/* Bottom Section */}
+        <div className="pt-10 border-t border-slate-100 dark:border-slate-800/50 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <p className="text-xs text-slate-400 font-bold tracking-widest uppercase">
+              © {new Date().getFullYear()} StackTruth MVP • Terminal v2.4.0
+            </p>
+            <div className="hidden md:block w-px h-4 bg-slate-200 dark:bg-slate-800" />
+            <div className="flex items-center gap-6">
+              <Link to="/privacy" className="text-xs font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors uppercase tracking-widest">Privacy</Link>
+              <Link to="/terms" className="text-xs font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors uppercase tracking-widest">Terms</Link>
+              <Link to="/cookies" className="text-xs font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors uppercase tracking-widest">Cookies</Link>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-8">
+             <div className="flex items-center gap-2 text-xs text-slate-400 font-bold uppercase tracking-widest">
+               Handcrafted with <Heart className="w-3.5 h-3.5 text-primary fill-primary" /> for Engineers
+             </div>
+             <div className="hidden sm:flex items-center gap-4">
+                <span className="text-[10px] font-black text-slate-300 dark:text-slate-700 uppercase">Secured by</span>
+                <Shield className="w-5 h-5 text-slate-300 dark:text-slate-700" />
+             </div>
+          </div>
         </div>
       </div>
     </footer>

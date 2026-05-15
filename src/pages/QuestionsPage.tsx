@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Search, Filter, ThumbsUp, MessageSquare, Eye, CheckCircle, TrendingUp, Clock, Flame, Plus, Tag, Award, BookmarkPlus } from "lucide-react";
+import { Search, Filter, ThumbsUp, MessageSquare, Eye, CheckCircle, TrendingUp, Clock, Flame, Plus, Tag, Award, BookmarkPlus, ChevronUp, ChevronDown, Sparkles, Shield, Users, MessageCircle } from "lucide-react";
 import { MOCK_QUESTIONS, TECH_TAGS } from "@/constants/mockData";
 import { QuestionSkeleton } from "@/components/ui/SkeletonLoader";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,7 +13,6 @@ const SORT_OPTIONS = [
   { label: "Newest", icon: Clock },
   { label: "Trending", icon: TrendingUp },
   { label: "Hot", icon: Flame },
-  { label: "Most Voted", icon: ThumbsUp },
 ];
 
 function timeAgo(dateStr: string): string {
@@ -25,82 +24,76 @@ function timeAgo(dateStr: string): string {
 
 function QuestionCard({ question }: { question: Question }) {
   const { success } = useToast();
-  const [voted, setVoted] = useState<"up" | "down" | null>(null);
   const [voteCount, setVoteCount] = useState(question.votes);
-  const [saved, setSaved] = useState(false);
+  const [voted, setVoted] = useState<number>(0);
 
-  const handleVote = (dir: "up" | "down") => {
+  const handleVote = (dir: number) => {
     if (voted === dir) {
-      setVoted(null);
+      setVoted(0);
       setVoteCount(question.votes);
     } else {
       setVoted(dir);
-      setVoteCount(question.votes + (dir === "up" ? 1 : -1));
+      setVoteCount(question.votes + dir);
     }
   };
 
   return (
-    <div className="glass-card-hover p-5 group">
-      <div className="flex items-start gap-4">
-        {/* Vote */}
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
-          <button
-            onClick={() => handleVote("up")}
-            className={`p-1.5 rounded-lg transition-all ${voted === "up" ? "text-green-400 bg-green-500/10" : "text-slate-500 hover:text-green-400 hover:bg-green-500/10"}`}
+    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 group relative overflow-hidden">
+      <div className="flex items-start gap-10">
+        {/* Vote Counter - Ultra Clean */}
+        <div className="flex flex-col items-center gap-3 flex-shrink-0 bg-slate-100/50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 transition-all duration-500 group-hover:border-primary/20 group-hover:bg-primary/5">
+          <button 
+            onClick={() => handleVote(1)}
+            className={`p-1.5 rounded-xl hover:bg-primary/10 transition-colors ${voted === 1 ? 'text-primary' : 'text-slate-300'}`}
           >
-            <ThumbsUp className="w-4 h-4" />
+            <ChevronUp className="w-8 h-8" />
           </button>
-          <span className={`text-sm font-bold ${voted === "up" ? "text-green-400" : voted === "down" ? "text-red-400" : "text-slate-300"}`}>
-            {voteCount}
-          </span>
-          <button
-            onClick={() => handleVote("down")}
-            className={`p-1.5 rounded-lg transition-all rotate-180 ${voted === "down" ? "text-red-400 bg-red-500/10" : "text-slate-500 hover:text-red-400 hover:bg-red-500/10"}`}
+          <span className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter">{voteCount}</span>
+          <button 
+             onClick={() => handleVote(-1)}
+             className={`p-1.5 rounded-xl hover:bg-primary/10 transition-colors ${voted === -1 ? 'text-primary' : 'text-slate-300'}`}
           >
-            <ThumbsUp className="w-4 h-4" />
+            <ChevronDown className="w-8 h-8" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start gap-2 mb-2">
-            <Link to={`/questions/${question.id}`} className="text-base font-semibold text-white hover:text-blue-400 transition-colors leading-snug line-clamp-2 flex-1">
+        {/* Question Content */}
+        <div className="flex-1 min-w-0 space-y-6">
+          <div className="flex items-start justify-between gap-6">
+            <Link to={`/questions/${question.id}`} className="text-2xl font-black text-slate-950 dark:text-white hover:text-primary transition-colors leading-[1.1] tracking-tighter line-clamp-2">
               {question.title}
             </Link>
             {question.bounty && (
-              <span className="flex-shrink-0 flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold px-2 py-1 rounded-lg">
-                <Award className="w-3 h-3" />+{question.bounty}
+              <span className="flex-shrink-0 bg-amber-500 text-white text-[9px] font-black px-4 py-1.5 rounded-sm uppercase tracking-widest shadow-lg shadow-amber-500/20">
+                +{question.bounty} Bounty
               </span>
             )}
           </div>
-          <p className="text-sm text-slate-500 line-clamp-2 mb-3">{question.body}</p>
+          
+          <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 font-medium tracking-tight">{question.body}</p>
 
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div className="flex flex-wrap gap-1.5">
-              {question.tags.map((tag) => (
-                <span key={tag} className="tag-badge">{tag}</span>
-              ))}
-            </div>
-            <div className="flex items-center gap-4 text-xs text-slate-500 flex-shrink-0">
-              <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{question.views.toLocaleString()}</span>
-              <div className={`flex items-center gap-1 font-medium ${question.isAnswered ? "text-green-400" : "text-slate-500"}`}>
-                <MessageSquare className="w-3.5 h-3.5" />
-                {question.answers} {question.isAnswered && <CheckCircle className="w-3 h-3" />}
-              </div>
-              <button onClick={() => { setSaved(!saved); success(saved ? "Removed from saved" : "Saved!", ""); }}>
-                <BookmarkPlus className={`w-3.5 h-3.5 transition-colors ${saved ? "text-blue-400" : "hover:text-blue-400"}`} />
-              </button>
-            </div>
+          <div className="flex flex-wrap gap-2.5">
+            {question.tags.map((tag) => (
+              <span key={tag} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 rounded-md border border-slate-100 dark:border-slate-800 group-hover:border-primary/20 transition-all">{tag}</span>
+            ))}
           </div>
 
-          {/* Author */}
-          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/50">
-            <img src={question.author.avatar} alt={question.author.name} className="w-5 h-5 rounded-full bg-slate-700" />
-            <span className="text-xs text-slate-500">
-              <span className="text-slate-400 font-medium">{question.author.name}</span>
-              {" "}asked {timeAgo(question.createdAt)}
-            </span>
-            <span className="text-xs text-amber-400 font-medium ml-auto">{question.author.reputation.toLocaleString()} rep</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-8 border-t border-slate-50 dark:border-slate-800 mt-6 gap-6">
+            <div className="flex items-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="flex items-center gap-2"><Eye className="w-4 h-4 text-primary" />{question.views.toLocaleString()} Index</span>
+              <span className={`flex items-center gap-2 ${question.isAnswered ? 'text-primary' : ''}`}>
+                <MessageSquare className="w-4 h-4" /> {question.answers} Protocols
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-xs font-black text-slate-900 dark:text-slate-200 leading-none">@{question.author.username}</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{timeAgo(question.createdAt)}</p>
+              </div>
+              <div className="w-10 h-10 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center text-primary font-black text-sm border border-primary/10">
+                {question.author.name.charAt(0)}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -110,6 +103,7 @@ function QuestionCard({ question }: { question: Question }) {
 
 export default function QuestionsPage() {
   const { isAuthenticated } = useAuth();
+  const { success } = useToast();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("All");
@@ -132,128 +126,177 @@ export default function QuestionsPage() {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Questions</h1>
-          <p className="text-slate-400 text-sm mt-1">{MOCK_QUESTIONS.length} questions · {MOCK_QUESTIONS.filter(q => q.isAnswered).length} answered</p>
-        </div>
-        {isAuthenticated && (
-          <button onClick={() => setShowAsk(true)} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Ask Question
-          </button>
-        )}
-      </div>
-
-      <div className="grid lg:grid-cols-4 gap-6">
-        {/* Main */}
-        <div className="lg:col-span-3 space-y-4">
-          {/* Search & Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search questions..."
-                className="w-full bg-white/5 border border-border rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all"
-              />
+    <div className="max-w-7xl mx-auto px-6 space-y-32 py-12">
+      {/* 1. Discussion Hub Header */}
+      <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
+          <div className="space-y-6 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 text-primary rounded-sm text-[10px] font-black uppercase tracking-[0.2em] border border-primary/10">
+              <MessageCircle className="w-4 h-4" /> Global Discussion Hub
             </div>
-            <div className="flex gap-2">
-              {SORT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.label}
-                  onClick={() => setSort(opt.label)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${sort === opt.label ? "bg-blue-600 text-white" : "bg-white/5 border border-border text-slate-400 hover:text-white"}`}
-                >
-                  <opt.icon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:block">{opt.label}</span>
-                </button>
-              ))}
-            </div>
+            <h1 className="text-5xl md:text-7xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">The Technical <br /> <span className="text-primary">Audits</span></h1>
+            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed tracking-tight">Explore community-verified solutions and architectural audits for complex engineering challenges.</p>
           </div>
-
-          {/* Filter tabs */}
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            {FILTERS.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${filter === f ? "bg-blue-600 text-white" : "bg-white/5 border border-border text-slate-400 hover:text-white"}`}
-              >
-                {f}
+          <div className="flex flex-col items-center lg:items-end gap-6">
+            <div className="flex gap-4">
+               <div className="bg-slate-100/50 dark:bg-slate-800/40 p-6 rounded-xl border border-slate-100 dark:border-slate-800 text-center w-32">
+                 <p className="text-3xl font-black text-slate-950 dark:text-white">{MOCK_QUESTIONS.length}</p>
+                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Audits</p>
+               </div>
+            </div>
+            {isAuthenticated && (
+              <button onClick={() => setShowAsk(true)} className="w-full bg-slate-950 dark:bg-primary text-white font-black px-10 py-5 rounded-lg flex items-center justify-center gap-3 hover:bg-primary transition-all shadow-2xl active:scale-95">
+                <Plus className="w-6 h-6" /> Initiate New Audit
               </button>
-            ))}
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Trending Topics Grid */}
+      <section className="space-y-12">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3">
+             <Tag className="w-5 h-5 text-primary" /> Technical Disciplines
+          </h2>
+          <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-8" />
+          <button 
+            onClick={() => { setSelectedTag(null); setFilter("All"); setSort("Newest"); setSearch(""); }}
+            className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1 active:scale-95 transition-all"
+          >
+            Reset All
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          {TECH_TAGS.slice(0, 15).map((tag) => (
+            <button
+              key={tag}
+              onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+              className={`px-6 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-500 border ${selectedTag === tag ? 'bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-105' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 hover:border-primary hover:-translate-y-1'}`}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Main Discussion Feed & Search Section */}
+      <section className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="lg:col-span-8 space-y-12">
+          {/* Advanced Search & Sorting */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-xl shadow-xl flex flex-col xl:flex-row gap-6 items-center relative overflow-hidden">
+             <div className="absolute inset-0 grid-pattern opacity-5" />
+             <div className="relative flex-1 w-full group">
+               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-300 group-focus-within:text-primary transition-colors" />
+               <input
+                 type="text"
+                 value={search}
+                 onChange={(e) => setSearch(e.target.value)}
+                 placeholder="Search protocols by keyword, tag, or contributor..."
+                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-lg pl-16 pr-6 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400"
+               />
+             </div>
+             <div className="flex gap-3 w-full xl:w-auto p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+               {SORT_OPTIONS.map((opt) => (
+                 <button
+                   key={opt.label}
+                   onClick={() => setSort(opt.label)}
+                   className={`flex-1 xl:flex-none px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xl' : 'text-slate-500 hover:text-primary'}`}
+                 >
+                   {opt.label}
+                 </button>
+               ))}
+             </div>
           </div>
 
-          {/* Questions */}
-          <div className="space-y-3">
+          {/* Discussion Registry */}
+          <div className="space-y-8">
             {isLoading
               ? [1, 2, 3].map((i) => <QuestionSkeleton key={i} />)
               : filtered.length > 0
               ? filtered.map((q) => <QuestionCard key={q.id} question={q} />)
               : (
-                <div className="glass-card p-12 text-center">
-                  <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                  <p className="text-white font-semibold mb-2">No questions found</p>
-                  <p className="text-slate-500 text-sm mb-4">Be the first to ask this question!</p>
-                  {isAuthenticated && <button onClick={() => setShowAsk(true)} className="btn-primary">Ask Question</button>}
+                <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-32 text-center rounded-xl shadow-sm">
+                  <MessageCircle className="w-24 h-24 text-slate-100 dark:text-slate-800 mx-auto mb-8 animate-pulse" />
+                  <h3 className="text-2xl font-black text-slate-950 dark:text-white mb-4">No matching audits</h3>
+                  <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto">Our registry couldn't find any discussions matching your current search parameters.</p>
+                  {isAuthenticated && <button onClick={() => setShowAsk(true)} className="mt-8 bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest shadow-xl">Initiate New Audit</button>}
                 </div>
               )}
           </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Featured tags */}
-          <div className="glass-card p-4">
-            <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2"><Tag className="w-4 h-4 text-blue-400" />Popular Tags</h3>
-            <div className="flex flex-wrap gap-1.5">
-              {TECH_TAGS.slice(0, 16).map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                  className={`tag-badge ${selectedTag === tag ? "bg-blue-500/20 border-blue-400" : ""}`}
-                >
-                  {tag}
-                </button>
-              ))}
+        {/* Sidebar Intelligence */}
+        <div className="lg:col-span-4 space-y-12">
+          {/* Community Stats Section (4) */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 rounded-xl shadow-xl space-y-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] rounded-full" />
+            <h3 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter flex items-center gap-3 relative z-10">
+              <TrendingUp className="w-6 h-6 text-primary" />
+              Community Momentum
+            </h3>
+            <div className="space-y-8 relative z-10">
+               {[
+                 { label: "Active Auditors", value: "2.4k", color: "text-blue-500" },
+                 { label: "Verified Solutions", value: "15k+", color: "text-emerald-500" },
+                 { label: "Open Bounties", value: "$4.2k", color: "text-amber-500" },
+               ].map(stat => (
+                 <div key={stat.label} className="flex items-center justify-between">
+                   <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                   <p className={`text-2xl font-black ${stat.color} tracking-tighter`}>{stat.value}</p>
+                 </div>
+               ))}
+            </div>
+            <div className="pt-10 border-t border-slate-50 dark:border-slate-800">
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 text-center">Top Reputation Movers</p>
+               <div className="space-y-4">
+                 {[1, 2, 3].map(i => (
+                    <div 
+                      key={i} 
+                      onClick={() => success(`Opening profile for Expert_${i}...`)}
+                      className="flex items-center justify-between group cursor-pointer active:scale-95 transition-all"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center text-primary font-black text-[10px] group-hover:bg-primary group-hover:text-white transition-all">U</div>
+                        <span className="text-sm font-black text-slate-900 dark:text-slate-200 group-hover:text-primary transition-colors">Expert_{i}</span>
+                      </div>
+                      <span className="text-[10px] font-black text-emerald-500">+{120 - i*10} PTS</span>
+                    </div>
+                 ))}
+               </div>
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="glass-card p-4">
-            <h3 className="text-sm font-bold text-white mb-3">Community Stats</h3>
-            <div className="space-y-3">
-              {[
-                { label: "Questions", value: "18,421" },
-                { label: "Answers", value: "89,342" },
-                { label: "Users", value: "48,291" },
-                { label: "Tags", value: "1,892" },
-              ].map((stat) => (
-                <div key={stat.label} className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500">{stat.label}</span>
-                  <span className="text-xs font-bold text-white">{stat.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Hot questions */}
-          <div className="glass-card p-4">
-            <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2"><Flame className="w-4 h-4 text-orange-400" />Hot Today</h3>
-            <div className="space-y-2">
-              {MOCK_QUESTIONS.slice(0, 4).map((q) => (
-                <Link key={q.id} to={`/questions/${q.id}`} className="block text-xs text-slate-400 hover:text-blue-400 transition-colors line-clamp-2 leading-relaxed">
-                  {q.title}
-                </Link>
-              ))}
-            </div>
+          {/* Audit Protocols Section (5) */}
+          <div className="bg-white dark:bg-slate-950 rounded-xl p-10 border border-slate-100 dark:border-slate-800 space-y-8 relative overflow-hidden group">
+             <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+             <Shield className="w-12 h-12 text-primary opacity-20 absolute top-10 right-10 group-hover:scale-125 transition-transform duration-700" />
+             <h3 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter relative z-10">Audit Protocols</h3>
+             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed relative z-10">Ensure all discussions maintain high technical fidelity by following our community-verified audit protocols.</p>
+             <ul className="space-y-4 relative z-10">
+               {[
+                 "Cite verified documentation",
+                 "Provide industrial context",
+                 "Maintain technical objectivity",
+                 "Verify solution protocols"
+               ].map(rule => (
+                 <li key={rule} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300">
+                   <CheckCircle className="w-4 h-4 text-primary" /> {rule}
+                 </li>
+               ))}
+             </ul>
+             <button 
+               onClick={() => success("Guideline protocol opened. Please review carefully.")}
+               className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-950 dark:text-white font-black py-4 rounded-lg text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all relative z-10 active:scale-95"
+             >
+               Read Guidelines
+             </button>
           </div>
         </div>
-      </div>
+      </section>
 
       {showAsk && <AskQuestionModal onClose={() => setShowAsk(false)} />}
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Search, Bell, Sun, Moon, ChevronDown, LogOut, Settings,
-  User, Code2, Zap, Menu, X, Plus,
+  User, Sparkles, Zap, Menu, X, Plus, Shield,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -17,6 +17,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -48,55 +49,80 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
   };
 
   return (
-    <nav className="sticky top-0 z-40 h-16 border-b border-border bg-background/80 backdrop-blur-xl">
-      <div className="h-full px-4 flex items-center justify-between gap-4 max-w-[1800px] mx-auto">
+    <nav className="sticky top-0 z-50 h-20 bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl border-b border-slate-100/50 dark:border-slate-800/50 shadow-sm">
+      <div className="h-full px-12 flex items-center justify-between gap-12 max-w-[2000px] mx-auto">
         {/* Left: Logo + Menu */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          {isAuthenticated && (
+        <div className="flex items-center gap-6 flex-shrink-0">
+          {isAuthenticated ? (
             <button
               onClick={onMenuClick}
-              className="lg:hidden btn-ghost p-2"
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Menu className="w-5 h-5" />
             </button>
+          ) : (
+            <button
+              onClick={() => setShowMobileNav(!showMobileNav)}
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {showMobileNav ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           )}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-400 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Code2 className="w-4 h-4 text-white" />
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/90 transition-all shadow-sm">
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
             </div>
-            <span className="font-bold text-lg text-white hidden sm:block">
-              Stack<span className="text-blue-400">Truth</span>
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className="logo-font text-2xl text-primary leading-none">
+                StackTruth
+              </span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-0.5">LEARN • PRACTICE • VERIFY</span>
+            </div>
           </Link>
+          
+          {/* Main Nav Links - Publicly Visible */}
+          <div className="hidden lg:flex items-center gap-6">
+            <Link to="/tutorials" className="nav-link">Tutorials</Link>
+            <Link to="/questions" className="nav-link">Practice</Link>
+            <Link to="/pricing" className="nav-link">Courses</Link>
+            <Link to="/jobs" className="nav-link">Jobs</Link>
+            <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
+          </div>
         </div>
 
         {/* Center: Search */}
         <div className="flex-1 max-w-xl hidden md:block">
           <form onSubmit={handleSearch}>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search questions, code, articles..."
-                className="w-full bg-white/5 border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:bg-white/10 transition-all"
+                placeholder="Search anything..."
+                className="w-full bg-muted/50 border border-border rounded-md pl-10 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:bg-background transition-all"
               />
-              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-600 bg-slate-800 px-1.5 py-0.5 rounded hidden lg:block">⌘K</kbd>
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:flex gap-1">
+                <kbd className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">⌘</kbd>
+                <kbd className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">K</kbd>
+              </div>
             </div>
           </form>
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button className="md:hidden btn-ghost p-2" onClick={() => setShowSearch(!showSearch)}>
+        <div className="flex items-center gap-4 flex-shrink-0">
+          <button className="md:hidden p-2 text-muted-foreground hover:text-foreground" onClick={() => setShowSearch(!showSearch)}>
             <Search className="w-4 h-4" />
           </button>
 
           <button
             onClick={toggleTheme}
-            className="btn-ghost p-2 rounded-lg"
-            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            className="p-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -105,27 +131,27 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
             <>
               <Link
                 to="/questions/ask"
-                className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-3 py-1.5 rounded-lg transition-all hover:shadow-lg hover:shadow-blue-500/20"
+                className="hidden sm:flex items-center gap-2 btn-primary text-xs px-4 py-2 rounded-md transition-all active:scale-95 shadow-lg shadow-primary/20"
               >
                 <Plus className="w-4 h-4" />
-                <span className="hidden lg:block">Ask Question</span>
+                <span className="hidden xl:block">Post Question</span>
               </Link>
 
               {/* Notifications */}
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="btn-ghost p-2 relative"
+                  className="p-2 text-muted-foreground hover:text-foreground transition-colors relative"
                 >
                   <Bell className="w-4 h-4" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
-                      {unreadCount}
-                    </span>
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full border-2 border-background" />
                   )}
                 </button>
                 {showNotifications && (
-                  <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                  <div className="absolute right-0 top-full mt-2">
+                    <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                  </div>
                 )}
               </div>
 
@@ -133,57 +159,63 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 hover:bg-white/10 rounded-lg px-2 py-1.5 transition-all"
+                  className="flex items-center gap-3 p-1 rounded-md hover:bg-muted transition-all"
                 >
-                  <img
-                    src={user?.avatar}
-                    alt={user?.name}
-                    className="w-7 h-7 rounded-full bg-slate-700 ring-2 ring-blue-500/30"
-                  />
-                  <div className="hidden lg:block text-left">
-                    <p className="text-xs font-semibold text-white leading-none">{user?.name}</p>
-                    <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+                    {user?.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-full h-full rounded-xl object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-black text-primary uppercase">{user?.name.charAt(0)}</span>
+                    )}
                   </div>
-                  <ChevronDown className="w-3 h-3 text-slate-500 hidden lg:block" />
+                  <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-slate-900 border border-border rounded-xl shadow-2xl shadow-black/50 overflow-hidden z-50">
-                    <div className="p-3 border-b border-border">
-                      <p className="text-sm font-semibold text-white">{user?.name}</p>
-                      <p className="text-xs text-slate-500">{user?.email}</p>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Zap className="w-3 h-3 text-amber-400" />
-                        <span className="text-xs text-amber-400 font-medium">{user?.reputation.toLocaleString()} rep</span>
+                  <div className="absolute right-0 top-full mt-2 w-64 card-elevated p-2 z-50">
+                    <div className="px-4 py-3 border-b border-border mb-2">
+                      <p className="text-sm font-bold text-foreground leading-none mb-1">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground">{user?.email}</p>
+                      <div className="flex items-center gap-2 mt-3">
+                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-accent" style={{ width: '65%' }} />
+                        </div>
+                        <span className="text-[10px] font-black text-accent uppercase tracking-widest">{user?.reputation.toLocaleString()}</span>
                       </div>
                     </div>
-                    <div className="p-1">
+                    
+                    <div className="space-y-1">
                       <Link
                         to="/profile"
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all font-medium"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        <User className="w-4 h-4" /> My Profile
+                        <User className="w-4 h-4" /> Profile
                       </Link>
                       <Link
                         to={getDashboardPath()}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all font-medium"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        <Zap className="w-4 h-4" /> Dashboard
+                        <Zap className="w-4 h-4" /> Workspace
                       </Link>
                       <Link
                         to="/profile/settings"
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all font-medium"
                         onClick={() => setShowUserMenu(false)}
                       >
                         <Settings className="w-4 h-4" /> Settings
                       </Link>
                     </div>
-                    <div className="p-1 border-t border-border">
+                    
+                    <div className="mt-2 pt-2 border-t border-border">
                       <button
                         onClick={() => { logout(); setShowUserMenu(false); navigate("/"); }}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all w-full"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-destructive hover:text-destructive/80 hover:bg-destructive/10 rounded-md transition-all font-bold w-full"
                       >
                         <LogOut className="w-4 h-4" /> Sign Out
                       </button>
@@ -193,30 +225,56 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-2">
-              <Link to="/login" className="btn-ghost text-sm px-3 py-2">Sign In</Link>
-              <Link to="/register" className="btn-primary text-sm px-4 py-2">Get Started</Link>
+            <div className="flex items-center gap-4">
+              <Link to="/login" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">Sign In</Link>
+              <Link to="/register" className="btn-primary text-xs px-5 py-2">Join Free</Link>
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile Search */}
+      {/* Mobile Search Overlay */}
       {showSearch && (
-        <div className="md:hidden px-4 pb-3">
+        <div className="md:hidden p-4 border-t border-border animate-fade-in-up">
           <form onSubmit={handleSearch}>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
                 autoFocus
-                className="w-full bg-white/5 border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+                className="w-full bg-muted border border-border rounded-md pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
               />
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Mobile Nav Menu */}
+      {showMobileNav && !isAuthenticated && (
+        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-in-up">
+          <div className="px-6 py-4 space-y-1">
+            {[
+              { label: "Tutorials", path: "/tutorials" },
+              { label: "Practice", path: "/questions" },
+              { label: "Courses", path: "/pricing" },
+              { label: "Jobs", path: "/jobs" },
+              { label: "Leaderboard", path: "/leaderboard" },
+              { label: "About", path: "/about" },
+              { label: "Contact", path: "/contact" },
+            ].map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setShowMobileNav(false)}
+                className="block px-4 py-3 text-sm font-semibold text-foreground hover:text-primary hover:bg-muted rounded-lg transition-all"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </nav>

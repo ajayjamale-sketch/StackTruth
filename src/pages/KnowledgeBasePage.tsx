@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, BookOpen, Clock, Heart, Eye, MessageSquare, TrendingUp, Star, Filter, ChevronRight, Code2 } from "lucide-react";
+import { Search, BookOpen, Clock, Heart, Eye, MessageSquare, TrendingUp, Star, Filter, ChevronRight, Code2, Sparkles, Zap, Award, Layers, Bot, Globe } from "lucide-react";
 import { MOCK_ARTICLES } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
 import type { Article } from "@/types";
@@ -18,49 +18,52 @@ function ArticleCard({ article, featured = false }: { article: Article; featured
   };
 
   return (
-    <div className={`glass-card-hover overflow-hidden group ${featured ? "lg:flex" : ""}`}>
-      {article.coverImage && (
-        <div className={`overflow-hidden flex-shrink-0 ${featured ? "lg:w-80" : ""}`}>
-          <img
-            src={article.coverImage}
-            alt={article.title}
-            className={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${featured ? "lg:h-full h-48" : "h-40"}`}
-          />
-        </div>
-      )}
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
+    <div className={`bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden group hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 ${featured ? "lg:flex" : ""}`}>
+      <div className={`overflow-hidden flex-shrink-0 relative ${featured ? "lg:w-[450px]" : ""}`}>
+        <img
+          src={article.coverImage || `https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80`}
+          alt={article.title}
+          className={`w-full object-cover transition-transform duration-1000 group-hover:scale-105 ${featured ? "lg:h-full h-64" : "h-56"}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+      <div className="p-10 flex flex-col flex-1 space-y-6">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-black px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary uppercase tracking-[0.2em]">
             {article.category}
           </span>
           {article.isFeatured && (
-            <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center gap-1">
-              <Star className="w-3 h-3 fill-amber-400" />Featured
+            <span className="text-[10px] font-black px-3 py-1 rounded-lg border border-amber-200/50 bg-amber-50 text-amber-600 uppercase tracking-[0.2em] flex items-center gap-1.5">
+              <Star className="w-3.5 h-3.5 fill-amber-600" /> Featured
             </span>
           )}
         </div>
 
-        <h3 className={`font-bold text-white mb-2 group-hover:text-blue-400 transition-colors leading-snug ${featured ? "text-xl" : "text-base"}`}>
+        <h3 className={`font-black text-slate-950 dark:text-white group-hover:text-primary transition-colors leading-[1.1] ${featured ? "text-4xl" : "text-2xl"} tracking-tighter`}>
           {article.title}
         </h3>
-        <p className="text-sm text-slate-400 leading-relaxed line-clamp-2 flex-1 mb-4">{article.excerpt}</p>
+        <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3 flex-1 font-medium tracking-tight">{article.excerpt}</p>
 
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="flex flex-wrap gap-2">
           {article.tags.slice(0, 4).map((tag) => (
-            <span key={tag} className="tag-badge text-[10px]">{tag}</span>
+            <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 rounded-md border border-slate-100 dark:border-slate-800 group-hover:border-primary/20 transition-colors">{tag}</span>
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-border/50">
-          <div className="flex items-center gap-2">
-            <img src={article.author.avatar} alt={article.author.name} className="w-6 h-6 rounded-full bg-slate-700" />
-            <span className="text-xs text-slate-400">{article.author.name}</span>
+        <div className="flex items-center justify-between pt-8 border-t border-slate-50 dark:border-slate-800 mt-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center text-primary font-black text-xs border border-primary/10">
+              {article.author.name.charAt(0)}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs font-black text-slate-900 dark:text-slate-200">{article.author.name}</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Expert Author</span>
+            </div>
           </div>
-          <div className="flex items-center gap-3 text-xs text-slate-500">
-            <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{article.readTime}m read</span>
-            <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{(article.views / 1000).toFixed(1)}k</span>
-            <button onClick={handleLike} className={`flex items-center gap-1 transition-colors ${liked ? "text-red-400" : "hover:text-red-400"}`}>
-              <Heart className={`w-3 h-3 ${liked ? "fill-red-400" : ""}`} />{likeCount}
+          <div className="flex items-center gap-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" />{article.readTime}m</span>
+            <button onClick={handleLike} className={`flex items-center gap-1.5 transition-colors ${liked ? "text-red-500" : "hover:text-red-500"}`}>
+              <Heart className={`w-4 h-4 ${liked ? "fill-red-500 border-red-500" : ""}`} />{likeCount}
             </button>
           </div>
         </div>
@@ -80,53 +83,148 @@ export default function KnowledgeBasePage() {
   });
 
   const featured = filtered.filter(a => a.isFeatured).slice(0, 1);
-  const rest = filtered.filter(a => !a.isFeatured || filtered.indexOf(a) > 0);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Knowledge Base</h1>
-        <p className="text-slate-400 text-sm mt-1">Tutorials, deep dives, and technical resources from expert contributors</p>
-      </div>
-
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tutorials, articles, documentation..." className="w-full bg-white/5 border border-border rounded-xl pl-12 pr-4 py-3.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-all" />
-      </div>
-
-      {/* Category tabs */}
-      <div className="flex gap-2 overflow-x-auto no-scrollbar">
-        {CATEGORIES.map((cat) => (
-          <button key={cat} onClick={() => setCategory(cat)} className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${category === cat ? "bg-blue-600 text-white" : "bg-white/5 border border-border text-slate-400 hover:text-white"}`}>
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Featured */}
-      {featured.length > 0 && (
-        <div>
-          <h2 className="font-bold text-white mb-4 flex items-center gap-2"><Star className="w-4 h-4 text-amber-400" />Featured</h2>
-          {featured.map(a => <ArticleCard key={a.id} article={a} featured />)}
+    <div className="space-y-32 py-12">
+      {/* 1. Hero Header Section */}
+      <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="space-y-6 max-w-2xl text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 text-primary rounded-sm text-[10px] font-black uppercase tracking-[0.2em] border border-primary/10">
+              <BookOpen className="w-4 h-4" /> Technical Sovereignty Index
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">The Technical <br /> <span className="text-primary">Library</span></h1>
+            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed tracking-tight">Verified documentation, architectural deep-dives, and industrial protocols for modern engineering experts.</p>
+          </div>
+          <div className="w-full lg:w-96 space-y-4">
+             <div className="relative group">
+               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+               <input 
+                 value={search} 
+                 onChange={e => setSearch(e.target.value)} 
+                 placeholder="Search protocols..." 
+                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-lg pl-12 pr-4 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400" 
+               />
+             </div>
+             <div className="flex gap-2">
+               <button className="flex-1 bg-slate-950 dark:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest py-4 rounded-xl hover:bg-primary transition-all">Search All</button>
+               <button className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-xl hover:border-primary transition-all shadow-sm">
+                 <Filter className="w-5 h-5 text-slate-400" />
+               </button>
+             </div>
+          </div>
         </div>
+      </section>
+
+      {/* 2. Trending Categories Section */}
+      <section className="space-y-12">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">Exploration Paths</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Browse verified resources by technical discipline</p>
+          </div>
+          <button className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1">Reset Filters</button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+          {CATEGORIES.map((cat) => (
+            <button 
+              key={cat} 
+              onClick={() => setCategory(cat)} 
+              className={`p-6 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 border flex flex-col items-center gap-4 group ${category === cat ? "bg-slate-950 dark:bg-primary border-slate-950 dark:border-primary text-white shadow-2xl scale-105" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:border-primary hover:-translate-y-2"}`}
+            >
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${category === cat ? "bg-white/20" : "bg-slate-100 dark:bg-slate-800 group-hover:bg-primary/10 group-hover:text-primary"}`}>
+                {cat === "All" ? <Layers className="w-5 h-5" /> : cat === "Tutorial" ? <Zap className="w-5 h-5" /> : cat === "Deep Dive" ? <Star className="w-5 h-5" /> : cat === "Architecture" ? <Shield className="w-5 h-5" /> : cat === "AI/ML" ? <Bot className="w-5 h-5" /> : <Code2 className="w-5 h-5" />}
+              </div>
+              {cat}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Editor's Choice Section */}
+      {featured.length > 0 && (
+        <section className="space-y-12">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3">
+              <Award className="w-5 h-5 text-amber-500" /> Editor's Premium Audit
+            </h2>
+            <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-8" />
+          </div>
+          <div className="relative group">
+            <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 to-primary/5 rounded-xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <ArticleCard article={featured[0]} featured />
+          </div>
+        </section>
       )}
 
-      {/* Articles grid */}
-      <div>
-        <h2 className="font-bold text-white mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4 text-blue-400" />All Articles ({filtered.length})</h2>
+      {/* 4. Main Library Grid Section */}
+      <section className="space-y-12">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter flex items-center gap-4">
+            <TrendingUp className="w-8 h-8 text-primary" /> 
+            Active Repository
+          </h2>
+          <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-sm text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-100 dark:border-slate-800">{filtered.length} Resources Found</span>
+        </div>
+        
         {filtered.length > 0 ? (
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {filtered.map(a => <ArticleCard key={a.id} article={a} />)}
           </div>
         ) : (
-          <div className="glass-card p-12 text-center">
-            <BookOpen className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-white font-semibold mb-2">No articles found</p>
-            <p className="text-slate-500 text-sm">Try different keywords or categories</p>
+          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-32 text-center rounded-xl shadow-sm">
+            <BookOpen className="w-24 h-24 text-slate-100 dark:text-slate-800 mx-auto mb-8 animate-pulse" />
+            <h3 className="text-2xl font-black text-slate-950 dark:text-white mb-4">No matching resources</h3>
+            <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto">Our auditors couldn't find any resources matching your current filter criteria.</p>
+            <button onClick={() => setCategory("All")} className="mt-8 text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1">Reset All Protocols</button>
           </div>
         )}
-      </div>
+      </section>
+
+      {/* 5. Mastery Tracks Section (New) */}
+      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+         <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+         
+         <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
+            <div className="space-y-10">
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
+                <Sparkles className="w-5 h-5" /> Specialized Skill Acquisition
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Master Technical <br /> <span className="text-primary">Disciplines.</span></h2>
+              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Structured collections of verified articles designed to take you from foundational concepts to expert implementation protocols.</p>
+              <div className="flex flex-col sm:flex-row items-center gap-8">
+                <button className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
+                  Explore Tracks
+                </button>
+                <div className="flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 rounded-xl">
+                   <Award className="w-6 h-6 text-amber-500" />
+                   <span className="text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">Verified Certifications</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[
+                { title: "System Architect", count: "12 Guides", icon: <Shield className="w-6 h-6" /> },
+                { title: "AI Operations", count: "18 Guides", icon: <Bot className="w-6 h-6" /> },
+                { title: "Security Protocols", count: "15 Guides", icon: <Shield className="w-6 h-6" /> },
+                { title: "Cloud Scale", count: "22 Guides", icon: <Globe className="w-6 h-6" /> },
+              ].map((track) => (
+                <div key={track.title} className="bg-white/5 backdrop-blur-3xl p-8 rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-500 group/item cursor-pointer hover:-translate-y-2">
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover/item:scale-110 transition-transform">
+                    {track.icon}
+                  </div>
+                  <h4 className="text-xl font-black mb-2">{track.title}</h4>
+                  <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">{track.count}</p>
+                </div>
+              ))}
+            </div>
+         </div>
+      </section>
     </div>
   );
 }

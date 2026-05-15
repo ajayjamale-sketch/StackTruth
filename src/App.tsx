@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ToastProvider } from "@/contexts/ToastContext";
-import MainLayout from "@/components/layout/MainLayout";
+import PublicLayout from "@/components/layout/PublicLayout";
+import AuthLayout from "@/components/layout/AuthLayout";
+import ScrollToTop from "@/components/layout/ScrollToTop";
 
 // Pages
 import LandingPage from "@/pages/LandingPage";
@@ -15,6 +17,7 @@ import RecruiterDashboard from "@/pages/RecruiterDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import QuestionsPage from "@/pages/QuestionsPage";
 import CodeReviewPage from "@/pages/CodeReviewPage";
+import TutorialsPage from "@/pages/TutorialsPage";
 import KnowledgeBasePage from "@/pages/KnowledgeBasePage";
 import JobsPage from "@/pages/JobsPage";
 import LeaderboardPage from "@/pages/LeaderboardPage";
@@ -26,6 +29,9 @@ import LiveCodingPage from "@/pages/LiveCodingPage";
 import AboutPage from "@/pages/AboutPage";
 import PricingPage from "@/pages/PricingPage";
 import ContactPage from "@/pages/ContactPage";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import TermsOfServicePage from "@/pages/TermsOfServicePage";
+import CookiePolicyPage from "@/pages/CookiePolicyPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 // Lazy imports for AI assistant page
@@ -82,35 +88,64 @@ function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode;
   return <>{children}</>;
 }
 
-function AppRoutes() {
-  const { isAuthenticated } = useAuth();
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, user } = useAuth();
+  
+  if (isAuthenticated && user) {
+    const dashboardPaths: Record<string, string> = {
+      developer: "/dashboard/developer",
+      expert: "/dashboard/expert",
+      recruiter: "/dashboard/recruiter",
+      admin: "/dashboard/admin",
+    };
+    return <Navigate to={dashboardPaths[user.role] || "/dashboard/developer"} replace />;
+  }
 
+  return <>{children}</>;
+}
+
+function DynamicLayout() {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <AuthLayout /> : <PublicLayout />;
+}
+
+function AppRoutes() {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard/developer" /> : <LoginPage />} />
-      <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard/developer" /> : <RegisterPage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/pricing" element={<PricingPage />} />
-      <Route path="/contact" element={<ContactPage />} />
+      {/* Strictly Public routes (No sidebar even if logged in) */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
+        <Route path="/cookies" element={<CookiePolicyPage />} />
+      </Route>
 
-      {/* App routes with layout */}
-      <Route element={<MainLayout />}>
+      {/* Feature pages (Sidebar if logged in, none if guest) */}
+      <Route element={<DynamicLayout />}>
+        <Route path="/questions" element={<QuestionsPage />} />
+        <Route path="/questions/:id" element={<QuestionsPage />} />
+        <Route path="/tutorials" element={<TutorialsPage />} />
+        <Route path="/knowledge" element={<KnowledgeBasePage />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+      </Route>
+
+      {/* Strictly Authenticated routes (Always has sidebar) */}
+      <Route element={<AuthLayout />}>
         {/* Dashboards */}
         <Route path="/dashboard/developer" element={<ProtectedRoute><DeveloperDashboard /></ProtectedRoute>} />
         <Route path="/dashboard/expert" element={<ProtectedRoute><ExpertDashboard /></ProtectedRoute>} />
         <Route path="/dashboard/recruiter" element={<ProtectedRoute><RecruiterDashboard /></ProtectedRoute>} />
         <Route path="/dashboard/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
 
-        {/* Features */}
-        <Route path="/questions" element={<QuestionsPage />} />
+        {/* Protected Features */}
         <Route path="/questions/ask" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} />
-        <Route path="/questions/:id" element={<QuestionsPage />} />
         <Route path="/code-review" element={<ProtectedRoute><CodeReviewPage /></ProtectedRoute>} />
-        <Route path="/knowledge" element={<KnowledgeBasePage />} />
-        <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
@@ -119,7 +154,7 @@ function AppRoutes() {
         <Route path="/live-coding" element={<ProtectedRoute><LiveCodingPage /></ProtectedRoute>} />
         <Route path="/ai-assistant" element={<AIAssistantPage />} />
 
-        {/* Admin */}
+        {/* Admin Specific */}
         <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/moderation" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
@@ -138,6 +173,7 @@ export default function App() {
       <AuthProvider>
         <ToastProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <AppRoutes />
           </BrowserRouter>
         </ToastProvider>

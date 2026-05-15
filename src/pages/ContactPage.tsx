@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Mail, MessageSquare, Globe, Send, CheckCircle2, Phone, MapPin } from "lucide-react";
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -18,13 +16,12 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <>
       
       <section className="py-24 mesh-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-extrabold text-white mb-4">Get in touch</h1>
+            <h1 className="text-5xl font-extrabold text-slate-950 dark:text-white mb-4">Get in touch</h1>
             <p className="text-lg text-slate-400 max-w-2xl mx-auto">
               Have questions about StackTruth? Our team is here to help you build better, together.
             </p>
@@ -34,7 +31,7 @@ export default function ContactPage() {
             {/* Contact Info */}
             <div className="space-y-8">
               <div className="glass-card p-8 space-y-6">
-                <h3 className="text-xl font-bold text-white">Contact Information</h3>
+                <h3 className="text-xl font-bold text-slate-950 dark:text-white">Contact Information</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
@@ -42,8 +39,8 @@ export default function ContactPage() {
                       <Mail className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Email</p>
-                      <p className="text-sm text-slate-400">hello@stacktruth.com</p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">Email</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">hello@stacktruth.com</p>
                       <p className="text-xs text-slate-500 mt-1">Response time: &lt; 24h</p>
                     </div>
                   </div>
@@ -53,8 +50,8 @@ export default function ContactPage() {
                       <Phone className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Phone</p>
-                      <p className="text-sm text-slate-400">+1 (555) 000-0000</p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">Phone</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">+1 (555) 000-0000</p>
                       <p className="text-xs text-slate-500 mt-1">Mon-Fri: 9am - 6pm EST</p>
                     </div>
                   </div>
@@ -64,9 +61,9 @@ export default function ContactPage() {
                       <MapPin className="w-5 h-5 text-purple-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Office</p>
-                      <p className="text-sm text-slate-400">123 Tech Plaza, Suite 500</p>
-                      <p className="text-sm text-slate-400">San Francisco, CA 94105</p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">Office</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">123 Tech Plaza, Suite 500</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">San Francisco, CA 94105</p>
                     </div>
                   </div>
                 </div>
@@ -87,7 +84,7 @@ export default function ContactPage() {
 
               {/* Support Card */}
               <div className="glass-card p-6 bg-blue-500/5 border-blue-500/20">
-                <h4 className="font-bold text-white mb-2">Need technical support?</h4>
+                <h4 className="font-bold text-slate-950 dark:text-white mb-2">Need technical support?</h4>
                 <p className="text-sm text-slate-400 mb-4">Check our knowledge base or open a ticket in your dashboard.</p>
                 <a href="/knowledge" className="text-sm text-blue-400 font-semibold hover:underline">Visit Knowledge Base →</a>
               </div>
@@ -101,7 +98,7 @@ export default function ContactPage() {
                     <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
                       <CheckCircle2 className="w-10 h-10 text-green-400" />
                     </div>
-                    <h2 className="text-3xl font-bold text-white">Message Sent!</h2>
+                    <h2 className="text-3xl font-bold text-slate-950 dark:text-white">Message Sent!</h2>
                     <p className="text-slate-400 max-w-md mx-auto">
                       Thank you for reaching out. We've received your message and will get back to you shortly.
                     </p>
@@ -122,7 +119,7 @@ export default function ContactPage() {
                           id="name" 
                           required 
                           placeholder="John Doe"
-                          className="w-full bg-white/5 border border-border rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                          className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-border rounded-xl px-4 py-3 text-slate-950 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
                         />
                       </div>
                       <div className="space-y-2">
@@ -132,7 +129,7 @@ export default function ContactPage() {
                           id="email" 
                           required 
                           placeholder="john@example.com"
-                          className="w-full bg-white/5 border border-border rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                          className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-border rounded-xl px-4 py-3 text-slate-950 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
                         />
                       </div>
                     </div>
@@ -141,7 +138,7 @@ export default function ContactPage() {
                       <label htmlFor="subject" className="text-sm font-medium text-slate-300">Subject</label>
                       <select 
                         id="subject" 
-                        className="w-full bg-white/5 border border-border rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none"
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-border rounded-xl px-4 py-3 text-slate-950 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none"
                       >
                         <option value="general" className="bg-slate-900">General Inquiry</option>
                         <option value="sales" className="bg-slate-900">Sales & Enterprise</option>
@@ -158,7 +155,7 @@ export default function ContactPage() {
                         required 
                         rows={6}
                         placeholder="How can we help you?"
-                        className="w-full bg-white/5 border border-border rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-border rounded-xl px-4 py-3 text-slate-950 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none"
                       />
                     </div>
 
@@ -189,7 +186,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </>
   );
 }
