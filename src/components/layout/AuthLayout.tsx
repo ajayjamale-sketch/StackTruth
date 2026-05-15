@@ -22,7 +22,7 @@ export default function AuthLayout() {
         />
         
         <main className={`flex-1 flex flex-col transition-all duration-500 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-80'}`}>
-          <div className="flex-1 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 py-10 w-full">
+          <div className="flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-10 w-full">
             <Outlet />
           </div>
           <Footer />

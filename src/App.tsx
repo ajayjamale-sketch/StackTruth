@@ -168,6 +168,7 @@ function AppRoutes() {
         <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistantPage /></ProtectedRoute>} />
 
         {/* Admin Specific */}
+        <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
         <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/moderation" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />

@@ -38,26 +38,26 @@ export default function DeveloperDashboard() {
   return (
     <div className="space-y-8 pb-12">
       {/* Header - GFG Style */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-xl shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="space-y-2 text-center lg:text-left">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
             Hello, <span className="text-primary">{user?.name?.split(" ")[0]}!</span>
           </h1>
-          <p className="text-sm text-slate-500 font-medium">
+          <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-md mx-auto lg:mx-0">
             Continue your learning journey. You have <span className="text-primary font-bold">4 active reviews</span> pending.
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
+        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-4 sm:gap-8">
+          <div className="flex flex-col items-center lg:items-end">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Reputation Score</span>
-            <span className="text-2xl font-bold text-primary">{user?.reputation.toLocaleString()}</span>
+            <span className="text-xl sm:text-2xl font-bold text-primary">{user?.reputation.toLocaleString()}</span>
           </div>
-          <Link to="/profile" className="btn-secondary text-xs px-6 py-2.5">My Profile</Link>
+          <Link to="/profile" className="w-full sm:w-auto btn-secondary text-[11px] px-8 py-3 text-center">My Profile</Link>
         </div>
       </div>
 
       {/* Quick Actions - Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {QUICK_ACTIONS.map((action) => (
           <Link
             key={action.label}
@@ -93,7 +93,7 @@ export default function DeveloperDashboard() {
             </div>
           </div>
           
-          <div className="h-[260px] w-full">
+          <div className="h-[200px] sm:h-[260px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={MOCK_ANALYTICS.engagement}>
                 <XAxis dataKey="week" stroke="#94a3b8" fontSize={10} fontWeight={600} />

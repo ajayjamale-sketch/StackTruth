@@ -29,14 +29,14 @@ export default function PricingPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-primary/5 blur-[160px] rounded-full pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-8 text-center space-y-12 relative z-10">
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-3 px-6 py-2 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-primary/10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="space-y-6 md:space-y-8">
+            <div className="inline-flex items-center gap-3 px-6 py-2 bg-primary/5 text-primary rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] border border-primary/10 shadow-sm">
               <Award className="w-4 h-4 text-amber-500" /> Mastery Protocols & Accreditation
             </div>
-            <h1 className="text-6xl md:text-8xl font-black text-slate-950 dark:text-white tracking-tighter leading-none animate-in fade-in slide-in-from-top-8 duration-1000">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-slate-950 dark:text-white tracking-tighter leading-[1.1]">
               Invest in Your <br /> <span className="text-primary underline decoration-primary/20 decoration-8 underline-offset-8">Engineering Sovereignty.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-slate-500 dark:text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed tracking-tight">
+            <p className="text-base sm:text-xl md:text-2xl text-slate-500 dark:text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed tracking-tight">
               Professional technical mastery programs designed for modern engineering leaders. Join 48,000+ verified experts driving the global frontier.
             </p>
           </div>
@@ -68,7 +68,7 @@ export default function PricingPage() {
 
       <main className="max-w-7xl mx-auto px-8 space-y-48 pb-48 relative z-10">
         {/* 2. Tier Selection Section */}
-        <section className="grid md:grid-cols-2 xl:grid-cols-4 gap-8 items-stretch">
+        <section className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-stretch">
           {PRICING_PLANS.map((plan, i) => (
             <div 
               key={plan.id} 
@@ -124,7 +124,7 @@ export default function PricingPage() {
              <h2 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tighter">Verified Accreditation</h2>
              <p className="text-xl text-slate-500 dark:text-slate-400 font-medium tracking-tight max-w-2xl mx-auto">StackTruth certifications are audited and recognized by global technology leaders and architectural labs.</p>
            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
               {[
                 "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
@@ -144,7 +144,7 @@ export default function PricingPage() {
            <div className="absolute inset-0 grid-pattern opacity-[0.05] pointer-events-none dark:invert-0 invert" />
            <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
            
-           <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
+           <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <div className="space-y-10 text-center lg:text-left">
                 <div className="inline-flex items-center gap-3 px-6 py-2 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/5">
                   <Users className="w-5 h-5" /> Elite Expert Laboratory

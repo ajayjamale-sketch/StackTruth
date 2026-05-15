@@ -50,7 +50,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
 
   return (
     <nav className="sticky top-0 z-50 h-20 bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl border-b border-slate-100/50 dark:border-slate-800/50 shadow-sm">
-      <div className="h-full px-12 flex items-center justify-between gap-12 max-w-[2000px] mx-auto">
+      <div className="h-full px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4 lg:gap-12 max-w-[2000px] mx-auto">
         {/* Left: Logo + Menu */}
         <div className="flex items-center gap-6 flex-shrink-0">
           {isAuthenticated ? (
@@ -77,10 +77,10 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               </svg>
             </div>
             <div className="flex flex-col leading-none">
-              <span className="logo-font text-2xl text-primary leading-none">
+              <span className="logo-font text-xl sm:text-2xl text-primary leading-none">
                 StackTruth
               </span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-0.5">LEARN • PRACTICE • VERIFY</span>
+              <span className="hidden lg:block text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">LEARN • PRACTICE • VERIFY</span>
             </div>
           </Link>
           
@@ -116,7 +116,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           <button className="md:hidden p-2 text-muted-foreground hover:text-foreground" onClick={() => setShowSearch(!showSearch)}>
             <Search className="w-4 h-4" />
           </button>
@@ -226,9 +226,9 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-4">
-              <Link to="/login" className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">Sign In</Link>
-              <Link to="/register" className="btn-primary text-xs px-5 py-2">Join Free</Link>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Link to="/login" className="hidden sm:block text-sm font-bold text-muted-foreground hover:text-foreground transition-colors">Sign In</Link>
+              <Link to="/register" className="btn-primary text-[10px] sm:text-xs px-4 sm:px-5 py-2">Join Free</Link>
             </div>
           )}
         </div>

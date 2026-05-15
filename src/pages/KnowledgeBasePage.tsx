@@ -31,7 +31,7 @@ const ArticleCard = ({ article, onClick }: { article: Article; onClick: () => vo
       </div>
     </div>
     
-    <div className="p-8 flex flex-col flex-1">
+    <div className="p-6 sm:p-8 flex flex-col flex-1">
       <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-snug mb-3">
         {article.title}
       </h3>
@@ -141,21 +141,21 @@ export default function KnowledgeBasePage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-20">
       {/* Search & Intro */}
-      <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="space-y-4">
-          <h1 className="text-5xl font-black tracking-tighter text-slate-900 dark:text-white">Library<span className="text-primary">.</span></h1>
-          <p className="text-slate-500 dark:text-slate-400 max-w-md font-medium">
+      <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="space-y-4 text-center lg:text-left">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 dark:text-white">Library<span className="text-primary">.</span></h1>
+          <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto lg:mx-0 font-medium leading-relaxed">
             Verified protocols and architectural deep-dives for modern engineering.
           </p>
         </div>
         
-        <div className="relative w-full md:w-80">
+        <div className="relative w-full lg:w-96">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search protocols..."
-            className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-none rounded-xl py-3.5 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white"
+            className="w-full bg-slate-100/50 dark:bg-slate-800/50 border-none rounded-xl py-4 pl-11 pr-4 focus:ring-2 focus:ring-primary/20 transition-all text-slate-900 dark:text-white placeholder:text-slate-400"
           />
         </div>
       </section>
@@ -195,18 +195,18 @@ export default function KnowledgeBasePage() {
       )}
 
       {/* Mastery Section - Now Fully Adaptive */}
-      <section className="bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-primary/10 rounded-3xl p-10 md:p-16 overflow-hidden relative">
-        <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-          <div>
+      <section className="bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-primary/10 rounded-3xl p-8 sm:p-12 lg:p-16 overflow-hidden relative">
+        <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="text-center lg:text-left">
             <h2 className="text-3xl font-black mb-4 text-slate-900 dark:text-white tracking-tight">Mastery Tracks</h2>
-            <p className="text-slate-500 dark:text-slate-400 mb-8 font-medium">
+            <p className="text-slate-500 dark:text-slate-400 mb-8 font-medium max-w-md mx-auto lg:mx-0">
               Structured learning paths to take you from foundational concepts to expert implementation.
             </p>
-            <button className="bg-primary text-white hover:opacity-90 px-8 py-3.5 rounded-xl font-bold text-sm transition-all shadow-xl shadow-primary/20">
+            <button className="w-full sm:w-auto bg-primary text-white hover:opacity-90 px-10 py-4 rounded-xl font-bold text-sm transition-all shadow-xl shadow-primary/20">
               View All Tracks
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <TrackCard icon={<Shield />} title="Security" />
             <TrackCard icon={<Bot />} title="AI Ops" />
             <TrackCard icon={<Layers />} title="Architecture" />

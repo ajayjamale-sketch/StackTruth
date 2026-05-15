@@ -111,8 +111,8 @@ export default function AIAssistant() {
 
   return (
     <div
-      className={`fixed bottom-8 right-8 z-[100] flex flex-col bg-slate-900 border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 ${
-        isMinimized ? "w-72 h-12" : "w-80 sm:w-96 h-[520px]"
+      className={`fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[100] flex flex-col bg-slate-900 border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 ${
+        isMinimized ? "w-64 sm:w-72 h-12" : "w-[calc(100vw-2rem)] sm:w-96 h-[500px] sm:h-[520px]"
       }`}
     >
       {/* Header */}

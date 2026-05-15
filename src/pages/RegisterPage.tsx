@@ -14,7 +14,7 @@ const ROLES: { value: UserRole; label: string; description: string }[] = [
 
 export default function RegisterPage() {
   const { loginAsRole } = useAuth();
-  const { success } = useToast();
+  const { success, error } = useToast();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +31,12 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (form.password.length < 8) {
+      error("Security Protocol Violation", "Password must be at least 8 characters long.");
+      return;
+    }
+
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 1000));
     loginAsRole(form.role);

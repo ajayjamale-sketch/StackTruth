@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   const renderOverview = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Community", icon: Users, value: "48,291", trend: "+842 new" },
           { label: "Moderation Queue", icon: Flag, value: 12, trend: "3 high priority" },
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
               Platform Growth Trends
             </h2>
           </div>
-          <div className="h-[280px]">
+          <div className="h-[220px] sm:h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={GROWTH_DATA}>
                 <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} fontWeight={600} />
@@ -138,14 +138,14 @@ export default function AdminDashboard() {
 
   const renderUsers = () => (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">User Directory</h2>
-        <div className="flex gap-4">
-          <div className="relative">
+      <div className="p-6 sm:p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-slate-50/50 dark:bg-slate-800/30">
+        <h2 className="text-xl font-bold text-slate-950 dark:text-white">User Directory</h2>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input type="text" placeholder="Search community..." className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-10 pr-4 py-2 text-xs focus:ring-1 focus:ring-primary outline-none" />
+            <input type="text" placeholder="Search community..." className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-xs focus:ring-1 focus:ring-primary outline-none" />
           </div>
-          <button className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:text-primary"><Filter className="w-4 h-4" /></button>
+          <button className="w-full sm:w-auto flex items-center justify-center p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-400 hover:text-primary"><Filter className="w-4 h-4" /></button>
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -273,19 +273,19 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8 pb-12">
       {/* Header - Admin Portal Style */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden group">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-xl shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden group">
         <div className="absolute inset-0 grid-pattern opacity-[0.03] pointer-events-none" />
-        <div className="relative z-10 space-y-1">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">System Control Panel</h1>
-            <span className="px-3 py-1 bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-black rounded-sm uppercase tracking-[0.2em] flex items-center gap-1.5 border border-red-500/20">
+        <div className="relative z-10 space-y-2 text-center lg:text-left">
+          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center lg:justify-start">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tighter">System Control Panel</h1>
+            <span className="px-3 py-1 bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] font-black rounded-sm uppercase tracking-[0.2em] flex items-center gap-1.5 border border-red-500/20">
                <Shield className="w-3.5 h-3.5" /> ROOT AUTHORITY
             </span>
           </div>
-          <p className="text-sm text-slate-500 font-medium">All nodes operational. <span className="text-primary font-black">12 protocols</span> pending review.</p>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">All nodes operational. <span className="text-primary font-black">12 protocols</span> pending review.</p>
         </div>
-        <div className="relative z-10 flex items-center gap-4">
-          <button onClick={() => success("Diagnostic Protocol", "System health 99.9%. All clusters active.")} className="bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition-all shadow-xl active:scale-95">
+        <div className="relative z-10 flex items-center justify-center lg:justify-end gap-4">
+          <button onClick={() => success("Diagnostic Protocol", "System health 99.9%. All clusters active.")} className="w-full sm:w-auto bg-slate-950 dark:bg-white text-white dark:text-slate-950 px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all shadow-xl active:scale-95">
              Run Diagnostics
           </button>
         </div>

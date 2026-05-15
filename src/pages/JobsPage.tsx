@@ -12,10 +12,10 @@ const JOB_TYPES = ["All Types", "full-time", "contract", "freelance", "remote"];
 const LEVELS = ["All Levels", "junior", "mid", "senior", "lead"];
 
 const FEATURED_COMPANIES = [
-  { name: "Google", logo: "https://logo.clearbit.com/google.com" },
-  { name: "Microsoft", logo: "https://logo.clearbit.com/microsoft.com" },
-  { name: "Amazon", logo: "https://logo.clearbit.com/amazon.com" },
-  { name: "Meta", logo: "https://logo.clearbit.com/meta.com" },
+  { name: "Google", logo: "https://api.dicebear.com/7.x/initials/svg?seed=Google" },
+  { name: "Microsoft", logo: "https://api.dicebear.com/7.x/initials/svg?seed=Microsoft" },
+  { name: "Amazon", logo: "https://api.dicebear.com/7.x/initials/svg?seed=Amazon" },
+  { name: "Meta", logo: "https://api.dicebear.com/7.x/initials/svg?seed=Meta" },
 ];
 
 function CompanyLogo({ src, name, className }: { src: string; name: string; className?: string }) {

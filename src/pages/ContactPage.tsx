@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, MessageSquare, Globe, Send, CheckCircle2, Phone, MapPin, Zap, Shield, Target, Users, Sparkles, Building, Headphones } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
 

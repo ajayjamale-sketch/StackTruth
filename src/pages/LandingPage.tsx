@@ -47,30 +47,30 @@ export default function LandingPage() {
       {/* 1. Hero Section - GFG Inspired Clean Search */}
       <section className="relative pt-32 pb-24 border-b border-slate-100 dark:border-slate-800 overflow-hidden">
         <img 
-          src="/assets/images/hero_bg.png" 
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
+          src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/hero_background_1778837846391.png" 
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-[0.15] pointer-events-none" 
           alt="Hero background"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#f8f9fa]/50 via-transparent to-white dark:from-slate-950/50 dark:via-transparent dark:to-slate-900 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+          <div className="space-y-4 px-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
               Hello, What Do You Want To <span className="text-primary">Learn?</span>
             </h1>
-            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">Search from over 10,000+ technical articles and interview experiences.</p>
+            <p className="text-sm sm:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">Search from over 10,000+ technical articles and interview experiences.</p>
           </div>
 
-          <div className="max-w-3xl mx-auto relative">
-            <form onSubmit={handleSearch} className="relative">
+          <div className="max-w-3xl mx-auto px-4 relative">
+            <form onSubmit={handleSearch} className="relative flex flex-col sm:block">
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search tutorials, courses, or problems..."
-                className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-xl pl-6 pr-40 py-5 text-lg focus:outline-none focus:border-primary transition-all shadow-sm placeholder:text-slate-400 dark:text-white"
+                placeholder="Search tutorials, courses..."
+                className="w-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-xl pl-6 pr-6 sm:pr-40 py-4 sm:py-5 text-base sm:text-lg focus:outline-none focus:border-primary transition-all shadow-sm placeholder:text-slate-400 dark:text-white mb-3 sm:mb-0"
               />
-              <button type="submit" className="absolute right-2 top-2 bottom-2 bg-primary text-white px-10 rounded-lg font-bold hover:bg-emerald-700 transition-all shadow-md flex items-center gap-2">
-                <Search className="w-5 h-5" /> Search
+              <button type="submit" className="sm:absolute sm:right-2 sm:top-2 sm:bottom-2 bg-primary text-white px-8 sm:px-10 py-4 sm:py-0 rounded-lg font-bold hover:bg-emerald-700 transition-all shadow-md flex items-center justify-center gap-2">
+                <Search className="w-5 h-5" /> <span className="sm:inline">Search</span>
               </button>
             </form>
           </div>
@@ -119,22 +119,13 @@ export default function LandingPage() {
                     Solve Problem <ArrowRight className="w-5 h-5" />
                  </Link>
                </div>
-                <div className="w-full lg:w-96 bg-white dark:bg-slate-900 rounded-xl p-8 font-mono text-xs text-slate-900 dark:text-slate-100 shadow-2xl relative overflow-hidden group min-h-[300px] border border-slate-100 dark:border-slate-800">
+                <div className="w-full lg:w-96 bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-2xl relative group min-h-[350px] border border-slate-100 dark:border-slate-800">
                   <img 
-                    src="/assets/images/problem_day.png" 
+                    src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/problem_day_code_1778837866606.png" 
                     alt="Code Audit" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-700" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" 
                   />
-                  <div className="relative z-10 space-y-4 opacity-80 group-hover:opacity-100 transition-opacity">
-                    <p className="text-slate-400"># protocol_audit.py</p>
-                    <p className="text-primary font-bold">def <span className="text-slate-900 dark:text-slate-100">broadcast_message</span>(node_list):</p>
-                    <p className="pl-6 text-slate-600 dark:text-slate-400">for node in node_list:</p>
-                    <p className="pl-12 text-slate-600 dark:text-slate-400">if node.is_healthy():</p>
-                    <p className="pl-18 text-emerald-600 font-bold">node.transmit(msg)</p>
-                    <p className="pl-12 text-slate-600">else:</p>
-                    <p className="pl-18 text-red-500 font-bold">initiate_recovery(node)</p>
-                    <p className="mt-8 animate-pulse text-primary font-black">_ _ _ _ _</p>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
                </div>
             </div>
           </div>
@@ -178,7 +169,8 @@ export default function LandingPage() {
                 { title: "Python for Data Science", count: "64 Chapters", image: "/assets/images/track_python.png", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20" },
               ].map((path) => (
                 <Link key={path.title} to="/knowledge" className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                   <img src={path.image} alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
+                   <img src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/track_mastery_icons_1778837884841.png" alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60" />
                    <div className="relative z-10 p-10 h-full flex flex-col gap-6">
                      <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                        {path.title.includes("DS") ? <Database className="w-8 h-8 text-emerald-600" /> : path.title.includes("MERN") ? <Layout className="w-8 h-8 text-indigo-600" /> : <Terminal className="w-8 h-8 text-amber-600" />}
@@ -204,7 +196,7 @@ export default function LandingPage() {
                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Certification & Mastery</h2>
                <Link to="/pricing" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">View All Courses</Link>
              </div>
-             <div className="grid md:grid-cols-4 gap-8">
+             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                {[
                  { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "/assets/images/system_design.png" },
                  { title: "Advanced Java Protocols", students: "8k+", price: "$49", rating: 4.8, img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" },
@@ -328,7 +320,7 @@ export default function LandingPage() {
                 </div>
                 <Link to="/leaderboard" className="inline-flex bg-primary text-white px-12 py-5 rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-2xl shadow-primary/30">View Global Rankings</Link>
               </div>
-              <div className="grid grid-cols-2 gap-8 w-full lg:w-auto">
+              <div className="grid sm:grid-cols-2 gap-8 w-full lg:w-auto">
                  {[1, 2, 3, 4].map(i => (
                     <div key={i} className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-6 group hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-4">
                        <div className="w-20 h-20 bg-primary/5 rounded-xl flex items-center justify-center text-primary font-black text-3xl group-hover:scale-110 transition-transform">

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import type { User, UserRole } from "@/types";
 import { MOCK_USERS } from "@/constants/mockData";
 
@@ -90,10 +90,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     persistUser(ROLE_USER_MAP[role]);
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("stacktruth_user");
-  };
+    // Clear any other app-specific state if necessary
+    sessionStorage.clear();
+  }, []);
 
   const updateProfile = (data: Partial<User>) => {
     if (!user) return;

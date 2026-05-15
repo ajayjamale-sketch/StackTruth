@@ -36,7 +36,7 @@ export default function GenericContentPage({
   return (
     <div className="space-y-32 py-12">
       {/* 1. Hero Section */}
-      <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
+      <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 sm:p-12 lg:p-16 rounded-xl shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
         <div className={`absolute top-0 right-0 w-1/2 h-full bg-${primaryColor}/5 blur-[120px] rounded-full pointer-events-none`} />
         
@@ -81,7 +81,7 @@ export default function GenericContentPage({
           </h2>
           <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-8" />
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
           {sections.map((section, i) => (
             <div 
               key={i} 
@@ -102,7 +102,7 @@ export default function GenericContentPage({
 
       {/* 3. Metrics Section */}
       <section className="bg-slate-50 dark:bg-slate-950/50 border-y border-slate-100 dark:border-slate-800 py-24">
-        <div className="max-w-6xl mx-auto px-8 grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+        <div className="max-w-6xl mx-auto px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
            {[
              { label: "Verified Users", value: "48.2k+" },
              { label: "Success Rate", value: "99.4%" },
@@ -142,7 +142,7 @@ export default function GenericContentPage({
       </section>
 
       {/* 5. Final CTA Section */}
-      <section className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+      <section className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-8 sm:p-16 lg:p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
          <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className={`absolute top-0 right-0 w-1/3 h-full bg-${primaryColor}/20 blur-[150px] rounded-full pointer-events-none`} />
          

@@ -158,7 +158,11 @@ export default function Sidebar({
   const handleLogout = () => {
     logout();
     success("Session Terminated", "You have been logged out of the secure network.");
-    navigate("/");
+    // Force a small tick to ensure state updates before navigation
+    setTimeout(() => {
+      navigate("/", { replace: true });
+      window.scrollTo(0, 0);
+    }, 100);
   };
 
   return (
@@ -295,11 +299,12 @@ export default function Sidebar({
           </button>
 
           <button 
+            type="button"
             onClick={handleLogout}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:shadow-sm ${isCollapsed ? "justify-center px-0" : ""}`}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:shadow-sm relative z-50 ${isCollapsed ? "justify-center px-0" : ""}`}
           >
-            <LogOut className="w-5 h-5" />
-            {!isCollapsed && <span>Terminate Session</span>}
+            <LogOut className="w-5 h-5 flex-shrink-0" />
+            {!isCollapsed && <span className="truncate">Terminate Session</span>}
           </button>
         </div>
       </aside>
