@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Briefcase, MapPin, Clock, DollarSign, Search, Filter, ExternalLink, CheckCircle, Zap, Star, Users, ArrowRight, Building, Globe, Shield, Sparkles, Award } from "lucide-react";
+import { 
+  Briefcase, MapPin, Clock, DollarSign, Search, Filter, 
+  ExternalLink, CheckCircle, Zap, Star, Users, ArrowRight, 
+  Building, Globe, Shield, Sparkles, Award, Code2 
+} from "lucide-react";
 import { MOCK_JOBS } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
 import type { Job } from "@/types";
@@ -8,72 +12,101 @@ const JOB_TYPES = ["All Types", "full-time", "contract", "freelance", "remote"];
 const LEVELS = ["All Levels", "junior", "mid", "senior", "lead"];
 
 const FEATURED_COMPANIES = [
-  { name: "Google", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-  { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_2012.svg" },
-  { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-  { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+  { name: "Google", logo: "https://logo.clearbit.com/google.com" },
+  { name: "Microsoft", logo: "https://logo.clearbit.com/microsoft.com" },
+  { name: "Amazon", logo: "https://logo.clearbit.com/amazon.com" },
+  { name: "Meta", logo: "https://logo.clearbit.com/meta.com" },
 ];
+
+function CompanyLogo({ src, name, className }: { src: string; name: string; className?: string }) {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className={`${className} bg-primary/10 flex items-center justify-center text-primary font-bold`}>
+        {name.charAt(0)}
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={src} 
+      alt={name} 
+      className={className} 
+      onError={() => setError(true)}
+    />
+  );
+}
 
 function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
   const [saved, setSaved] = useState(false);
   const daysLeft = Math.max(0, Math.floor((new Date(job.deadline).getTime() - Date.now()) / 86400000));
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 rounded-xl hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 group relative overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:hover:shadow-primary/5 transition-all duration-300 group relative overflow-hidden">
       {job.isFeatured && (
-        <div className="absolute top-0 right-0">
-          <div className="bg-primary text-white text-[9px] font-black px-6 py-2 uppercase tracking-[0.2em] translate-x-4 translate-y-4 rotate-45 shadow-2xl">
-            Featured
-          </div>
+        <div className="absolute top-0 right-0 p-4">
+          <span className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/20">
+            <Sparkles className="w-3 h-3" /> Featured
+          </span>
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-10">
-        <div className="w-20 h-20 bg-slate-100/50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:border-primary transition-all duration-500 group-hover:scale-110">
-          <img src={job.companyLogo} alt={job.company} className="w-12 h-12 object-contain" />
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="w-16 h-16 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm overflow-hidden p-3">
+          <CompanyLogo src={job.companyLogo} name={job.company} className="w-full h-full object-contain dark:brightness-200" />
         </div>
-        <div className="flex-1 min-w-0 space-y-6">
-          <div className="space-y-2">
-            <h3 className="text-3xl font-black text-slate-950 dark:text-white group-hover:text-primary transition-colors duration-500 tracking-tighter leading-none">{job.title}</h3>
-            <div className="flex flex-wrap items-center gap-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
-              <span className="flex items-center gap-2 text-primary"><Building className="w-4 h-4" />{job.company}</span>
-              <span className="flex items-center gap-2"><MapPin className="w-4 h-4" />{job.location}</span>
-              <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{job.type}</span>
+
+        <div className="flex-1 min-w-0 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors tracking-tight">{job.title}</h3>
+            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 text-primary"><Building className="w-3.5 h-3.5" />{job.company}</span>
+              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{job.location}</span>
+              <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{job.type}</span>
             </div>
           </div>
 
-          <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 font-medium tracking-tight">{job.description}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 font-medium">{job.description}</p>
 
-          <div className="flex flex-wrap gap-2.5">
-            {job.skills.slice(0, 6).map((skill) => (
-              <span key={skill} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 rounded-lg border border-slate-100 dark:border-slate-800 group-hover:border-primary/20 transition-all">{skill}</span>
+          <div className="flex flex-wrap gap-2">
+            {job.skills.slice(0, 5).map((skill) => (
+              <span key={skill} className="px-2.5 py-1 bg-slate-50 dark:bg-slate-800 text-[10px] font-bold uppercase tracking-widest text-slate-500 rounded border border-slate-100 dark:border-slate-800">
+                {skill}
+              </span>
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-10 border-t border-slate-50 dark:border-slate-800 gap-6">
-            <div className="flex items-center gap-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800 gap-4">
+            <div className="flex items-center gap-6">
               <div className="flex flex-col">
-                 <span className="text-primary font-black text-2xl tracking-tighter leading-none mb-1">{job.salary}</span>
-                 <span className="text-[9px] text-slate-400 uppercase tracking-widest">Annual Package</span>
+                 <span className="text-primary font-bold text-xl tracking-tight leading-none mb-1">{job.salary}</span>
+                 <span className="text-[9px] text-slate-400 uppercase font-black tracking-widest">Annual Range</span>
               </div>
-              <div className="w-px h-10 bg-slate-100 dark:bg-slate-800" />
-              <span className="flex items-center gap-2 text-slate-900 dark:text-slate-200"><Users className="w-4 h-4 text-primary" />{job.applicants} Applied</span>
-              <span className={`flex items-center gap-2 ${daysLeft <= 7 ? "text-red-500" : "text-slate-900 dark:text-slate-200"}`}>
-                <Clock className="w-4 h-4 text-primary" />{daysLeft > 0 ? `${daysLeft} Days Left` : "Closing Soon"}
-              </span>
+              <div className="w-px h-8 bg-slate-100 dark:bg-slate-800" />
+              <div className="space-y-0.5">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <Users className="w-3 h-3" /> {job.applicants} Applicants
+                </p>
+                <p className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${daysLeft <= 7 ? "text-amber-500" : "text-slate-400"}`}>
+                  <Clock className="w-3 h-3" /> {daysLeft > 0 ? `${daysLeft}d left` : "Closing"}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
+            
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setSaved(!saved)}
-                className={`p-4 rounded-xl border transition-all duration-500 ${saved ? "bg-primary/10 border-primary/20 text-primary shadow-xl shadow-primary/10" : "bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-800 text-slate-400 hover:text-primary hover:border-primary"}`}
+                className={`p-3 rounded-lg border transition-all ${saved ? "bg-primary/10 border-primary/20 text-primary" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:border-primary"}`}
               >
-                <Star className={`w-6 h-6 ${saved ? "fill-primary" : ""}`} />
+                <Star className={`w-5 h-5 ${saved ? "fill-primary" : ""}`} />
               </button>
               <button
                 onClick={() => onApply(job)}
-                className="bg-slate-950 dark:bg-primary text-white font-black px-10 py-4 rounded-xl flex items-center gap-3 hover:bg-primary dark:hover:bg-emerald-600 transition-all duration-500 shadow-2xl shadow-primary/20"
+                className="bg-slate-900 dark:bg-primary text-white font-bold px-8 py-3 rounded-lg flex items-center gap-2 hover:bg-primary dark:hover:bg-primary/90 transition-all text-sm shadow-lg shadow-primary/10"
               >
-                Apply Protocol <ArrowRight className="w-5 h-5" />
+                Apply Now <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -90,49 +123,48 @@ function ApplyModal({ job, onClose }: { job: Job; onClose: () => void }) {
 
   const handleApply = async () => {
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 1200));
     setSubmitting(false);
-    success("Application Protocol Initiated", `Your verification profile has been sent to ${job.company}.`);
+    success("Application Sent", `Your profile has been submitted to ${job.company}.`);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-[0_50px_100px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in duration-500">
-        <div className="flex items-center justify-between px-10 py-8 border-b border-slate-50 dark:border-slate-800">
-          <div className="space-y-1">
-            <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter">Submit Application</h2>
-            <p className="text-xs text-slate-500 font-medium uppercase tracking-widest">Formal Verification Protocol</p>
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Apply for Position</h2>
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Role: {job.title}</p>
           </div>
-          <button onClick={onClose} className="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all">✕</button>
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">✕</button>
         </div>
-        <div className="p-10 space-y-8">
-          <div className="flex items-center gap-6 p-6 bg-primary/5 border border-primary/10 rounded-xl">
-            <div className="w-16 h-16 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center border border-primary/20 shadow-sm">
-              <img src={job.companyLogo} alt={job.company} className="w-10 h-10 object-contain" />
+        <div className="p-8 space-y-6">
+          <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700">
+            <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 p-2">
+              <CompanyLogo src={job.companyLogo} name={job.company} className="w-full h-full object-contain dark:brightness-200" />
             </div>
             <div>
-              <p className="text-xl font-black text-slate-950 dark:text-white leading-none">{job.title}</p>
-              <p className="text-xs text-slate-500 font-black uppercase tracking-[0.2em] mt-2">{job.company} • {job.salary}</p>
+              <p className="font-bold text-slate-900 dark:text-white leading-none">{job.company}</p>
+              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1.5">{job.location} • {job.type}</p>
             </div>
           </div>
-          <div className="space-y-3">
-            <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Verification Brief</label>
-            <textarea value={coverLetter} onChange={e => setCoverLetter(e.target.value)} placeholder="Highlight your technical achievements for this specific role..." rows={6} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-6 py-5 text-base focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all resize-none shadow-inner" />
-          </div>
-          <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-4 h-4 text-primary" />
-              <p className="text-[11px] text-primary font-black uppercase tracking-widest">Automatic Profile Audit Inclusion</p>
-            </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Your global reputation score, verified certifications, and problem-solving audit history will be transmitted securely with this application.</p>
+          <div className="space-y-2">
+            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Why are you a good fit?</label>
+            <textarea 
+              value={coverLetter} 
+              onChange={e => setCoverLetter(e.target.value)} 
+              placeholder="Briefly describe your experience with these technical audit protocols..." 
+              rows={4} 
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" 
+            />
           </div>
         </div>
-        <div className="flex gap-6 px-10 py-8 border-t border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-          <button onClick={onClose} className="flex-1 py-4 rounded-xl font-black text-xs uppercase tracking-widest text-slate-500 hover:text-slate-950 transition-all">Cancel</button>
-          <button onClick={handleApply} disabled={submitting} className="flex-[2] bg-slate-950 dark:bg-primary text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary dark:hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/20 flex items-center justify-center gap-3">
+        <div className="flex gap-4 px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+          <button onClick={onClose} className="flex-1 py-3 rounded-lg font-bold text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Cancel</button>
+          <button onClick={handleApply} disabled={submitting} className="flex-[2] bg-primary text-white py-3 rounded-lg font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
             {submitting ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <CheckCircle className="w-4 h-4" />}
-            {submitting ? "Transmitting..." : "Initiate Audit"}
+            {submitting ? "Sending..." : "Submit Application"}
           </button>
         </div>
       </div>
@@ -154,152 +186,94 @@ export default function JobsPage() {
   });
 
   return (
-    <div className="space-y-32 py-12">
-      {/* 1. Career Marketplace Header */}
-      <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
+    <div className="space-y-20 py-8">
+      {/* 1. Header Section */}
+      <section className="bg-slate-900 text-white rounded-2xl p-12 relative overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/10 blur-[100px] pointer-events-none" />
         
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
-          <div className="space-y-6 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 text-primary rounded-sm text-[10px] font-black uppercase tracking-[0.2em] border border-primary/10">
-              <Briefcase className="w-4 h-4" /> Global Opportunity Index
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="space-y-4 max-w-xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary rounded text-[10px] font-black uppercase tracking-widest border border-primary/30">
+              <Zap className="w-3.5 h-3.5" /> Market Opportunities
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">The Career <br /> <span className="text-primary">Marketplace</span></h1>
-            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed tracking-tight">Verified technical mandates from elite laboratories and high-growth engineering firms.</p>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Find Your Next <br /> <span className="text-primary underline decoration-primary/30 decoration-4 underline-offset-8">Technical Challenge</span></h1>
+            <p className="text-slate-400 text-lg font-medium leading-relaxed">Verified roles from leading technology companies, audited for technical depth and cultural excellence.</p>
           </div>
-          <div className="flex flex-col items-center lg:items-end gap-6">
-            <div className="flex gap-4">
-               <div className="bg-slate-100/50 dark:bg-slate-800/40 p-6 rounded-xl border border-slate-100 dark:border-slate-800 text-center w-32">
-                 <p className="text-3xl font-black text-slate-950 dark:text-white">{MOCK_JOBS.length}</p>
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Live Roles</p>
-               </div>
-               <div className="bg-slate-100/50 dark:bg-slate-800/40 p-6 rounded-xl border border-slate-100 dark:border-slate-800 text-center w-32">
-                 <p className="text-3xl font-black text-primary">$125k</p>
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Avg Salary</p>
-               </div>
+          <div className="flex gap-6">
+            <div className="text-center">
+              <p className="text-3xl font-bold">{MOCK_JOBS.length}</p>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Active Roles</p>
             </div>
-            <button className="w-full bg-slate-950 dark:bg-primary text-white font-black px-8 py-4 rounded-xl hover:bg-primary transition-all shadow-xl">Post a Mandate</button>
+            <div className="w-px h-12 bg-white/10" />
+            <div className="text-center">
+              <p className="text-3xl font-bold text-primary">$180k</p>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Avg Salary</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Intelligent Filters Section */}
-      <section className="space-y-12">
-        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 rounded-xl shadow-xl flex flex-col xl:flex-row gap-8 items-center relative overflow-hidden">
-           <div className="absolute inset-0 grid-pattern opacity-5" />
-           <div className="relative flex-1 w-full group">
-             <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-300 group-focus-within:text-primary transition-colors" />
-             <input 
-               value={search} 
-               onChange={e => setSearch(e.target.value)} 
-               placeholder="Search by role, company, or technical audit protocol..." 
-               className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl pl-16 pr-6 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400" 
-             />
-           </div>
-           <div className="flex flex-wrap gap-4 w-full xl:w-auto">
-             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl px-6 py-5 text-xs font-black uppercase tracking-widest focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all cursor-pointer shadow-sm min-w-[180px]">
-               {JOB_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-             </select>
-             <select value={levelFilter} onChange={e => setLevelFilter(e.target.value)} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl px-6 py-5 text-xs font-black uppercase tracking-widest focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all cursor-pointer shadow-sm min-w-[180px] capitalize">
-               {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-             </select>
-           </div>
+      {/* 2. Search & Filters */}
+      <section className="grid lg:grid-cols-12 gap-6 items-center">
+        <div className="lg:col-span-6 relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+          <input 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            placeholder="Search roles, companies, or technologies..." 
+            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-12 pr-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-sm" 
+          />
+        </div>
+        <div className="lg:col-span-3">
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-4 text-xs font-bold uppercase tracking-wider focus:outline-none transition-all cursor-pointer shadow-sm">
+            {JOB_TYPES.map(t => <option key={t} value={t}>{t === 'All Types' ? 'Any Type' : t}</option>)}
+          </select>
+        </div>
+        <div className="lg:col-span-3">
+          <select value={levelFilter} onChange={e => setLevelFilter(e.target.value)} className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-4 text-xs font-bold uppercase tracking-wider focus:outline-none transition-all cursor-pointer shadow-sm capitalize">
+            {LEVELS.map(l => <option key={l} value={l}>{l === 'All Levels' ? 'Any Level' : l}</option>)}
+          </select>
         </div>
       </section>
 
-      {/* 3. Featured Ecosystems Section */}
-      <section className="space-y-12">
-         <div className="flex items-center justify-between">
-           <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3">
-              <Sparkles className="w-5 h-5 text-amber-500" /> Premium Hiring Ecosystems
-           </h2>
-           <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-8" />
-         </div>
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-           {FEATURED_COMPANIES.map(company => (
-             <div key={company.name} className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center justify-center grayscale hover:grayscale-0 hover:border-primary/20 hover:shadow-xl transition-all duration-700 group cursor-pointer">
-                <img src={company.logo} alt={company.name} className="h-10 object-contain opacity-30 group-hover:opacity-100 transition-all duration-700 dark:invert" />
-             </div>
-           ))}
-         </div>
+      {/* 3. Featured Ecosystems */}
+      <section className="space-y-6">
+        <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-2">
+          <Building className="w-4 h-4" /> Hiring Ecosystems
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {FEATURED_COMPANIES.map(company => (
+            <div key={company.name} className="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center grayscale hover:grayscale-0 hover:border-primary/50 transition-all duration-300 group cursor-pointer shadow-sm">
+              <CompanyLogo src={company.logo} name={company.name} className="h-6 object-contain opacity-50 group-hover:opacity-100 transition-all dark:brightness-200" />
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* 4. Active Mandates (Feed) Section */}
-      <section className="space-y-12">
+      {/* 4. Job List */}
+      <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter flex items-center gap-4">
-             <Zap className="w-8 h-8 text-primary" />
-             Active Mandates
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            Latest Mandates <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] rounded text-slate-500">{filtered.length}</span>
           </h2>
-          <span className="px-5 py-2 bg-slate-100 dark:bg-slate-800 rounded-sm text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] border border-slate-100 dark:border-slate-800">{filtered.length} Live Positions</span>
         </div>
         
-        <div className="space-y-8">
+        <div className="grid gap-6">
           {filtered.length > 0
             ? filtered.map((job) => <JobCard key={job.id} job={job} onApply={setSelectedJob} />)
             : (
-              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-32 text-center rounded-xl shadow-sm">
-                <Briefcase className="w-24 h-24 text-slate-100 dark:text-slate-800 mx-auto mb-8 animate-pulse" />
-                <h3 className="text-2xl font-black text-slate-950 dark:text-white mb-4">No matching positions</h3>
-                <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto">Our auditors couldn't find any positions matching your search criteria.</p>
-                <button onClick={() => {setSearch(""); setTypeFilter("All Types"); setLevelFilter("All Levels");}} className="mt-8 text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1">Reset All Protocols</button>
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-20 text-center rounded-xl shadow-sm">
+                <Briefcase className="w-16 h-16 text-slate-200 dark:text-slate-800 mx-auto mb-6" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">No roles found</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto">Try adjusting your filters or search terms to find more technical opportunities.</p>
+                <button onClick={() => {setSearch(""); setTypeFilter("All Types"); setLevelFilter("All Levels");}} className="mt-6 text-primary font-bold text-xs uppercase tracking-widest hover:underline">Reset Filters</button>
               </div>
             )}
         </div>
-      </section>
-
-      {/* 5. Career Protocol Lab Section (New) */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
-         <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
-         
-         <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-10">
-              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
-                <Award className="w-5 h-5" /> Professional Career Laboratory
-              </div>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Elevate Your <br /> <span className="text-primary">Career Protocol.</span></h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Access specialized interview preparation modules, expert-led salary negotiation audits, and high-fidelity technical resume blueprints.</p>
-              <div className="flex flex-col sm:flex-row items-center gap-8">
-                <button className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
-                  Access Lab
-                </button>
-                <div className="flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 rounded-xl">
-                   <CheckCircle className="w-6 h-6 text-emerald-500" />
-                   <span className="text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">Verified Mentorship Active</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-               <div className="bg-white/5 backdrop-blur-3xl p-10 rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-500 group/item cursor-pointer">
-                  <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-8 group-hover/item:scale-110 transition-transform">
-                    <Code2 className="w-8 h-8" />
-                  </div>
-                  <h4 className="text-2xl font-black mb-3">Audit Prep</h4>
-                  <p className="text-sm font-medium text-slate-500 leading-relaxed">Company-specific technical audit blueprints and mock protocols.</p>
-               </div>
-               <div className="bg-white/5 backdrop-blur-3xl p-10 rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-500 group/item cursor-pointer">
-                  <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-8 group-hover/item:scale-110 transition-transform">
-                    <DollarSign className="w-8 h-8" />
-                  </div>
-                  <h4 className="text-2xl font-black mb-3">Salary Audit</h4>
-                  <p className="text-sm font-medium text-slate-500 leading-relaxed">Global engineering compensation benchmarks and negotiation audits.</p>
-               </div>
-            </div>
-         </div>
       </section>
 
       {selectedJob && <ApplyModal job={selectedJob} onClose={() => setSelectedJob(null)} />}
     </div>
   );
 }
-
-const Code2 = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m18 16 4-4-4-4" />
-    <path d="m6 8-4 4 4 4" />
-    <path d="m14.5 4-5 16" />
-  </svg>
-);

@@ -4,7 +4,7 @@ import {
   LayoutDashboard, MessageSquare, Code2, Bot, Users, Briefcase,
   BarChart3, Settings, BookOpen, Play, Trophy, Star, UserCheck,
   Shield, Flag, Bell, FileText, Building, Search, Calendar,
-  GitBranch, Sparkles, X, ChevronRight,
+  GitBranch, Sparkles, X, ChevronRight, Zap,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import type { UserRole } from "@/types";
@@ -29,22 +29,31 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
         { label: "Overview", icon: LayoutDashboard, path: "/dashboard/developer" },
         { label: "Practice", icon: MessageSquare, path: "/questions", badge: "42", badgeColor: "bg-primary" },
         { label: "Code Reviews", icon: Code2, path: "/code-review" },
-        { label: "Interview Prep", icon: Bot, path: "/ai-assistant", badge: "New", badgeColor: "bg-amber-500" },
+        { label: "AI Assistant", icon: Bot, path: "/ai-assistant", badge: "New", badgeColor: "bg-amber-500" },
+      ],
+    },
+    {
+      title: "Mastery Tracks",
+      items: [
+        { label: "Data Structures", icon: GitBranch, path: "/practice/data-structures" },
+        { label: "Algorithms", icon: Zap, path: "/practice/algorithms" },
+        { label: "System Design", icon: Shield, path: "/practice/system-design" },
       ],
     },
     {
       title: "Collaborate",
       items: [
-        { label: "Community Groups", icon: Users, path: "/workspace" },
+        { label: "Community", icon: Users, path: "/community" },
+        { label: "Contests", icon: Trophy, path: "/contests" },
+        { label: "Tutorials", icon: BookOpen, path: "/tutorials" },
         { label: "Live Coding", icon: Play, path: "/live-coding" },
-        { label: "Tutorials", icon: BookOpen, path: "/knowledge" },
       ],
     },
     {
       title: "Opportunities",
       items: [
-        { label: "Courses", icon: Sparkles, path: "/pricing" },
-        { label: "Jobs & Internships", icon: Briefcase, path: "/jobs" },
+        { label: "Courses", icon: Sparkles, path: "/courses" },
+        { label: "Jobs", icon: Briefcase, path: "/jobs" },
         { label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
       ],
     },

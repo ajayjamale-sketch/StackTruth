@@ -34,31 +34,21 @@ import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import CookiePolicyPage from "@/pages/CookiePolicyPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
-// Lazy imports for AI assistant page
-const AIAssistantPage = () => {
-  const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/login" />;
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">AI Assistant</h1>
-        <p className="text-slate-400 text-sm mt-1">Your intelligent coding companion — powered by StackTruth AI</p>
-      </div>
-      <div className="glass-card p-8 text-center space-y-4">
-        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-purple-500/30">
-          <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2" />
-          </svg>
-        </div>
-        <h2 className="text-xl font-bold text-white">AI Assistant is ready!</h2>
-        <p className="text-slate-400 max-w-md mx-auto">Use the floating AI widget in the bottom-right corner to chat with our AI assistant. It can help with code review, bug fixing, optimization, and much more.</p>
-        <div className="flex items-center justify-center gap-2 text-sm text-blue-400 font-medium">
-          <span>→ Look for the blue bot icon in the bottom-right</span>
-        </div>
-      </div>
-    </div>
-  );
-};
+// New Pages
+import DataStructuresPage from "@/pages/DataStructuresPage";
+import AlgorithmsPage from "@/pages/AlgorithmsPage";
+import SystemDesignPage from "@/pages/SystemDesignPage";
+import PythonTutorialPage from "@/pages/PythonTutorialPage";
+import MERNStackPage from "@/pages/MERNStackPage";
+import CompanyWisePage from "@/pages/CompanyWisePage";
+import TopicWisePage from "@/pages/TopicWisePage";
+import ContestsPage from "@/pages/ContestsPage";
+import CommunityPage from "@/pages/CommunityPage";
+import PartnerProgramPage from "@/pages/PartnerProgramPage";
+import CareersPage from "@/pages/CareersPage";
+import AIAssistantPage from "@/pages/AIAssistantPage";
+import CoursesPage from "@/pages/CoursesPage";
+
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
   const { isAuthenticated, user, isLoading } = useAuth();
@@ -126,13 +116,33 @@ function AppRoutes() {
 
       {/* Feature pages (Sidebar if logged in, none if guest) */}
       <Route element={<DynamicLayout />}>
+        {/* Questions & Topics */}
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/questions/:id" element={<QuestionsPage />} />
+        <Route path="/questions/companies" element={<CompanyWisePage />} />
+        <Route path="/questions/topics" element={<TopicWisePage />} />
+
+        {/* Practice Tracks */}
+        <Route path="/practice" element={<QuestionsPage />} />
+        <Route path="/practice/data-structures" element={<DataStructuresPage />} />
+        <Route path="/practice/algorithms" element={<AlgorithmsPage />} />
+        <Route path="/practice/system-design" element={<SystemDesignPage />} />
+
+        {/* Tutorials */}
         <Route path="/tutorials" element={<TutorialsPage />} />
+        <Route path="/tutorials/python" element={<PythonTutorialPage />} />
+        <Route path="/tutorials/mern" element={<MERNStackPage />} />
+
+        {/* Career & Knowledge */}
         <Route path="/knowledge" element={<KnowledgeBasePage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/courses" element={<CoursesPage />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/partner" element={<PartnerProgramPage />} />
+        <Route path="/contests" element={<ContestsPage />} />
+        <Route path="/community" element={<CommunityPage />} />
       </Route>
 
       {/* Strictly Authenticated routes (Always has sidebar) */}
@@ -152,7 +162,7 @@ function AppRoutes() {
         <Route path="/profile/settings" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/workspace" element={<ProtectedRoute><TeamWorkspacePage /></ProtectedRoute>} />
         <Route path="/live-coding" element={<ProtectedRoute><LiveCodingPage /></ProtectedRoute>} />
-        <Route path="/ai-assistant" element={<AIAssistantPage />} />
+        <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistantPage /></ProtectedRoute>} />
 
         {/* Admin Specific */}
         <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />

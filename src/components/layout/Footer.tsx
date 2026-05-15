@@ -4,32 +4,32 @@ import { Github, Twitter, Linkedin, Heart, ExternalLink, Mail, MessageSquare, Sh
 
 const FOOTER_LINKS = {
   "Trending Now": [
-    { label: "Data Structures", path: "/knowledge" },
-    { label: "Algorithms", path: "/knowledge" },
-    { label: "System Design", path: "/knowledge" },
-    { label: "Python Tutorial", path: "/knowledge" },
-    { label: "MERN Stack", path: "/knowledge" },
+    { label: "Data Structures", path: "/practice/data-structures" },
+    { label: "Algorithms", path: "/practice/algorithms" },
+    { label: "System Design", path: "/practice/system-design" },
+    { label: "Python Tutorial", path: "/tutorials/python" },
+    { label: "MERN Stack", path: "/tutorials/mern" },
   ],
   "Practice": [
     { label: "All Questions", path: "/questions" },
-    { label: "Company Wise", path: "/questions" },
-    { label: "Topic Wise", path: "/questions" },
-    { label: "Contests", path: "/leaderboard" },
+    { label: "Company Wise", path: "/questions/companies" },
+    { label: "Topic Wise", path: "/questions/topics" },
+    { label: "Contests", path: "/contests" },
     { label: "Code Audits", path: "/code-review" },
   ],
   "Community": [
     { label: "Tutorials", path: "/tutorials" },
     { label: "Leaderboard", path: "/leaderboard" },
-    { label: "Jobs Portal", path: "/jobs" },
+    { label: "Community", path: "/community" },
     { label: "Knowledge Base", path: "/knowledge" },
     { label: "AI Assistant", path: "/ai-assistant" },
   ],
   "Company": [
     { label: "About Us", path: "/about" },
     { label: "Contact Us", path: "/contact" },
-    { label: "Careers", path: "/jobs" },
+    { label: "Careers", path: "/careers" },
     { label: "Pricing", path: "/pricing" },
-    { label: "Partner Program", path: "/contact" },
+    { label: "Partner Program", path: "/partner" },
   ],
 };
 
