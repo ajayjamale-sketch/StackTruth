@@ -19,6 +19,7 @@ import QuestionsPage from "@/pages/QuestionsPage";
 import CodeReviewPage from "@/pages/CodeReviewPage";
 import TutorialsPage from "@/pages/TutorialsPage";
 import KnowledgeBasePage from "@/pages/KnowledgeBasePage";
+import AuthorGuidesPage from "@/pages/AuthorGuidesPage";
 import JobsPage from "@/pages/JobsPage";
 import LeaderboardPage from "@/pages/LeaderboardPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
@@ -135,6 +136,7 @@ function AppRoutes() {
 
         {/* Career & Knowledge */}
         <Route path="/knowledge" element={<KnowledgeBasePage />} />
+        <Route path="/author-guides" element={<AuthorGuidesPage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/pricing" element={<PricingPage />} />

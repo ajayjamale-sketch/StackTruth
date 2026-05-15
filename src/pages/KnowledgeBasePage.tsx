@@ -1,24 +1,53 @@
 import React, { useState } from "react";
-import { Search, BookOpen, Clock, Heart, Eye, MessageSquare, TrendingUp, Star, Filter, ChevronRight, Code2, Sparkles, Zap, Award, Layers, Bot, Globe } from "lucide-react";
+import { Search, BookOpen, Clock, Heart, Eye, MessageSquare, TrendingUp, Star, Filter, ChevronRight, Code2, Sparkles, Zap, Award, Layers, Bot, Globe, ArrowLeft, Share2, Bookmark } from "lucide-react";
 import { MOCK_ARTICLES } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
+import { Skeleton } from "@/components/ui/SkeletonLoader";
 import type { Article } from "@/types";
 
 const CATEGORIES = ["All", "Tutorial", "Deep Dive", "Architecture", "AI/ML", "Security", "DevOps"];
 
-function ArticleCard({ article, featured = false }: { article: Article; featured?: boolean }) {
+function ArticleSkeleton({ featured = false }: { featured?: boolean }) {
+  return (
+    <div className={`bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden ${featured ? "lg:flex" : ""}`}>
+      <Skeleton className={`flex-shrink-0 ${featured ? "lg:w-[450px] lg:h-full h-64" : "h-56 w-full"}`} />
+      <div className="p-10 flex flex-col flex-1 space-y-6">
+        <Skeleton className="h-6 w-24" />
+        <Skeleton className="h-10 w-3/4" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+        <div className="pt-8 border-t border-slate-50 dark:border-slate-800 mt-auto flex justify-between">
+          <div className="flex items-center gap-3">
+            <Skeleton className="w-8 h-8 rounded-xl" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <Skeleton className="h-4 w-16" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ArticleCard({ article, featured = false, onClick }: { article: Article; featured?: boolean; onClick?: () => void }) {
   const { success } = useToast();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(article.likes);
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setLiked(!liked);
     setLikeCount(liked ? article.likes : article.likes + 1);
   };
 
   return (
-    <div className={`bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden group hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 ${featured ? "lg:flex" : ""}`}>
+    <div 
+      onClick={onClick}
+      className={`bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden group hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 cursor-pointer ${featured ? "lg:flex" : ""}`}
+    >
       <div className={`overflow-hidden flex-shrink-0 relative ${featured ? "lg:w-[450px]" : ""}`}>
         <img
           src={article.coverImage || `https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80`}
@@ -73,8 +102,16 @@ function ArticleCard({ article, featured = false }: { article: Article; featured
 }
 
 export default function KnowledgeBasePage() {
+  const { success } = useToast();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filtered = MOCK_ARTICLES.filter((a) => {
     const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) || a.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
@@ -83,6 +120,72 @@ export default function KnowledgeBasePage() {
   });
 
   const featured = filtered.filter(a => a.isFeatured).slice(0, 1);
+
+  if (selectedArticle) {
+    return (
+      <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-500">
+        <button 
+          onClick={() => setSelectedArticle(null)}
+          className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:text-primary transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Technical Library
+        </button>
+
+        <article className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden shadow-2xl relative">
+          <div className="h-96 w-full relative">
+            <img 
+              src={selectedArticle.coverImage} 
+              alt={selectedArticle.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+            <div className="absolute bottom-10 left-10 right-10 space-y-4">
+              <span className="text-[10px] font-black px-3 py-1 rounded-lg border border-primary/20 bg-primary/20 text-white uppercase tracking-[0.2em] backdrop-blur-md">
+                {selectedArticle.category}
+              </span>
+              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight">
+                {selectedArticle.title}
+              </h1>
+            </div>
+          </div>
+
+          <div className="p-10 md:p-16 space-y-12">
+            <div className="flex flex-wrap items-center justify-between gap-8 pb-12 border-b border-slate-50 dark:border-slate-800">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-black border border-primary/20">
+                  {selectedArticle.author.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-sm font-black text-slate-950 dark:text-white leading-none">{selectedArticle.author.name}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Technical Auditor • {selectedArticle.publishedAt}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <button onClick={() => success("Protocol shared to external network.")} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:text-primary transition-colors border border-slate-100 dark:border-slate-800"><Share2 className="w-5 h-5" /></button>
+                <button onClick={() => success("Resource cached for offline access.")} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl hover:text-primary transition-colors border border-slate-100 dark:border-slate-800"><Bookmark className="w-5 h-5" /></button>
+                <button className="bg-primary text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all">Audit This Protocol</button>
+              </div>
+            </div>
+
+            <div className="prose dark:prose-invert max-w-none">
+              <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                {selectedArticle.excerpt}
+              </p>
+              <div className="h-64 bg-slate-50 dark:bg-slate-800/50 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 font-mono text-sm">
+                [TECHNICAL_CONTENT_PAYLOAD_UNAVAILABLE_IN_MVP]
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {selectedArticle.tags.map(tag => (
+                <span key={tag} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 rounded-md">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        </article>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-32 py-12">
@@ -145,7 +248,12 @@ export default function KnowledgeBasePage() {
       </section>
 
       {/* 3. Editor's Choice Section */}
-      {featured.length > 0 && (
+      {isLoading ? (
+        <section className="space-y-12">
+          <Skeleton className="h-6 w-48" />
+          <ArticleSkeleton featured />
+        </section>
+      ) : featured.length > 0 && (
         <section className="space-y-12">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3">
@@ -155,7 +263,11 @@ export default function KnowledgeBasePage() {
           </div>
           <div className="relative group">
             <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 to-primary/5 rounded-xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <ArticleCard article={featured[0]} featured />
+            <ArticleCard 
+              article={featured[0]} 
+              featured 
+              onClick={() => setSelectedArticle(featured[0])}
+            />
           </div>
         </section>
       )}
@@ -167,19 +279,31 @@ export default function KnowledgeBasePage() {
             <TrendingUp className="w-8 h-8 text-primary" /> 
             Active Repository
           </h2>
-          <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-sm text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-100 dark:border-slate-800">{filtered.length} Resources Found</span>
+          <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-sm text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-100 dark:border-slate-800">
+            {isLoading ? "Synchronizing Index..." : `${filtered.length} Resources Found`}
+          </span>
         </div>
         
-        {filtered.length > 0 ? (
+        {isLoading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {filtered.map(a => <ArticleCard key={a.id} article={a} />)}
+            {[1, 2, 3, 4, 5, 6].map(i => <ArticleSkeleton key={i} />)}
+          </div>
+        ) : filtered.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filtered.map(a => (
+              <ArticleCard 
+                key={a.id} 
+                article={a} 
+                onClick={() => setSelectedArticle(a)}
+              />
+            ))}
           </div>
         ) : (
           <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-32 text-center rounded-xl shadow-sm">
             <BookOpen className="w-24 h-24 text-slate-100 dark:text-slate-800 mx-auto mb-8 animate-pulse" />
             <h3 className="text-2xl font-black text-slate-950 dark:text-white mb-4">No matching resources</h3>
             <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto">Our auditors couldn't find any resources matching your current filter criteria.</p>
-            <button onClick={() => setCategory("All")} className="mt-8 text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1">Reset All Protocols</button>
+            <button onClick={() => { setCategory("All"); setSearch(""); }} className="mt-8 text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1">Reset All Protocols</button>
           </div>
         )}
       </section>

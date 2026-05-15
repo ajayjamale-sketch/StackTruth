@@ -50,6 +50,7 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
           ]
         },
         { label: "Tutorials", icon: BookOpen, path: "/tutorials" },
+        { label: "Technical Library", icon: BookOpen, path: "/knowledge" },
       ],
     },
     {

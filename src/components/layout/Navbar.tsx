@@ -87,6 +87,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
           {/* Main Nav Links - Publicly Visible */}
           <div className="hidden lg:flex items-center gap-6">
             <Link to="/tutorials" className="nav-link">Tutorials</Link>
+            <Link to="/knowledge" className="nav-link">Library</Link>
             <Link to="/questions" className="nav-link">Practice</Link>
             <Link to="/pricing" className="nav-link">Courses</Link>
             <Link to="/jobs" className="nav-link">Jobs</Link>

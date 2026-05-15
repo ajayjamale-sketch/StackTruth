@@ -6,7 +6,7 @@ export const MOCK_USERS: User[] = [
     name: "Alex Chen",
     email: "alex@example.com",
     username: "alexchen",
-    avatar: "",
+    avatar: "/assets/images/alex_chen.png",
     role: "developer",
     reputation: 4820,
     badges: [
@@ -32,7 +32,7 @@ export const MOCK_USERS: User[] = [
     name: "Sarah Mitchell",
     email: "sarah@example.com",
     username: "sarahm",
-    avatar: "",
+    avatar: "/assets/images/sarah_mitchell.png",
     role: "expert",
     reputation: 12350,
     badges: [
@@ -58,7 +58,7 @@ export const MOCK_USERS: User[] = [
     name: "TechForge Inc.",
     email: "hiring@techforge.com",
     username: "techforge",
-    avatar: "",
+    avatar: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop",
     role: "recruiter",
     reputation: 890,
     badges: [
@@ -84,7 +84,7 @@ export const MOCK_USERS: User[] = [
     name: "Admin User",
     email: "admin@stacktruth.com",
     username: "admin",
-    avatar: "",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop",
     role: "admin",
     reputation: 99999,
     badges: [
@@ -109,7 +109,7 @@ export const MOCK_USERS: User[] = [
     name: "Jordan Rivera",
     email: "jordan@example.com",
     username: "jordanr",
-    avatar: "",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
     role: "developer",
     reputation: 2340,
     badges: [
@@ -134,7 +134,7 @@ export const MOCK_USERS: User[] = [
     name: "Priya Sharma",
     email: "priya@example.com",
     username: "priyas",
-    avatar: "",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
     role: "expert",
     reputation: 8940,
     badges: [

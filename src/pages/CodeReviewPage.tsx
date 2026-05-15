@@ -112,6 +112,7 @@ function ReviewCard({ review }: { review: CodeReview }) {
             </div>
           </div>
           <button 
+            type="button"
             onClick={() => {
               setExpanded(!expanded);
               info(expanded ? "Audit log collapsed." : "Accessing full audit registry.");
@@ -161,6 +162,7 @@ function ReviewCard({ review }: { review: CodeReview }) {
 
         <div className="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
           <button
+            type="button"
             onClick={handleAIReview}
             disabled={analyzing}
             className="flex items-center gap-3 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-primary/5 transition-all disabled:opacity-50"
@@ -169,6 +171,7 @@ function ReviewCard({ review }: { review: CodeReview }) {
             {analyzing ? "Neural Auditing..." : "Re-Run AI Protocol"}
           </button>
           <button 
+            type="button"
             onClick={handleImplementFixes}
             className="flex items-center gap-3 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
           >
@@ -189,12 +192,23 @@ export default function CodeReviewPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!code.trim() || !title.trim()) {
-      warning("Input Required", "Please provide both protocol title and source code.");
+    if (submitting) return;
+
+    if (!title.trim()) {
+      warning("Protocol Title Required", "Please specify a unique identifier for this logic block.");
       return;
     }
+
+    if (!code.trim()) {
+      warning("Source Logic Required", "Submission terminal requires valid source code for neural verification.");
+      return;
+    }
+
     setSubmitting(true);
+    info("Neural Uplink Initialized", "Transmitting source architecture to auditing nodes...");
+    
     await new Promise(r => setTimeout(r, 2000));
+    
     setSubmitting(false);
     setShowSubmit(false);
     setCode("");
@@ -221,6 +235,7 @@ export default function CodeReviewPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium">High-fidelity auditing protocols for mission-critical engineering.</p>
         </div>
         <button 
+          type="button"
           onClick={() => {
             setShowSubmit(!showSubmit);
             if (!showSubmit) info("Accessing submission terminal.");
@@ -260,6 +275,7 @@ export default function CodeReviewPage() {
                 <div className="flex flex-wrap gap-2">
                   {LANGS.map(l => (
                     <button 
+                      type="button"
                       key={l} 
                       onClick={() => {
                         setLanguage(l);
@@ -297,11 +313,11 @@ export default function CodeReviewPage() {
                  </div>
               </div>
               <div className="flex gap-4 w-full sm:w-auto">
-                <button onClick={handleDiscard} className="flex-1 sm:flex-none px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all">Discard</button>
+                <button type="button" onClick={handleDiscard} className="flex-1 sm:flex-none px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all">Discard</button>
                 <button 
+                  type="button"
                   onClick={handleSubmit} 
-                  disabled={!code.trim() || !title.trim() || submitting} 
-                  className="flex-1 sm:flex-none bg-primary text-white px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 sm:flex-none bg-primary text-white px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
                 >
                   {submitting ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Zap className="w-4 h-4" />}
                   {submitting ? "Analyzing..." : "Initiate Audit"}
