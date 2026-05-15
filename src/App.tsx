@@ -136,6 +136,7 @@ function AppRoutes() {
 
         {/* Career & Knowledge */}
         <Route path="/knowledge" element={<KnowledgeBasePage />} />
+        <Route path="/knowledge/:id" element={<KnowledgeBasePage />} />
         <Route path="/author-guides" element={<AuthorGuidesPage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />

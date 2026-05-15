@@ -76,7 +76,7 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
     {
       title: "Resources",
       items: [
-        { label: "Author Guides", icon: BookOpen, path: "/knowledge" },
+        { label: "Author Guides", icon: BookOpen, path: "/author-guides" },
         { label: "Expert Lab", icon: Play, path: "/live-coding" },
       ],
     },

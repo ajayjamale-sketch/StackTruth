@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Search, BookOpen, Clock, Heart, Eye, MessageSquare, TrendingUp, Star, Filter, ChevronRight, Code2, Sparkles, Zap, Award, Layers, Bot, Globe, ArrowLeft, Share2, Bookmark } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MOCK_ARTICLES } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
 import { Skeleton } from "@/components/ui/SkeletonLoader";
@@ -103,15 +104,20 @@ function ArticleCard({ article, featured = false, onClick }: { article: Article;
 
 export default function KnowledgeBasePage() {
   const { success } = useToast();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+
+  // Sync selected article with URL param
+  const selectedArticle = id ? MOCK_ARTICLES.find(a => a.id === id) : null;
 
   React.useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
-  }, []);
+  }, [id]);
 
   const filtered = MOCK_ARTICLES.filter((a) => {
     const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) || a.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
@@ -125,7 +131,7 @@ export default function KnowledgeBasePage() {
     return (
       <div className="max-w-5xl mx-auto space-y-12 animate-in fade-in duration-500">
         <button 
-          onClick={() => setSelectedArticle(null)}
+          onClick={() => navigate("/knowledge")}
           className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:text-primary transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Technical Library

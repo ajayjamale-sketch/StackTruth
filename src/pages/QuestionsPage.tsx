@@ -125,6 +125,11 @@ export default function QuestionsPage() {
     if (search) return q.title.toLowerCase().includes(search.toLowerCase()) || q.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
     if (selectedTag) return q.tags.includes(selectedTag);
     return true;
+  }).sort((a, b) => {
+    if (sort === "Newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (sort === "Trending") return b.views - a.views;
+    if (sort === "Hot") return b.votes - a.votes;
+    return 0;
   });
 
   const selectedQuestion = id ? MOCK_QUESTIONS.find(q => q.id === id) : null;

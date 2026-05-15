@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { 
   Layout, Bot, Shield, Globe, Sparkles, TrendingUp, 
   PlayCircle, Star, CheckCircle, ChevronRight, Award,
-  Search, Filter
+  Search, Filter, ArrowLeft, Clock, Target, BookOpen,
+  Terminal, Database, Cpu, Zap, Code2, Layers, Play
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/contexts/ToastContext";
@@ -57,6 +58,7 @@ export default function TutorialsPage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedTrack, setSelectedTrack] = useState<any | null>(null);
 
   const filteredTracks = TRACKS.filter(track => {
     const matchesSearch = track.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -65,11 +67,140 @@ export default function TutorialsPage() {
     return matchesSearch && matchesCategory;
   });
 
+  const trackSyllabus = [
+    { id: 1, title: "Foundational Protocols", duration: "4h 20m", lessons: 8, status: "completed" },
+    { id: 2, title: "Architecture Orchestration", duration: "6h 45m", lessons: 12, status: "in-progress" },
+    { id: 3, title: "Security Enforcement", duration: "3h 15m", lessons: 6, status: "locked" },
+    { id: 4, title: "Scale Synchronization", duration: "8h 10m", lessons: 15, status: "locked" },
+  ];
+
   const handleAction = (trackId?: string) => {
     if (trackId === "mern") navigate("/tutorials/mern");
     else if (trackId === "python") navigate("/tutorials/python");
-    else success("Protocol initiated. Welcome to the track.");
+    else {
+      const track = TRACKS.find(t => t.id === trackId);
+      if (track) setSelectedTrack(track);
+      else success("Protocol initiated. Welcome to the track.");
+    }
   };
+
+  if (selectedTrack) {
+    return (
+      <div className="max-w-6xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <button 
+          onClick={() => setSelectedTrack(null)}
+          className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:text-primary transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Technical Academy
+        </button>
+
+        <div className="grid lg:grid-cols-12 gap-12">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-12">
+            <div className="space-y-8">
+              <div className={`w-20 h-20 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center shadow-xl`}>
+                {selectedTrack.icon}
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">{selectedTrack.title}</h1>
+                  <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">Verified</span>
+                </div>
+                <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{selectedTrack.desc}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-6">
+              {[
+                { label: "Total Duration", value: "24h 45m", icon: Clock },
+                { label: "Mastery Level", value: "Industrial", icon: Target },
+                { label: "Track Modules", value: "12 Stages", icon: BookOpen },
+              ].map(stat => (
+                <div key={stat.label} className="p-6 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/10 space-y-2">
+                  <stat.icon className="w-5 h-5 text-emerald-500" />
+                  <p className="text-lg font-black text-slate-950 dark:text-white">{stat.value}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-8">
+              <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter flex items-center gap-3">
+                <Layers className="w-6 h-6 text-emerald-500" /> Syllabus Protocol
+              </h2>
+              <div className="space-y-4">
+                {trackSyllabus.map(module => (
+                  <div key={module.id} className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl flex items-center justify-between group hover:border-emerald-500/30 transition-all cursor-pointer">
+                    <div className="flex items-center gap-6">
+                      <div className="w-10 h-10 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-black text-sm group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                        {module.id}
+                      </div>
+                      <div>
+                        <h4 className="text-base font-black text-slate-950 dark:text-white tracking-tight">{module.title}</h4>
+                        <p className="text-xs text-slate-500 font-medium uppercase tracking-widest mt-1">{module.lessons} Modules • {module.duration}</p>
+                      </div>
+                    </div>
+                    {module.status === "completed" ? (
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
+                    ) : module.status === "in-progress" ? (
+                      <div className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] font-black uppercase tracking-widest animate-pulse">Resuming...</div>
+                    ) : (
+                      <Shield className="w-5 h-5 text-slate-200 dark:text-slate-800" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar Info */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="p-8 bg-slate-950 rounded-xl text-white space-y-8 relative overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 grid-pattern opacity-10" />
+              <div className="relative z-10 space-y-6">
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Mission Parameters</p>
+                  <h3 className="text-2xl font-black tracking-tighter leading-tight">Initialize Mastery Protocol</h3>
+                </div>
+                <div className="space-y-4">
+                   <div className="flex items-center justify-between text-xs border-b border-white/10 pb-4">
+                     <span className="text-white/60">Success Rate</span>
+                     <span className="font-black">94.2%</span>
+                   </div>
+                   <div className="flex items-center justify-between text-xs border-b border-white/10 pb-4">
+                     <span className="text-white/60">Audit Credits</span>
+                     <span className="font-black text-emerald-400">+1,200</span>
+                   </div>
+                   <div className="flex items-center justify-between text-xs pb-4">
+                     <span className="text-white/60">Estimated Time</span>
+                     <span className="font-black">2.5 Weeks</span>
+                   </div>
+                </div>
+                <button 
+                  onClick={() => success("Protocol deployed. Laboratory initialized.")}
+                  className="w-full py-4 bg-emerald-500 text-white rounded-lg font-black uppercase tracking-widest text-xs hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20 active:scale-95"
+                >
+                  Join Track
+                </button>
+              </div>
+            </div>
+
+            <div className="p-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl space-y-6">
+              <h3 className="text-lg font-black text-slate-950 dark:text-white tracking-tighter">Prerequisites</h3>
+              <div className="space-y-4">
+                {["Basic Logic Protocols", "CLI Access Mastery", "Distributed Theory"].map(pre => (
+                  <div key={pre} className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                    <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">{pre}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-32 py-12">

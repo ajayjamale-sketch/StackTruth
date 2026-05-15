@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                   </span>
                 </td>
                 <td className="px-8 py-4 text-right">
-                  <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => handleUserAction(u.name, "Restrict")} className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-all"><Ban className="w-4 h-4" /></button>
                     <button onClick={() => handleUserAction(u.name, "Audit")} className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"><RefreshCw className="w-4 h-4" /></button>
                     <button onClick={() => handleUserAction(u.name, "View")} className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all"><MoreVertical className="w-4 h-4" /></button>
