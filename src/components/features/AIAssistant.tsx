@@ -101,7 +101,7 @@ export default function AIAssistant() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="floating-widget w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all hover:scale-110 active:scale-95"
+        className="fixed bottom-8 right-8 z-[100] w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 transition-all hover:scale-110 active:scale-95"
       >
         <Bot className="w-6 h-6 text-white" />
         <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-slate-900 animate-pulse" />
@@ -111,7 +111,7 @@ export default function AIAssistant() {
 
   return (
     <div
-      className={`floating-widget flex flex-col bg-slate-900 border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 ${
+      className={`fixed bottom-8 right-8 z-[100] flex flex-col bg-slate-900 border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 ${
         isMinimized ? "w-72 h-12" : "w-80 sm:w-96 h-[520px]"
       }`}
     >

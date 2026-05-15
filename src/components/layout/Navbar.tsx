@@ -131,10 +131,10 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
             <>
               <Link
                 to="/questions/ask"
-                className="hidden sm:flex items-center gap-2 btn-primary text-xs px-4 py-2 rounded-md transition-all active:scale-95 shadow-lg shadow-primary/20"
+                className="hidden sm:flex items-center gap-2 bg-primary text-white text-xs font-black px-4 py-2 rounded-md transition-all active:scale-95 shadow-lg shadow-primary/20 hover:bg-primary/90"
               >
                 <Plus className="w-4 h-4" />
-                <span className="hidden xl:block">Post Question</span>
+                <span className="hidden md:block">Post Question</span>
               </Link>
 
               {/* Notifications */}

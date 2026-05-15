@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Star, Award, Zap, Code2, MessageSquare, Search, ChevronRight, Sparkles, Target, Users, Calendar, Layers } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
 import { MOCK_LEADERBOARD, MOCK_USERS } from "@/constants/mockData";
@@ -13,10 +14,13 @@ function ChangeIndicator({ change }: { change: number }) {
   return <span className="flex items-center gap-1 text-slate-400 text-xs"><Minus className="w-3 h-3" /></span>;
 }
 
-function TopThreeCard({ entry }: { entry: LeaderboardEntry }) {
+function TopThreeCard({ entry, onClick }: { entry: LeaderboardEntry, onClick: (id: string) => void }) {
   const isFirst = entry.rank === 1;
   return (
-    <div className={`flex flex-col items-center group ${isFirst ? "scale-110 lg:-translate-y-12" : "scale-95 translate-y-4"}`}>
+    <div 
+      onClick={() => onClick(entry.user.id)}
+      className={`flex flex-col items-center group cursor-pointer active:scale-95 transition-all ${isFirst ? "scale-110 lg:-translate-y-12" : "scale-95 translate-y-4"}`}
+    >
       <div className={`relative mb-8 group`}>
         {isFirst && <Crown className="w-12 h-12 text-amber-400 absolute -top-16 left-1/2 -translate-x-1/2 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] animate-pulse" />}
         <div className={`w-32 h-32 rounded-xl flex items-center justify-center text-primary font-black text-4xl border-4 transition-all duration-700 group-hover:scale-110 ${isFirst ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/20' : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl'}`}>
@@ -42,16 +46,35 @@ function TopThreeCard({ entry }: { entry: LeaderboardEntry }) {
 
 export default function LeaderboardPage() {
   const { success } = useToast();
+  const navigate = useNavigate();
   const [period, setPeriod] = useState("All Time");
   const [category, setCategory] = useState("Overall");
   const [search, setSearch] = useState("");
 
-  const filtered = MOCK_LEADERBOARD.filter(e =>
-    !search || e.user.name.toLowerCase().includes(search.toLowerCase()) || e.user.username.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = MOCK_LEADERBOARD
+    .filter(e => {
+      const matchesSearch = !search || 
+        e.user.name.toLowerCase().includes(search.toLowerCase()) || 
+        e.user.username.toLowerCase().includes(search.toLowerCase());
+      
+      // Category filter (mocked)
+      const matchesCategory = category === "Overall" || 
+        e.user.skills.some(s => s.toLowerCase().includes(category.toLowerCase().split(' ')[0]));
+      
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      // Period filter (mocked score adjustments)
+      if (period === "This Week") return b.change - a.change;
+      return b.score - a.score;
+    });
 
   const top3 = filtered.slice(0, 3);
   const rest = filtered.slice(3);
+
+  const handleProfileClick = (id: string) => {
+    navigate(`/profile/${id}`);
+  };
 
   return (
     <div className="space-y-32 py-12">
@@ -94,9 +117,9 @@ export default function LeaderboardPage() {
         <div className="relative group">
           <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row items-end justify-center gap-16 lg:gap-32 pb-12">
-            {top3[1] && <TopThreeCard entry={top3[1]} />}
-            {top3[0] && <TopThreeCard entry={top3[0]} />}
-            {top3[2] && <TopThreeCard entry={top3[2]} />}
+            {top3[1] && <TopThreeCard entry={top3[1]} onClick={handleProfileClick} />}
+            {top3[0] && <TopThreeCard entry={top3[0]} onClick={handleProfileClick} />}
+            {top3[2] && <TopThreeCard entry={top3[2]} onClick={handleProfileClick} />}
           </div>
         </div>
       </section>
@@ -155,7 +178,11 @@ export default function LeaderboardPage() {
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                 {rest.map((entry) => (
-                  <tr key={entry.rank} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all duration-500 cursor-pointer">
+                  <tr 
+                    key={entry.rank} 
+                    onClick={() => handleProfileClick(entry.user.id)}
+                    className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all duration-500 cursor-pointer"
+                  >
                     <td className="px-10 py-8">
                       <span className="text-xl font-black text-slate-300 group-hover:text-primary transition-colors tracking-tighter">#{entry.rank}</span>
                     </td>

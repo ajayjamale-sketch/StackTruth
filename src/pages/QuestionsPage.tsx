@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
 import { Search, Filter, ThumbsUp, MessageSquare, Eye, CheckCircle, TrendingUp, Clock, Flame, Plus, Tag, Award, BookmarkPlus, ChevronUp, ChevronDown, Sparkles, Shield, Users, MessageCircle } from "lucide-react";
 import { MOCK_QUESTIONS, TECH_TAGS } from "@/constants/mockData";
 import { QuestionSkeleton } from "@/components/ui/SkeletonLoader";
@@ -104,6 +104,8 @@ function QuestionCard({ question }: { question: Question }) {
 export default function QuestionsPage() {
   const { isAuthenticated } = useAuth();
   const { success } = useToast();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("All");
@@ -124,6 +126,117 @@ export default function QuestionsPage() {
     if (selectedTag) return q.tags.includes(selectedTag);
     return true;
   });
+
+  const selectedQuestion = id ? MOCK_QUESTIONS.find(q => q.id === id) : null;
+
+  if (selectedQuestion) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+        <button 
+          onClick={() => navigate("/questions")}
+          className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:text-primary transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" /> Back to Registry
+        </button>
+
+        <div className="grid lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-8 space-y-12">
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-12 rounded-xl shadow-2xl space-y-8 relative overflow-hidden">
+               <div className="absolute inset-0 grid-pattern opacity-5" />
+               <div className="relative z-10 space-y-6">
+                 <div className="flex flex-wrap gap-4 items-center justify-between">
+                   <div className="flex gap-2">
+                     {selectedQuestion.tags.map(tag => (
+                       <span key={tag} className="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest rounded-md border border-primary/10">{tag}</span>
+                     ))}
+                   </div>
+                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                     <Clock className="w-4 h-4" /> {timeAgo(selectedQuestion.createdAt)}
+                   </span>
+                 </div>
+                 <h1 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tighter leading-tight">
+                   {selectedQuestion.title}
+                 </h1>
+                 <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                      {selectedQuestion.body}
+                    </p>
+                 </div>
+                 <div className="pt-10 border-t border-slate-50 dark:border-slate-800 flex flex-wrap gap-6 items-center justify-between">
+                    <div className="flex items-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                       <span className="flex items-center gap-2"><Eye className="w-4 h-4 text-primary" />{selectedQuestion.views.toLocaleString()} Index</span>
+                       <span className="flex items-center gap-2"><MessageSquare className="w-4 h-4 text-primary" />{selectedQuestion.answers} Protocols</span>
+                    </div>
+                    <button 
+                      onClick={() => navigate("/live-coding")}
+                      className="bg-primary text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-xl active:scale-95"
+                    >
+                      Solve Challenge
+                    </button>
+                 </div>
+               </div>
+            </div>
+
+            <div className="space-y-8">
+               <h3 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter">Community Responses ({selectedQuestion.answers})</h3>
+               {[1, 2].map(i => (
+                 <div key={i} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 rounded-xl space-y-6 relative group overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4">
+                       <CheckCircle className="w-6 h-6 text-emerald-500 opacity-20 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <div className="flex items-center gap-4">
+                       <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-primary font-black">E</div>
+                       <div>
+                          <p className="text-sm font-black text-slate-950 dark:text-white leading-none">Expert_Auditor_{i}</p>
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Reputation: 12.4k</p>
+                       </div>
+                    </div>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                       Verified solution protocol for this challenge. Implementation involves optimizing the O(n) traversal using an atomic coordinate registry...
+                    </p>
+                    <div className="flex gap-4">
+                       <button className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">
+                          <ThumbsUp className="w-4 h-4" /> Helpful (24)
+                       </button>
+                       <button className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">
+                          <MessageSquare className="w-4 h-4" /> Comment
+                       </button>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          </div>
+
+          <div className="lg:col-span-4 space-y-10">
+             <div className="bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-white p-10 rounded-xl space-y-8 relative overflow-hidden border border-slate-100 dark:border-slate-800 shadow-xl">
+                <div className="absolute inset-0 grid-pattern opacity-10" />
+                <h3 className="text-2xl font-black tracking-tighter relative z-10 text-slate-950 dark:text-white">Audit Metadata</h3>
+                <div className="space-y-6 relative z-10">
+                   {[
+                     { label: "Difficulty", value: "Level 4 (Elite)", color: "text-amber-500" },
+                     { label: "Success Rate", value: "24.5%", color: "text-emerald-500" },
+                     { label: "Audit Nodes", value: "128 Active", color: "text-blue-500" },
+                   ].map(stat => (
+                     <div key={stat.label} className="flex justify-between items-center">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{stat.label}</span>
+                        <span className={`text-sm font-black ${stat.color}`}>{stat.value}</span>
+                     </div>
+                   ))}
+                </div>
+                <div className="pt-8 border-t border-slate-200 dark:border-white/10 relative z-10">
+                   <button 
+                     onClick={() => success("Audit report downloaded to local node.")}
+                     className="w-full bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 py-4 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-950 dark:text-white hover:bg-slate-50 dark:hover:bg-white/20 transition-all active:scale-95 shadow-sm"
+                   >
+                     Download Report
+                   </button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 space-y-32 py-12">

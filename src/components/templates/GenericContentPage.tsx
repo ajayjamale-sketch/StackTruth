@@ -63,7 +63,10 @@ export default function GenericContentPage({
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Protocol</p>
                </div>
             </div>
-            <button className={`w-full bg-slate-950 dark:bg-${primaryColor} text-white font-black px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-xl`}>
+            <button 
+              onClick={() => success("Protocol established. Initializing technical program...")}
+              className={`w-full bg-slate-950 dark:bg-${primaryColor} text-white font-black px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-xl active:scale-95`}
+            >
               Initialize Program
             </button>
           </div>
@@ -80,7 +83,11 @@ export default function GenericContentPage({
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {sections.map((section, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer">
+            <div 
+              key={i} 
+              onClick={() => success(`Accessing ${section.title} module...`)}
+              className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer"
+            >
               <div className={`w-14 h-14 bg-${primaryColor}/10 rounded-2xl flex items-center justify-center text-${primaryColor} mb-8 group-hover:scale-110 transition-transform`}>
                 {section.icon}
               </div>
@@ -117,9 +124,17 @@ export default function GenericContentPage({
           <p className="text-lg text-slate-500 dark:text-slate-400 font-medium tracking-tight">Commonly retrieved information regarding this program.</p>
         </div>
         <div className="space-y-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl flex items-center justify-between group hover:border-primary/30 transition-all cursor-pointer">
-              <span className="font-black text-slate-950 dark:text-white text-lg tracking-tight">Technical Inquiry Protocol #{i}</span>
+          {[
+            "How do I initiate the technical audit?",
+            "What are the verified certification requirements?",
+            "Can I collaborate with other global experts?"
+          ].map((q, i) => (
+            <div 
+              key={i} 
+              onClick={() => success("Protocol documentation retrieved.")}
+              className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl flex items-center justify-between group hover:border-primary/30 transition-all cursor-pointer"
+            >
+              <span className="font-black text-slate-950 dark:text-white text-lg tracking-tight">{q}</span>
               <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
             </div>
           ))}
@@ -127,7 +142,7 @@ export default function GenericContentPage({
       </section>
 
       {/* 5. Final CTA Section */}
-      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+      <section className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
          <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className={`absolute top-0 right-0 w-1/3 h-full bg-${primaryColor}/20 blur-[150px] rounded-full pointer-events-none`} />
          
@@ -139,7 +154,7 @@ export default function GenericContentPage({
               </p>
             </div>
             <button 
-              onClick={() => success("Protocol established. Welcome to the laboratory.")}
+              onClick={() => success("Program enrollment protocol initiated.")}
               className={`bg-${primaryColor} text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl active:scale-95`}
             >
               {ctaButton}

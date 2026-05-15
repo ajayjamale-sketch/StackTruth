@@ -1,50 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   Layout, Bot, Shield, Globe, Sparkles, TrendingUp, 
-  PlayCircle, Star, CheckCircle, ChevronRight, Award 
+  PlayCircle, Star, CheckCircle, ChevronRight, Award,
+  Search, Filter
 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/contexts/ToastContext";
 
 const TRACKS = [
   { 
+    id: "mern",
     title: "MERN Stack Mastery", 
     desc: "Complete path from zero to full-stack architect with verified industry protocols.",
     icon: <Layout className="w-8 h-8" />,
     count: "85 Chapters",
+    category: "Development",
     color: "from-indigo-500/10 to-blue-500/10 dark:from-indigo-500/5 dark:to-blue-500/5",
     text: "text-indigo-600"
   },
   { 
+    id: "ai",
     title: "AI & ML Infrastructure", 
     desc: "Master the deployment and scaling of neural architectures in production labs.",
     icon: <Bot className="w-8 h-8" />,
     count: "64 Chapters",
+    category: "AI/ML",
     color: "from-purple-500/10 to-pink-500/10 dark:from-purple-500/5 dark:to-pink-500/5",
     text: "text-purple-600"
   },
   { 
+    id: "sysdesign",
     title: "System Design Elite", 
     desc: "Architectural patterns for high-concurrency clusters and atomic data integrity.",
     icon: <Shield className="w-8 h-8" />,
     count: "42 Chapters",
+    category: "Architecture",
     color: "from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/5 dark:to-teal-500/5",
     text: "text-emerald-600"
   },
   { 
+    id: "devops",
     title: "Cloud Scale DevOps", 
     desc: "Infrastructure as code, automated audits, and global coordination protocols.",
     icon: <Globe className="w-8 h-8" />,
     count: "76 Chapters",
+    category: "DevOps",
     color: "from-amber-500/10 to-orange-500/10 dark:from-amber-500/5 dark:to-orange-500/5",
     text: "text-amber-600"
   }
 ];
 
+const CATEGORIES = ["All", "Development", "AI/ML", "Architecture", "DevOps"];
+
 export default function TutorialsPage() {
   const { success } = useToast();
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const handleAction = () => {
-    success("Protocol initiated. Welcome to the track.");
+  const filteredTracks = TRACKS.filter(track => {
+    const matchesSearch = track.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         track.desc.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === "All" || track.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleAction = (trackId?: string) => {
+    if (trackId === "mern") navigate("/tutorials/mern");
+    else if (trackId === "python") navigate("/tutorials/python");
+    else success("Protocol initiated. Welcome to the track.");
   };
 
   return (
@@ -68,7 +92,7 @@ export default function TutorialsPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-8 justify-center lg:justify-start">
                  <button 
-                   onClick={handleAction}
+                   onClick={() => handleAction()}
                    className="bg-emerald-500 text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/20 active:scale-95"
                  >
                    Start Learning
@@ -102,7 +126,7 @@ export default function TutorialsPage() {
                  ))}
                </div>
                <button 
-                 onClick={handleAction}
+                 onClick={() => handleAction("mern")}
                  className="w-full py-4 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-950 dark:text-white hover:bg-emerald-500 hover:text-white transition-all active:scale-95 shadow-sm"
                >
                  Resume Last Protocol
@@ -111,15 +135,46 @@ export default function TutorialsPage() {
           </div>
         </section>
 
-        {/* 2. Structured Mastery Tracks */}
+        {/* 2. Structured Mastery Tracks with Search and Filters */}
         <section className="space-y-16">
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tighter">Structured Mastery Tracks</h2>
-            <p className="text-lg text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">Verified learning sequences designed for high-density knowledge retention.</p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div className="space-y-4 text-center md:text-left">
+              <h2 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tighter">Structured Mastery Tracks</h2>
+              <p className="text-lg text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto md:mx-0">Verified learning sequences designed for high-density knowledge retention.</p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <div className="relative group flex-1 sm:w-64">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                <input 
+                  type="text"
+                  placeholder="Search tracks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                />
+              </div>
+              <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto no-scrollbar">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${activeCategory === cat ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm' : 'text-slate-500 hover:text-emerald-500'}`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
+
           <div className="grid md:grid-cols-2 gap-8">
-            {TRACKS.map((track) => (
-              <div key={track.title} className="group relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 rounded-xl hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden">
+            {filteredTracks.map((track) => (
+              <div 
+                key={track.title} 
+                onClick={() => handleAction(track.id)}
+                className="group relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-10 rounded-xl hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden"
+              >
                  <div className={`absolute inset-0 bg-gradient-to-br ${track.color} opacity-0 group-hover:opacity-100 transition-opacity`} />
                  <div className="relative z-10 space-y-8">
                     <div className={`w-16 h-16 ${track.text} bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
@@ -130,12 +185,19 @@ export default function TutorialsPage() {
                       <p className="text-base text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{track.desc}</p>
                     </div>
                     <div className="flex items-center justify-between pt-8 border-t border-slate-50 dark:border-slate-800">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{track.count} • Verified Audit</span>
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{track.count} • {track.category}</span>
                       <ChevronRight className="w-6 h-6 text-emerald-500 group-hover:translate-x-2 transition-transform" />
                     </div>
                  </div>
               </div>
             ))}
+            {filteredTracks.length === 0 && (
+              <div className="col-span-full py-24 text-center bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+                 <Search className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                 <p className="text-lg font-black text-slate-400">No tracks found matching your protocol.</p>
+                 <button onClick={() => { setSearchTerm(""); setActiveCategory("All"); }} className="mt-4 text-emerald-500 font-black uppercase tracking-widest text-[10px] border-b-2 border-emerald-500">Reset Filters</button>
+              </div>
+            )}
           </div>
         </section>
 
@@ -156,7 +218,7 @@ export default function TutorialsPage() {
                  ))}
                </ul>
                <button 
-                 onClick={handleAction}
+                 onClick={() => navigate("/practice/system-design")}
                  className="bg-emerald-600 dark:bg-emerald-500 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-xl active:scale-95"
                >
                  Enroll in Track
@@ -184,7 +246,12 @@ export default function TutorialsPage() {
                <h2 className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">Premium Collections</h2>
                <p className="text-slate-500 dark:text-slate-400 font-medium">Deep-dive video series from verified technical auditors.</p>
              </div>
-             <button className="text-emerald-500 font-black uppercase tracking-widest text-[10px] border-b-2 border-emerald-500 pb-1 hover:text-emerald-400 transition-colors">Browse All Videos</button>
+             <button 
+              onClick={() => navigate("/community")}
+              className="text-emerald-500 font-black uppercase tracking-widest text-[10px] border-b-2 border-emerald-500 pb-1 hover:text-emerald-400 transition-colors"
+             >
+              Browse All Videos
+             </button>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {[
