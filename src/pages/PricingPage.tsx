@@ -124,10 +124,9 @@ export default function PricingPage() {
              <h2 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tighter">Verified Accreditation</h2>
              <p className="text-xl text-slate-500 dark:text-slate-400 font-medium tracking-tight max-w-2xl mx-auto">StackTruth certifications are audited and recognized by global technology leaders and architectural labs.</p>
            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {[
                 "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
-                "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_2012.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",

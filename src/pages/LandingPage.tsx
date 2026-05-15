@@ -46,7 +46,12 @@ export default function LandingPage() {
 
       {/* 1. Hero Section - GFG Inspired Clean Search */}
       <section className="relative pt-32 pb-24 border-b border-slate-100 dark:border-slate-800 overflow-hidden">
-        <div className="absolute inset-0 bg-[#f8f9fa] dark:bg-slate-950/50 pointer-events-none" />
+        <img 
+          src="/assets/images/hero_bg.png" 
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
+          alt="Hero background"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#f8f9fa]/50 via-transparent to-white dark:from-slate-950/50 dark:via-transparent dark:to-slate-900 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -116,9 +121,9 @@ export default function LandingPage() {
                </div>
                 <div className="w-full lg:w-96 bg-white dark:bg-slate-900 rounded-xl p-8 font-mono text-xs text-slate-900 dark:text-slate-100 shadow-2xl relative overflow-hidden group min-h-[300px] border border-slate-100 dark:border-slate-800">
                   <img 
-                    src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80" 
+                    src="/assets/images/problem_day.png" 
                     alt="Code Audit" 
-                    className="absolute inset-0 w-full h-full object-cover opacity-5 group-hover:opacity-10 transition-opacity duration-700" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-700" 
                   />
                   <div className="relative z-10 space-y-4 opacity-80 group-hover:opacity-100 transition-opacity">
                     <p className="text-slate-400"># protocol_audit.py</p>
@@ -168,12 +173,12 @@ export default function LandingPage() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {[
-                { title: "Complete DS & Algo", count: "120 Chapters", image: "https://images.unsplash.com/photo-1509228468518-180dd4805a46?auto=format&fit=crop&w=600&q=80", color: "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20" },
-                { title: "MERN Stack Mastery", count: "85 Chapters", image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=600&q=80", color: "border-indigo-200 dark:border-indigo-900/40 bg-indigo-50 dark:bg-indigo-950/20" },
-                { title: "Python for Data Science", count: "64 Chapters", image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20" },
+                { title: "Complete DS & Algo", count: "120 Chapters", image: "/assets/images/track_ds_algo.png", color: "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20" },
+                { title: "MERN Stack Mastery", count: "85 Chapters", image: "/assets/images/track_mern.png", color: "border-indigo-200 dark:border-indigo-900/40 bg-indigo-50 dark:bg-indigo-950/20" },
+                { title: "Python for Data Science", count: "64 Chapters", image: "/assets/images/track_python.png", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20" },
               ].map((path) => (
                 <Link key={path.title} to="/knowledge" className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                   <img src={path.image} alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-20 transition-opacity duration-700" />
+                   <img src={path.image} alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
                    <div className="relative z-10 p-10 h-full flex flex-col gap-6">
                      <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                        {path.title.includes("DS") ? <Database className="w-8 h-8 text-emerald-600" /> : path.title.includes("MERN") ? <Layout className="w-8 h-8 text-indigo-600" /> : <Terminal className="w-8 h-8 text-amber-600" />}
@@ -201,7 +206,7 @@ export default function LandingPage() {
              </div>
              <div className="grid md:grid-cols-4 gap-8">
                {[
-                 { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=600&q=80" },
+                 { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "/assets/images/system_design.png" },
                  { title: "Advanced Java Protocols", students: "8k+", price: "$49", rating: 4.8, img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" },
                  { title: "AI Infrastructure Lab", students: "5k+", price: "$99", rating: 4.7, img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80" },
                  { title: "Security Audit Mastery", students: "3k+", price: "$79", rating: 4.9, img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" },
@@ -277,9 +282,9 @@ export default function LandingPage() {
              </div>
              <div className="grid md:grid-cols-3 gap-10">
                 {[
-                  { id: "a1", title: "Microservices: Implementing Atomic Consensus", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", tag: "Architecture" },
-                  { id: "a2", title: "Blockchain Infrastructure: Node Coordination", img: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80", tag: "Security" },
-                  { id: "a3", title: "High-Scale Systems: The 2026 Blueprint", img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=800&q=80", tag: "System Design" },
+                  { id: "a1", title: "Microservices: Implementing Atomic Consensus", img: "/assets/images/microservices.png", tag: "Architecture" },
+                  { id: "a2", title: "Blockchain Infrastructure: Node Coordination", img: "/assets/images/blockchain.png", tag: "Security" },
+                  { id: "a3", title: "High-Scale Systems: The 2026 Blueprint", img: "/assets/images/system_design.png", tag: "System Design" },
                 ].map((article) => (
                   <Link key={article.id} to={`/knowledge/${article.id}`} className="flex flex-col gap-6 group cursor-pointer">
                     <div className="h-64 bg-slate-100 rounded-xl overflow-hidden relative">
