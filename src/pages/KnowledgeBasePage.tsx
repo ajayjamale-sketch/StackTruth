@@ -109,12 +109,12 @@ export default function KnowledgeBasePage() {
                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-lg pl-12 pr-4 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400" 
                />
              </div>
-             <div className="flex gap-2">
-               <button className="flex-1 bg-slate-950 dark:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest py-4 rounded-xl hover:bg-primary transition-all">Search All</button>
-               <button className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-xl hover:border-primary transition-all shadow-sm">
-                 <Filter className="w-5 h-5 text-slate-400" />
-               </button>
-             </div>
+              <div className="flex gap-2">
+                <button className="flex-1 bg-primary text-white font-black text-[10px] uppercase tracking-widest py-4 rounded-xl hover:opacity-90 transition-all shadow-lg shadow-primary/20">Search All</button>
+                <button className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-xl hover:border-primary transition-all shadow-sm">
+                  <Filter className="w-5 h-5 text-slate-400" />
+                </button>
+              </div>
           </div>
         </div>
       </section>
@@ -133,7 +133,7 @@ export default function KnowledgeBasePage() {
             <button 
               key={cat} 
               onClick={() => setCategory(cat)} 
-              className={`p-6 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 border flex flex-col items-center gap-4 group ${category === cat ? "bg-slate-950 dark:bg-primary border-slate-950 dark:border-primary text-white shadow-2xl scale-105" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:border-primary hover:-translate-y-2"}`}
+              className={`p-6 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-500 border flex flex-col items-center gap-4 group ${category === cat ? "bg-primary text-white border-primary shadow-2xl scale-105" : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:border-primary hover:-translate-y-2"}`}
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${category === cat ? "bg-white/20" : "bg-slate-100 dark:bg-slate-800 group-hover:bg-primary/10 group-hover:text-primary"}`}>
                 {cat === "All" ? <Layers className="w-5 h-5" /> : cat === "Tutorial" ? <Zap className="w-5 h-5" /> : cat === "Deep Dive" ? <Star className="w-5 h-5" /> : cat === "Architecture" ? <Shield className="w-5 h-5" /> : cat === "AI/ML" ? <Bot className="w-5 h-5" /> : <Code2 className="w-5 h-5" />}
@@ -185,8 +185,8 @@ export default function KnowledgeBasePage() {
       </section>
 
       {/* 5. Mastery Tracks Section (New) */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
          
          <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
@@ -194,15 +194,15 @@ export default function KnowledgeBasePage() {
               <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
                 <Sparkles className="w-5 h-5" /> Specialized Skill Acquisition
               </div>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Master Technical <br /> <span className="text-primary">Disciplines.</span></h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Structured collections of verified articles designed to take you from foundational concepts to expert implementation protocols.</p>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">Master Technical <br /> <span className="text-primary">Disciplines.</span></h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Structured collections of verified articles designed to take you from foundational concepts to expert implementation protocols.</p>
               <div className="flex flex-col sm:flex-row items-center gap-8">
-                <button className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
+                <button className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/30 active:scale-95">
                   Explore Tracks
                 </button>
-                <div className="flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 rounded-xl">
+                <div className="flex items-center gap-4 px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
                    <Award className="w-6 h-6 text-amber-500" />
-                   <span className="text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">Verified Certifications</span>
+                   <span className="text-[11px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.3em]">Verified Certifications</span>
                 </div>
               </div>
             </div>
@@ -214,12 +214,12 @@ export default function KnowledgeBasePage() {
                 { title: "Security Protocols", count: "15 Guides", icon: <Shield className="w-6 h-6" /> },
                 { title: "Cloud Scale", count: "22 Guides", icon: <Globe className="w-6 h-6" /> },
               ].map((track) => (
-                <div key={track.title} className="bg-white/5 backdrop-blur-3xl p-8 rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-500 group/item cursor-pointer hover:-translate-y-2">
+                <div key={track.title} className="bg-white dark:bg-white/5 backdrop-blur-3xl p-8 rounded-xl border border-slate-200 dark:border-white/10 hover:border-primary/50 transition-all duration-500 group/item cursor-pointer hover:-translate-y-2 shadow-sm">
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover/item:scale-110 transition-transform">
                     {track.icon}
                   </div>
-                  <h4 className="text-xl font-black mb-2">{track.title}</h4>
-                  <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">{track.count}</p>
+                  <h4 className="text-xl font-black text-slate-950 dark:text-white mb-2">{track.title}</h4>
+                  <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{track.count}</p>
                 </div>
               ))}
             </div>

@@ -104,7 +104,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
               </button>
               <button
                 onClick={() => onApply(job)}
-                className="bg-slate-900 dark:bg-primary text-white font-bold px-8 py-3 rounded-lg flex items-center gap-2 hover:bg-primary dark:hover:bg-primary/90 transition-all text-sm shadow-lg shadow-primary/10"
+                className="bg-primary text-white font-bold px-8 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition-all text-sm shadow-lg shadow-primary/10"
               >
                 Apply Now <ArrowRight className="w-4 h-4" />
               </button>
@@ -188,27 +188,27 @@ export default function JobsPage() {
   return (
     <div className="space-y-20 py-8">
       {/* 1. Header Section */}
-      <section className="bg-slate-900 text-white rounded-2xl p-12 relative overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-white dark:bg-slate-900 text-slate-950 dark:text-white border border-slate-100 dark:border-slate-800 rounded-2xl p-12 relative overflow-hidden shadow-2xl dark:shadow-none">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
         <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/10 blur-[100px] pointer-events-none" />
         
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="space-y-4 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary rounded text-[10px] font-black uppercase tracking-widest border border-primary/30">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded text-[10px] font-black uppercase tracking-widest border border-primary/20">
               <Zap className="w-3.5 h-3.5" /> Market Opportunities
             </div>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Find Your Next <br /> <span className="text-primary underline decoration-primary/30 decoration-4 underline-offset-8">Technical Challenge</span></h1>
-            <p className="text-slate-400 text-lg font-medium leading-relaxed">Verified roles from leading technology companies, audited for technical depth and cultural excellence.</p>
+            <p className="text-slate-500 dark:text-slate-400 text-lg font-medium leading-relaxed">Verified roles from leading technology companies, audited for technical depth and cultural excellence.</p>
           </div>
           <div className="flex gap-6">
             <div className="text-center">
-              <p className="text-3xl font-bold">{MOCK_JOBS.length}</p>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Active Roles</p>
+              <p className="text-3xl font-bold text-slate-950 dark:text-white">{MOCK_JOBS.length}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Active Roles</p>
             </div>
-            <div className="w-px h-12 bg-white/10" />
+            <div className="w-px h-12 bg-slate-200 dark:bg-white/10" />
             <div className="text-center">
               <p className="text-3xl font-bold text-primary">$180k</p>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Avg Salary</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">Avg Salary</p>
             </div>
           </div>
         </div>

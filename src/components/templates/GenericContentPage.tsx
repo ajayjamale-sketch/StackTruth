@@ -127,14 +127,14 @@ export default function GenericContentPage({
       </section>
 
       {/* 5. Final CTA Section */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className={`absolute top-0 right-0 w-1/3 h-full bg-${primaryColor}/20 blur-[150px] rounded-full pointer-events-none`} />
          
          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
             <div className="space-y-8 max-w-2xl text-center lg:text-left">
-              <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight">{ctaTitle}</h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">
+              <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">{ctaTitle}</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">
                 {ctaDescription}
               </p>
             </div>

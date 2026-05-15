@@ -51,19 +51,19 @@ export default function TutorialsPage() {
     <div className="space-y-32 py-12">
         
         {/* 1. Hero Section */}
-        <section className="relative bg-slate-900 rounded-xl p-16 md:p-24 overflow-hidden group border border-white/5">
-          <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/grid.svg')] bg-center" />
+        <section className="relative bg-white dark:bg-slate-900 rounded-xl p-16 md:p-24 overflow-hidden group border border-slate-100 dark:border-white/5 shadow-2xl dark:shadow-none">
+          <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('/grid.svg')] bg-center dark:invert-0 invert" />
           <div className="absolute top-0 right-0 w-2/3 h-full bg-emerald-500/10 blur-[150px] rounded-full pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
           
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
             <div className="space-y-10 max-w-2xl text-center lg:text-left">
-              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-emerald-500/10 text-emerald-400 rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-emerald-500/20">
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-emerald-500/20">
                 <Sparkles className="w-5 h-5" /> Elite Technical Roadmap
               </div>
-              <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
+              <h1 className="text-5xl md:text-8xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">
                 Master the <br /> <span className="text-emerald-500">Protocols.</span>
               </h1>
-              <p className="text-slate-400 text-xl font-medium leading-relaxed max-w-xl">
+              <p className="text-slate-500 dark:text-slate-400 text-xl font-medium leading-relaxed max-w-xl">
                 Structured tutorial paths designed by industry veterans to take you from foundational concepts to mission-critical implementations.
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-8 justify-center lg:justify-start">
@@ -73,15 +73,15 @@ export default function TutorialsPage() {
                  >
                    Start Learning
                  </button>
-                 <div className="flex items-center gap-4 text-slate-400 font-black text-[10px] uppercase tracking-widest cursor-pointer hover:text-white transition-colors">
-                   <PlayCircle className="w-6 h-6 text-white" /> Watch Overview
+                 <div className="flex items-center gap-4 text-slate-400 font-black text-[10px] uppercase tracking-widest cursor-pointer hover:text-slate-950 dark:hover:text-white transition-colors">
+                   <PlayCircle className="w-6 h-6 text-slate-950 dark:text-white" /> Watch Overview
                  </div>
               </div>
             </div>
 
-            <div className="w-full lg:w-[450px] bg-white/5 backdrop-blur-3xl border border-white/10 rounded-xl p-10 space-y-8">
+            <div className="w-full lg:w-[450px] bg-slate-50 dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 rounded-xl p-10 space-y-8 shadow-xl dark:shadow-none">
                <div className="flex items-center justify-between">
-                 <h3 className="text-xl font-black text-white">Daily Progress</h3>
+                 <h3 className="text-xl font-black text-slate-950 dark:text-white">Daily Progress</h3>
                  <TrendingUp className="w-6 h-6 text-emerald-500" />
                </div>
                <div className="space-y-6">
@@ -95,7 +95,7 @@ export default function TutorialsPage() {
                        <span>{item.label}</span>
                        <span>{item.progress}%</span>
                      </div>
-                     <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                     <div className="h-1.5 bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden">
                        <div className="h-full bg-emerald-500" style={{ width: `${item.progress}%` }} />
                      </div>
                    </div>
@@ -103,7 +103,7 @@ export default function TutorialsPage() {
                </div>
                <button 
                  onClick={handleAction}
-                 className="w-full py-4 bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-white hover:bg-emerald-500 transition-all active:scale-95"
+                 className="w-full py-4 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-950 dark:text-white hover:bg-emerald-500 hover:text-white transition-all active:scale-95 shadow-sm"
                >
                  Resume Last Protocol
                </button>
@@ -157,7 +157,7 @@ export default function TutorialsPage() {
                </ul>
                <button 
                  onClick={handleAction}
-                 className="bg-slate-950 dark:bg-emerald-500 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-xl active:scale-95"
+                 className="bg-emerald-600 dark:bg-emerald-500 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-xl active:scale-95"
                >
                  Enroll in Track
                </button>
@@ -218,10 +218,10 @@ export default function TutorialsPage() {
         </section>
 
         {/* 5. Final CTA */}
-        <section className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 md:p-24 rounded-xl text-center space-y-12 relative overflow-hidden">
+        <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 p-16 md:p-24 rounded-xl text-center space-y-12 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:40px:40px] opacity-[0.03] pointer-events-none" />
           <div className="space-y-6 relative z-10">
-            <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-emerald-500/10 text-emerald-500 rounded-sm text-[11px] font-black uppercase tracking-widest border border-emerald-500/20">
+            <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 rounded-sm text-[11px] font-black uppercase tracking-widest border border-emerald-500/20">
               <Award className="w-5 h-5" /> Certification Protocol
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tighter">Validate Your <br /> Technical <span className="text-emerald-500">Sovereignty.</span></h2>
@@ -242,7 +242,7 @@ export default function TutorialsPage() {
           <div className="pt-8 relative z-10">
             <button 
               onClick={handleAction}
-              className="bg-slate-950 dark:bg-emerald-500 text-white px-16 py-6 rounded-lg font-black uppercase tracking-widest text-sm hover:opacity-90 transition-all shadow-2xl active:scale-95"
+              className="bg-emerald-500 text-white px-16 py-6 rounded-lg font-black uppercase tracking-widest text-sm hover:bg-emerald-400 transition-all shadow-2xl active:scale-95"
             >
               Start Your First Track
             </button>

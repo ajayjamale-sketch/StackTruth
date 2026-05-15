@@ -171,19 +171,19 @@ export default function ContactPage() {
       </section>
 
       {/* 5. Final CTA Node */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
          
          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
             <div className="space-y-10 max-w-2xl">
-              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20">
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
                 <Sparkles className="w-5 h-5" /> Strategic Synergy
               </div>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Elevate Your <br /> <span className="text-primary">Engineering Node.</span></h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Access the world's most rigorous technical audit platform and drive industrial excellence.</p>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">Elevate Your <br /> <span className="text-primary">Engineering Node.</span></h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Access the world's most rigorous technical audit platform and drive industrial excellence.</p>
             </div>
-            <Link to="/pricing" className="bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 text-center">View Programs</Link>
+            <Link to="/pricing" className="bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/30 text-center">View Programs</Link>
          </div>
       </section>
     </div>

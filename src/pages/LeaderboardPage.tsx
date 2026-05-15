@@ -197,8 +197,8 @@ export default function LeaderboardPage() {
       </section>
 
       {/* 5. Seasonal Achievements Section (New) */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className="absolute top-0 left-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
          
          <div className="relative z-10 grid lg:grid-cols-2 gap-20 items-center">
@@ -206,8 +206,8 @@ export default function LeaderboardPage() {
               <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
                 <Calendar className="w-5 h-5" /> Seasonal Performance Audit
               </div>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Rising Stars of <br /> <span className="text-primary">Q2 2026.</span></h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">The contributors with the highest reputation velocity and protocol audit quality over the current seasonal quarter.</p>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">Rising Stars of <br /> <span className="text-primary">Q2 2026.</span></h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">The contributors with the highest reputation velocity and protocol audit quality over the current seasonal quarter.</p>
               <div className="flex flex-col sm:flex-row items-center gap-8">
                 <button 
                   onClick={() => success("Seasonal report protocol initiated. Generating data...")}
@@ -215,26 +215,26 @@ export default function LeaderboardPage() {
                 >
                   View Seasonal Report
                 </button>
-                <div className="flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 rounded-xl">
+                <div className="flex items-center gap-4 px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
                    <Sparkles className="w-6 h-6 text-amber-500" />
-                   <span className="text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">Reputation Multiplier Active</span>
+                   <span className="text-[11px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.3em]">Reputation Multiplier Active</span>
                 </div>
               </div>
             </div>
             
             <div className="space-y-6">
                {[1, 2, 3].map(i => (
-                 <div key={i} className="bg-white/5 backdrop-blur-3xl p-8 rounded-xl border border-white/10 flex items-center justify-between group/item hover:border-primary/50 transition-all duration-500">
+                 <div key={i} className="bg-white dark:bg-white/5 backdrop-blur-3xl p-8 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between group/item hover:border-primary/50 transition-all duration-500 shadow-sm">
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-black text-xl">
                         {String.fromCharCode(65 + i)}
                       </div>
                       <div>
-                        <p className="text-xl font-black">Expert_Rising_{i}</p>
+                        <p className="text-xl font-black text-slate-950 dark:text-white">Expert_Rising_{i}</p>
                         <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em] mt-1">Velocity: +1,240 / Week</p>
                       </div>
                     </div>
-                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
                        <Award className="w-6 h-6 text-amber-500" />
                     </div>
                  </div>

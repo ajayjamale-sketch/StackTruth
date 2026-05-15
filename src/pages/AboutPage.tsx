@@ -24,8 +24,8 @@ export default function AboutPage() {
   return (
     <div className="space-y-32 py-12">
       {/* 1. Sovereign Mission Header */}
-      <section className="relative bg-slate-950 text-white rounded-2xl p-16 overflow-hidden group">
-        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="relative bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-950 dark:text-white rounded-2xl p-16 overflow-hidden group shadow-2xl dark:shadow-none">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
         <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="relative z-10 max-w-4xl space-y-8">
@@ -35,16 +35,16 @@ export default function AboutPage() {
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none">
             Architecting <br /> <span className="text-primary">Technical Sovereignty.</span>
           </h1>
-          <p className="text-xl text-slate-400 font-medium leading-relaxed tracking-tight max-w-2xl">
+          <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed tracking-tight max-w-2xl">
             StackTruth was founded to eliminate knowledge fragmentation. We are building the world's most rigorous industrial laboratory for technical validation, architectural auditing, and expert collaboration.
           </p>
           <div className="flex flex-wrap gap-6 pt-4">
             <button className="bg-primary text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
               Read the Manifesto
             </button>
-            <div className="flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 rounded-xl">
+            <div className="flex items-center gap-4 px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">
                <Shield className="w-6 h-6 text-primary" />
-               <span className="text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">Verified Protocol Active</span>
+               <span className="text-[11px] font-black text-slate-400 dark:text-slate-300 uppercase tracking-[0.3em]">Verified Protocol Active</span>
             </div>
           </div>
         </div>
@@ -111,21 +111,21 @@ export default function AboutPage() {
       </section>
 
       {/* 5. Final Convergence CTA */}
-      <section className="bg-slate-950 rounded-xl p-20 text-white relative overflow-hidden group">
-         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
+         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
          
          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
             <div className="space-y-10 max-w-2xl">
-              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20">
+              <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-primary/10 text-primary rounded-sm text-[11px] font-black uppercase tracking-[0.3em] border border-primary/20 shadow-xl shadow-primary/10">
                 <Sparkles className="w-5 h-5" /> Career Convergence
               </div>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight">Join the <br /> <span className="text-primary">Laboratory.</span></h2>
-              <p className="text-slate-400 text-xl leading-relaxed font-medium tracking-tight">We are constantly seeking elite technical minds to scale our global auditing protocols. Explore our current mandates.</p>
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">Join the <br /> <span className="text-primary">Laboratory.</span></h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">We are constantly seeking elite technical minds to scale our global auditing protocols. Explore our current mandates.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-6 w-full lg:w-auto">
-              <Link to="/register" className="bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 text-center">Start Protocol</Link>
-              <Link to="/jobs" className="bg-white/5 border border-white/10 text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center">View Mandates</Link>
+              <Link to="/register" className="bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/30 text-center">Start Protocol</Link>
+              <Link to="/jobs" className="bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-950 dark:text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-white/20 transition-all text-center">View Mandates</Link>
             </div>
          </div>
       </section>

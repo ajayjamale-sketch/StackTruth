@@ -148,7 +148,7 @@ export default function QuestionsPage() {
                </div>
             </div>
             {isAuthenticated && (
-              <button onClick={() => setShowAsk(true)} className="w-full bg-slate-950 dark:bg-primary text-white font-black px-10 py-5 rounded-lg flex items-center justify-center gap-3 hover:bg-primary transition-all shadow-2xl active:scale-95">
+              <button onClick={() => setShowAsk(true)} className="w-full bg-primary text-white font-black px-10 py-5 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-all shadow-2xl active:scale-95">
                 <Plus className="w-6 h-6" /> Initiate New Audit
               </button>
             )}
