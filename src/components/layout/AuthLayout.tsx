@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import Footer from "./Footer";
 import AIAssistant from "@/components/features/AIAssistant";
 
 export default function AuthLayout() {
@@ -24,6 +25,7 @@ export default function AuthLayout() {
           <div className="flex-1 max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-12 py-10 w-full">
             <Outlet />
           </div>
+          <Footer />
         </main>
       </div>
       

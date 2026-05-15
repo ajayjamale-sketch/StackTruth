@@ -276,12 +276,12 @@ export default function LandingPage() {
                <Link to="/knowledge" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">Read All Articles</Link>
              </div>
              <div className="grid md:grid-cols-3 gap-10">
-               {[
-                 { title: "Microservices: Implementing Atomic Consensus", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", tag: "Architecture" },
-                 { title: "Blockchain Infrastructure: Node Coordination", img: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80", tag: "Security" },
-                 { title: "High-Scale Systems: The 2026 Blueprint", img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=800&q=80", tag: "System Design" },
-               ].map((article, i) => (
-                 <div key={i} className="flex flex-col gap-6 group cursor-pointer">
+                {[
+                  { id: "a1", title: "Microservices: Implementing Atomic Consensus", img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80", tag: "Architecture" },
+                  { id: "a2", title: "Blockchain Infrastructure: Node Coordination", img: "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80", tag: "Security" },
+                  { id: "a3", title: "High-Scale Systems: The 2026 Blueprint", img: "https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=800&q=80", tag: "System Design" },
+                ].map((article) => (
+                  <Link key={article.id} to={`/knowledge/${article.id}`} className="flex flex-col gap-6 group cursor-pointer">
                     <div className="h-64 bg-slate-100 rounded-xl overflow-hidden relative">
                        <img src={article.img} alt={article.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-60" />
@@ -294,8 +294,8 @@ export default function LandingPage() {
                        <h3 className="text-2xl font-black text-slate-950 dark:text-white group-hover:text-primary transition-colors leading-tight tracking-tight">{article.title}</h3>
                        <p className="text-slate-500 font-medium leading-relaxed line-clamp-2">A technical deep-dive into distributed coordination and eventual consistency patterns in high-scale systems.</p>
                     </div>
-                 </div>
-               ))}
+                  </Link>
+                ))}
              </div>
           </div>
         </section>
