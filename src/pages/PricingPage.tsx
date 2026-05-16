@@ -1,24 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   CheckCircle, Zap, ArrowRight, ChevronDown, Award, 
   Sparkles, Shield, Star, Users, BookOpen, Globe, 
-  MessageSquare, Clock, Terminal, Cpu, Network
+  MessageSquare, Clock, Terminal, Cpu, Network, X, CreditCard, Lock
 } from "lucide-react";
 import { PRICING_PLANS, FAQS } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function PricingPage() {
-  const { success } = useToast();
+  const { success, warning } = useToast();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
-  const handleCTA = (cta: string) => {
-    if (cta === "Contact Sales") {
+  const handleCTA = (plan: any) => {
+    if (plan.cta === "Contact Sales") {
       success("Redirecting to institutional inquiry protocol...");
-    } else {
-      success("Initializing registration protocol...");
+      navigate("/contact");
+      return;
     }
+
+    if (!isAuthenticated) {
+      warning("Authentication Required", "Please initialize identity protocols to proceed with enrollment.");
+      navigate("/register");
+    } else {
+      setSelectedPlan(plan);
+      setShowPayment(true);
+    }
+  };
+
+  const handlePayment = (e: React.FormEvent) => {
+    e.preventDefault();
+    success("Transaction Initialized", "Payment protocol successful. Provisioning technical access...");
+    setShowPayment(false);
   };
 
   return (
@@ -106,13 +125,12 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link 
-                to={plan.cta === "Contact Sales" ? "/contact" : "/register"} 
-                onClick={() => handleCTA(plan.cta)}
+              <button 
+                onClick={() => handleCTA(plan)}
                 className={`w-full text-center py-5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 active:scale-95 shadow-lg ${plan.isPopular ? "bg-slate-950 dark:bg-primary text-white hover:bg-primary dark:hover:bg-emerald-500" : "bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-white/10 hover:bg-slate-950 dark:hover:bg-primary hover:text-white"}`}
               >
                 {plan.cta}
-              </Link>
+              </button>
             </div>
           ))}
         </section>
@@ -224,6 +242,71 @@ export default function PricingPage() {
           </div>
         </section>
       </main>
+
+      {/* 6. Secure Payment Modal */}
+      {showPayment && selectedPlan && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowPayment(false)} />
+          <div className="relative bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500">
+             {/* Modal Header */}
+             <div className="bg-slate-50 dark:bg-white/5 px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                      <CreditCard className="w-5 h-5" />
+                   </div>
+                   <div>
+                      <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Payment Protocol</h3>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Secure Terminal v2.4</p>
+                   </div>
+                </div>
+                <button onClick={() => setShowPayment(false)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 transition-all">
+                   <X className="w-5 h-5" />
+                </button>
+             </div>
+
+             <form onSubmit={handlePayment} className="p-8 space-y-8">
+                {/* Plan Summary */}
+                <div className="bg-primary/5 border border-primary/10 rounded-xl p-6 flex items-center justify-between">
+                   <div>
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Selected Program</p>
+                      <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{selectedPlan.name}</h4>
+                   </div>
+                   <div className="text-right">
+                      <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">${annual ? Math.floor(selectedPlan.price * 0.75) : selectedPlan.price}</p>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{annual ? "Annually" : "Monthly"}</p>
+                   </div>
+                </div>
+
+                <div className="space-y-4">
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity Node (Email)</label>
+                      <input type="email" required placeholder="name@stacktruth.com" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-all" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Instrument</label>
+                      <div className="relative">
+                        <input type="text" required placeholder="Card Number" className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-all pr-12" />
+                        <CreditCard className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300" />
+                      </div>
+                   </div>
+                   <div className="grid grid-cols-2 gap-4">
+                      <input type="text" required placeholder="MM/YY" className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-all" />
+                      <input type="text" required placeholder="CVV" className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-primary transition-all" />
+                   </div>
+                </div>
+
+                <div className="pt-4 space-y-6">
+                   <button type="submit" className="w-full bg-primary text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-xl shadow-primary/20 active:scale-95 flex items-center justify-center gap-3">
+                      Complete Enrollment <ArrowRight className="w-5 h-5" />
+                   </button>
+                   <div className="flex items-center justify-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                      <Lock className="w-3.5 h-3.5 text-emerald-500" /> AES-256 Encrypted Transaction
+                   </div>
+                </div>
+             </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

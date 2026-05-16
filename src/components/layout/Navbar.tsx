@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Search, Bell, Sun, Moon, ChevronDown, LogOut, Settings,
   User, Sparkles, Zap, Menu, X, Plus, Shield,
@@ -9,10 +9,11 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { MOCK_NOTIFICATIONS } from "@/constants/mockData";
 import NotificationDropdown from "@/components/features/NotificationDropdown";
 
-export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
+export default function Navbar({ onMenuClick, minimal }: { onMenuClick?: () => void, minimal?: boolean }) {
   const { user, logout, isAuthenticated } = useAuth();
   const { toggleTheme, isDark } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +32,9 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  // Navigation links are suppressed on all internal panels (including Admin) for focus
+  const isMinimal = minimal || (isAuthenticated && (location.pathname.startsWith("/dashboard") || location.pathname.startsWith("/admin")));
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,17 +57,19 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
       <div className="h-full px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4 lg:gap-12 max-w-[2000px] mx-auto">
         {/* Left: Logo + Menu */}
         <div className="flex items-center gap-6 flex-shrink-0">
-          {isAuthenticated ? (
+          {onMenuClick ? (
             <button
               onClick={onMenuClick}
-              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Open sidebar menu"
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
             >
               <Menu className="w-5 h-5" />
             </button>
           ) : (
             <button
               onClick={() => setShowMobileNav(!showMobileNav)}
-              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label={showMobileNav ? "Close navigation menu" : "Open navigation menu"}
+              className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
             >
               {showMobileNav ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -80,19 +86,23 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               <span className="logo-font text-xl sm:text-2xl text-primary leading-none">
                 StackTruth
               </span>
-              <span className="hidden lg:block text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">LEARN • PRACTICE • VERIFY</span>
+              {!isMinimal && (
+                <span className="hidden lg:block text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">LEARN • PRACTICE • VERIFY</span>
+              )}
             </div>
           </Link>
           
-          {/* Main Nav Links - Publicly Visible */}
-          <div className="hidden lg:flex items-center gap-6">
-            <Link to="/tutorials" className="nav-link">Tutorials</Link>
-            <Link to="/knowledge" className="nav-link">Library</Link>
-            <Link to="/questions" className="nav-link">Practice</Link>
-            <Link to="/pricing" className="nav-link">Courses</Link>
-            <Link to="/jobs" className="nav-link">Jobs</Link>
-            <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
-          </div>
+          {/* Main Nav Links - Suppressed in internal panels for focused workspace */}
+          {!isMinimal && (
+            <div className="hidden lg:flex items-center gap-6">
+              <Link to="/tutorials" className="nav-link">Tutorials</Link>
+              <Link to="/knowledge" className="nav-link">Library</Link>
+              <Link to="/questions" className="nav-link">Practice</Link>
+              <Link to="/pricing" className="nav-link">Pricing</Link>
+              <Link to="/jobs" className="nav-link">Jobs</Link>
+              <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
+            </div>
+          )}
         </div>
 
         {/* Center: Search */}
@@ -123,7 +133,8 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
 
           <button
             onClick={toggleTheme}
-            className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+            className="p-2 text-muted-foreground hover:text-foreground transition-all active:scale-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
           >
             {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -142,7 +153,8 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="p-2 text-muted-foreground hover:text-foreground transition-colors relative"
+                  aria-label={`View notifications (${unreadCount} unread)`}
+                  className="p-2 text-muted-foreground hover:text-foreground transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md relative"
                 >
                   <Bell className="w-4 h-4" />
                   {unreadCount > 0 && (
@@ -166,11 +178,11 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
                     {user?.avatar ? (
                       <img
                         src={user.avatar}
-                        alt={user.name}
+                        alt={user.name || "User"}
                         className="w-full h-full rounded-xl object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-black text-primary uppercase">{user?.name.charAt(0)}</span>
+                      <span className="text-sm font-black text-primary uppercase">{user?.name?.charAt(0) || "U"}</span>
                     )}
                   </div>
                   <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
@@ -179,13 +191,13 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
                 {showUserMenu && (
                   <div className="absolute right-0 top-full mt-2 w-64 card-elevated p-2 z-50">
                     <div className="px-4 py-3 border-b border-border mb-2">
-                      <p className="text-sm font-bold text-foreground leading-none mb-1">{user?.name}</p>
-                      <p className="text-xs text-muted-foreground">{user?.email}</p>
+                      <p className="text-sm font-bold text-foreground leading-none mb-1">{user?.name || "Access User"}</p>
+                      <p className="text-xs text-muted-foreground">{user?.email || "identity@stacktruth.com"}</p>
                       <div className="flex items-center gap-2 mt-3">
                         <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                           <div className="h-full bg-accent" style={{ width: '65%' }} />
                         </div>
-                        <span className="text-[10px] font-black text-accent uppercase tracking-widest">{user?.reputation.toLocaleString()}</span>
+                        <span className="text-[10px] font-black text-accent uppercase tracking-widest">{(user?.reputation || 0).toLocaleString()}</span>
                       </div>
                     </div>
                     
@@ -254,13 +266,13 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
       )}
 
       {/* Mobile Nav Menu */}
-      {showMobileNav && !isAuthenticated && (
+      {showMobileNav && !minimal && (
         <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-in-up">
           <div className="px-6 py-4 space-y-1">
             {[
               { label: "Tutorials", path: "/tutorials" },
               { label: "Practice", path: "/questions" },
-              { label: "Courses", path: "/pricing" },
+              { label: "Pricing", path: "/pricing" },
               { label: "Jobs", path: "/jobs" },
               { label: "Leaderboard", path: "/leaderboard" },
               { label: "About", path: "/about" },

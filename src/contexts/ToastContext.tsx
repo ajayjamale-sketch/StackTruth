@@ -30,10 +30,10 @@ const ICONS: Record<ToastType, React.ReactNode> = {
 };
 
 const BG: Record<ToastType, string> = {
-  success: "border-green-500/30 bg-green-500/10",
-  error: "border-red-500/30 bg-red-500/10",
-  info: "border-blue-500/30 bg-blue-500/10",
-  warning: "border-amber-500/30 bg-amber-500/10",
+  success: "border-green-500/50 bg-slate-950",
+  error: "border-red-500/50 bg-slate-950",
+  info: "border-blue-500/50 bg-slate-950",
+  warning: "border-amber-500/50 bg-slate-950",
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -64,7 +64,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`flex items-start gap-3 p-4 rounded-xl border backdrop-blur-md shadow-2xl animate-slide-in-right ${BG[t.type]}`}
+            className={`flex items-start gap-3 p-4 rounded-xl border shadow-2xl animate-slide-in-right ${BG[t.type]}`}
           >
             <div className="mt-0.5 flex-shrink-0">{ICONS[t.type]}</div>
             <div className="flex-1 min-w-0">

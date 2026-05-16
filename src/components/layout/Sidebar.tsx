@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useToast } from "@/contexts/ToastContext";
+import { useSidebar } from "@/contexts/SidebarContext";
 import type { UserRole } from "@/types";
 
 interface SidebarItem {
@@ -31,7 +32,6 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
     {
       items: [
         { label: "Overview", icon: LayoutDashboard, path: "/dashboard/developer" },
-        { label: "Practice Hub", icon: MessageSquare, path: "/questions", badge: "42", badgeColor: "bg-primary" },
         { label: "Code Reviews", icon: Code2, path: "/code-review" },
         { label: "AI Assistant", icon: Bot, path: "/ai-assistant", badge: "New", badgeColor: "bg-amber-500" },
       ],
@@ -49,19 +49,24 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
             { label: "System Design", path: "/practice/system-design" },
           ]
         },
-        { label: "Tutorials", icon: BookOpen, path: "/tutorials" },
-        { label: "Technical Library", icon: BookOpen, path: "/knowledge" },
+        { 
+          label: "Tutorials", 
+          icon: BookOpen, 
+          path: "/tutorials",
+          subItems: [
+            { label: "Python Mastery", path: "/tutorials/python" },
+            { label: "MERN Stack", path: "/tutorials/mern" },
+            { label: "AI & ML", path: "/tutorials/ai" },
+            { label: "System Design", path: "/tutorials/sysdesign" },
+            { label: "Cloud DevOps", path: "/tutorials/devops" },
+          ]
+        },
       ],
     },
     {
       title: "Ecosystem",
       items: [
-        { label: "Community", icon: Users, path: "/community" },
-        { label: "Contests", icon: Trophy, path: "/contests" },
         { label: "Live Coding", icon: Play, path: "/live-coding" },
-        { label: "Courses", icon: Sparkles, path: "/courses" },
-        { label: "Jobs", icon: Briefcase, path: "/jobs" },
-        { label: "Leaderboard", icon: Trophy, path: "/leaderboard" },
       ],
     },
   ],
@@ -85,8 +90,6 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
     {
       items: [
         { label: "Recruitment Portal", icon: LayoutDashboard, path: "/dashboard/recruiter" },
-        { label: "Active Roles", icon: Briefcase, path: "/jobs" },
-        { label: "Search Experts", icon: Search, path: "/leaderboard" },
       ],
     },
     {
@@ -117,18 +120,15 @@ const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
 
 export default function Sidebar({ 
   isOpen, 
-  onClose,
-  isCollapsed,
-  setIsCollapsed
+  onClose
 }: { 
   isOpen: boolean; 
   onClose: () => void;
-  isCollapsed: boolean;
-  setIsCollapsed: (v: boolean) => void;
 }) {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const { success } = useToast();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -165,13 +165,15 @@ export default function Sidebar({
     }, 100);
   };
 
+  const isAdminPage = location.pathname.startsWith("/admin") || location.pathname.startsWith("/dashboard/admin");
+
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 lg:hidden" onClick={onClose} />
       )}
 
-      <aside className={`fixed left-0 top-20 h-[calc(100vh-80px)] bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col z-40 transition-all duration-500 shadow-2xl dark:shadow-none ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${isCollapsed ? "w-20" : "w-80"}`}>
+      <aside className={`fixed left-0 ${isAdminPage ? "top-0 h-screen" : "top-20 h-[calc(100vh-80px)]"} bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col z-40 transition-all duration-500 shadow-2xl dark:shadow-none ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${isCollapsed ? "w-20" : "w-80"}`}>
         
         {/* Collapse Toggle - Desktop Only */}
         <button 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { 
   Search, BookOpen, Clock, Heart, TrendingUp, Star, 
-  Bot, ArrowLeft, Share2, Bookmark, Shield, Layers 
+  Bot, ArrowLeft, Share2, Bookmark, Shield, Layers,
+  Trophy, Sparkles, Zap, Users, Globe
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MOCK_ARTICLES } from "@/constants/mockData";
@@ -55,10 +56,13 @@ const ArticleCard = ({ article, onClick }: { article: Article; onClick: () => vo
   </div>
 );
 
-const TrackCard = ({ icon, title }: { icon: React.ReactNode; title: string }) => (
-  <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 rounded-2xl hover:border-primary/50 transition-all group cursor-pointer shadow-sm dark:shadow-none">
+const TrackCard = ({ icon, title, onClick }: { icon: React.ReactNode; title: string; onClick: () => void }) => (
+  <div 
+    onClick={onClick}
+    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-primary/50 transition-all group cursor-pointer shadow-sm dark:shadow-none active:scale-95"
+  >
     <div className="text-primary mb-4 group-hover:scale-110 transition-transform">{icon}</div>
-    <span className="font-bold text-sm text-slate-900 dark:text-white">{title}</span>
+    <span className="font-bold text-sm text-slate-900 dark:text-white uppercase tracking-widest">{title}</span>
   </div>
 );
 
@@ -160,6 +164,34 @@ export default function KnowledgeBasePage() {
         </div>
       </section>
 
+      {/* Featured Protocols Spotlight */}
+      <section className="grid lg:grid-cols-2 gap-10">
+        {[
+          { title: "Distributed Consensus 2026", desc: "A technical audit of Paxos vs Raft in high-concurrency clusters.", color: "bg-blue-600", icon: Shield },
+          { title: "Neural Layer Scaling", desc: "Scaling transformer architectures across heterogeneous GPU clusters.", color: "bg-primary", icon: Bot },
+        ].map((feat, i) => (
+          <div 
+            key={i} 
+            onClick={() => navigate("/knowledge/a1")}
+            className="relative group overflow-hidden rounded-3xl bg-white dark:bg-slate-950 p-10 text-slate-900 dark:text-white border border-slate-100 dark:border-white/5 hover:border-primary/50 transition-all cursor-pointer active:scale-[0.98] shadow-sm"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 space-y-6">
+              <div className={`w-12 h-12 ${feat.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+                <feat.icon className="w-6 h-6" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black tracking-tight">{feat.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-sm">{feat.desc}</p>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-primary group-hover:gap-4 transition-all">
+                Access Audit <Clock className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
+
       {/* Categories */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
         {CATEGORIES.map(cat => (
@@ -202,16 +234,76 @@ export default function KnowledgeBasePage() {
             <p className="text-slate-500 dark:text-slate-400 mb-8 font-medium max-w-md mx-auto lg:mx-0">
               Structured learning paths to take you from foundational concepts to expert implementation.
             </p>
-            <button className="w-full sm:w-auto bg-primary text-white hover:opacity-90 px-10 py-4 rounded-xl font-bold text-sm transition-all shadow-xl shadow-primary/20">
+            <button 
+              onClick={() => navigate("/tutorials")}
+              className="w-full sm:w-auto bg-primary text-white hover:opacity-90 px-10 py-4 rounded-xl font-bold text-sm transition-all shadow-xl shadow-primary/20 active:scale-95"
+            >
               View All Tracks
             </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <TrackCard icon={<Shield />} title="Security" />
-            <TrackCard icon={<Bot />} title="AI Ops" />
-            <TrackCard icon={<Layers />} title="Architecture" />
-            <TrackCard icon={<TrendingUp />} title="Scale" />
+            <TrackCard icon={<Shield />} title="Security Hub" onClick={() => navigate("/practice/algorithms")} />
+            <TrackCard icon={<Bot />} title="AI Mastery" onClick={() => navigate("/tutorials/ai")} />
+            <TrackCard icon={<Layers />} title="Architecture" onClick={() => navigate("/tutorials/sysdesign")} />
+            <TrackCard icon={<TrendingUp />} title="Scale Ops" onClick={() => navigate("/practice/system-design")} />
           </div>
+        </div>
+      </section>
+
+      {/* Community Contributor Index */}
+      <section className="space-y-10">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Technical Contributors</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Top contributors defining the technical standards of the sovereignty.</p>
+          </div>
+          <button 
+            onClick={() => success("Global Rankings Index", "Navigating to the community Hall of Fame protocols.")}
+            className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1 hover:text-primary/80 transition-all"
+          >
+            View Hall of Fame
+          </button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          {[1, 2, 3, 4, 5, 6].map(i => (
+            <div 
+              key={i} 
+              onClick={() => success("Auditor Identity", `Displaying technical credentials for Auditor_0${i}.`)}
+              className="flex flex-col items-center gap-4 p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-primary/30 transition-all cursor-pointer group active:scale-95"
+            >
+              <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors text-xl font-black border border-slate-100 dark:border-slate-700">
+                {String.fromCharCode(64 + i)}
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-black text-slate-950 dark:text-white">Auditor_0{i}</p>
+                <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">{15-i}k Rep</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Subscription/Newsletter */}
+      <section className="bg-primary/5 border border-primary/10 rounded-3xl p-10 md:p-16 text-center space-y-10 relative overflow-hidden">
+        <div className="absolute inset-0 grid-pattern opacity-5" />
+        <div className="space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-sm text-[10px] font-black uppercase tracking-widest">
+            <Zap className="w-4 h-4" /> Global Intelligence Brief
+          </div>
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">Stay Synchronized.</h2>
+          <p className="text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
+            Get weekly technical audits, protocol updates, and interview insights delivered directly to your node.
+          </p>
+        </div>
+        <div className="max-w-md mx-auto relative z-10">
+          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); success("Subscription Confirmed."); }}>
+            <input 
+              type="email" 
+              placeholder="node-identity@stacktruth.com" 
+              className="flex-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl px-6 py-4 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+            <button className="bg-primary text-white px-8 rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-xl shadow-primary/10">Subscribe</button>
+          </form>
         </div>
       </section>
     </div>

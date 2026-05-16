@@ -77,16 +77,18 @@ export default function TutorialsPage() {
   const handleAction = (trackId?: string) => {
     if (trackId === "mern") navigate("/tutorials/mern");
     else if (trackId === "python") navigate("/tutorials/python");
+    else if (trackId === "ai") navigate("/tutorials/ai");
+    else if (trackId === "sysdesign") navigate("/tutorials/sysdesign");
+    else if (trackId === "devops") navigate("/tutorials/devops");
     else {
-      const track = TRACKS.find(t => t.id === trackId);
-      if (track) setSelectedTrack(track);
-      else success("Protocol initiated. Welcome to the track.");
+      // Default fallback or general start
+      navigate("/tutorials/mern");
     }
   };
 
   if (selectedTrack) {
     return (
-      <div className="max-w-6xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <button 
           onClick={() => setSelectedTrack(null)}
           className="flex items-center gap-2 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:text-primary transition-colors group"
@@ -203,7 +205,7 @@ export default function TutorialsPage() {
   }
 
   return (
-    <div className="space-y-32 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-32 py-12">
         
         {/* 1. Hero Section */}
         <section className="relative bg-white dark:bg-slate-900 rounded-xl p-16 md:p-24 overflow-hidden group border border-slate-100 dark:border-white/5 shadow-2xl dark:shadow-none">
@@ -228,9 +230,12 @@ export default function TutorialsPage() {
                  >
                    Start Learning
                  </button>
-                 <div className="flex items-center gap-4 text-slate-400 font-black text-[10px] uppercase tracking-widest cursor-pointer hover:text-slate-950 dark:hover:text-white transition-colors">
+                 <button 
+                   onClick={() => navigate("/about")}
+                   className="flex items-center gap-4 text-slate-400 font-black text-[10px] uppercase tracking-widest cursor-pointer hover:text-slate-950 dark:hover:text-white transition-colors"
+                 >
                    <PlayCircle className="w-6 h-6 text-slate-950 dark:text-white" /> Watch Overview
-                 </div>
+                 </button>
               </div>
             </div>
 
@@ -385,12 +390,16 @@ export default function TutorialsPage() {
              </button>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
-            {[
+            { [
               { title: "Distributed Database Internals", time: "14h 20m", level: "Expert", img: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80" },
               { title: "Large Scale AI Deployment", time: "10h 45m", level: "Advanced", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" },
               { title: "Industrial Security Protocols", time: "12h 15m", level: "Pro", img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" }
             ].map((video, i) => (
-              <div key={i} className="group cursor-pointer space-y-6">
+              <div 
+                key={i} 
+                onClick={() => navigate("/community")}
+                className="group cursor-pointer space-y-6"
+              >
                  <div className="relative aspect-video bg-slate-100 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800">
                     <img src={video.img} alt={video.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                     <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/40 transition-colors" />

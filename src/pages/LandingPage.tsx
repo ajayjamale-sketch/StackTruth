@@ -47,7 +47,7 @@ export default function LandingPage() {
       {/* 1. Hero Section - GFG Inspired Clean Search */}
       <section className="relative pt-32 pb-24 border-b border-slate-100 dark:border-slate-800 overflow-hidden">
         <img 
-          src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/hero_background_1778837846391.png" 
+          src="/assets/images/hero_premium.png" 
           className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-[0.15] pointer-events-none" 
           alt="Hero background"
         />
@@ -121,9 +121,12 @@ export default function LandingPage() {
                </div>
                 <div className="w-full lg:w-96 bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-2xl relative group min-h-[350px] border border-slate-100 dark:border-slate-800">
                   <img 
-                    src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/problem_day_code_1778837866606.png" 
+                    src="/assets/images/problem_premium.png" 
                     alt="Code Audit" 
                     className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" 
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80";
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
                </div>
@@ -164,12 +167,12 @@ export default function LandingPage() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {[
-                { title: "Complete DS & Algo", count: "120 Chapters", image: "/assets/images/track_ds_algo.png", color: "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20" },
-                { title: "MERN Stack Mastery", count: "85 Chapters", image: "/assets/images/track_mern.png", color: "border-indigo-200 dark:border-indigo-900/40 bg-indigo-50 dark:bg-indigo-950/20" },
-                { title: "Python for Data Science", count: "64 Chapters", image: "/assets/images/track_python.png", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20" },
+                { title: "Complete DS & Algo", count: "120 Chapters", image: "/assets/images/track_ds_algo.png", color: "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20", path: "/practice/data-structures" },
+                { title: "MERN Stack Mastery", count: "85 Chapters", image: "/assets/images/track_mern.png", color: "border-indigo-200 dark:border-indigo-900/40 bg-indigo-50 dark:bg-indigo-950/20", path: "/tutorials/mern" },
+                { title: "Python for Data Science", count: "64 Chapters", image: "/assets/images/track_python.png", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20", path: "/tutorials/python" },
               ].map((path) => (
-                <Link key={path.title} to="/knowledge" className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                   <img src="file:///C:/Users/ajayj/.gemini/antigravity/brain/89d7bc6b-6e7c-4789-a997-d46f06783f55/track_mastery_icons_1778837884841.png" alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" />
+                <Link key={path.title} to={path.path} className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
+                   <img src="/assets/images/track_premium.png" alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" />
                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60" />
                    <div className="relative z-10 p-10 h-full flex flex-col gap-6">
                      <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
@@ -194,16 +197,20 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6 space-y-16">
              <div className="flex items-center justify-between">
                <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Certification & Mastery</h2>
-               <Link to="/pricing" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">View All Courses</Link>
+               <Link to="/pricing" className="text-primary font-black text-xs uppercase tracking-widest border-b-2 border-primary pb-1">View Pricing Protocols</Link>
              </div>
              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                {[
-                 { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "/assets/images/system_design.png" },
-                 { title: "Advanced Java Protocols", students: "8k+", price: "$49", rating: 4.8, img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" },
-                 { title: "AI Infrastructure Lab", students: "5k+", price: "$99", rating: 4.7, img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80" },
-                 { title: "Security Audit Mastery", students: "3k+", price: "$79", rating: 4.9, img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" },
+                 { title: "System Design for FAANG", students: "12k+", price: "Free", rating: 4.9, img: "/assets/images/system_design.png", path: "/tutorials/sysdesign" },
+                 { title: "Advanced Java Protocols", students: "8k+", price: "$49", rating: 4.8, img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80", path: "/tutorials/python" },
+                 { title: "AI Infrastructure Lab", students: "5k+", price: "$99", rating: 4.7, img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80", path: "/tutorials/ai" },
+                 { title: "Security Audit Mastery", students: "3k+", price: "$79", rating: 4.9, img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80", path: "/tutorials/devops" },
                ].map((course) => (
-                 <div key={course.title} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer">
+                 <Link 
+                   key={course.title} 
+                   to={course.path}
+                   className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer block"
+                 >
                     <div className="h-48 bg-slate-50 rounded-lg mb-8 overflow-hidden border border-slate-50 relative">
                        <img 
                          src={course.img} 
@@ -224,7 +231,7 @@ export default function LandingPage() {
                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{course.students} Students</span>
                        <span className="text-lg font-black text-slate-900 dark:text-white">{course.price}</span>
                     </div>
-                 </div>
+                 </Link>
                ))}
              </div>
           </div>

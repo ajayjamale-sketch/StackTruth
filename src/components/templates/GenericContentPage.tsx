@@ -12,6 +12,7 @@ interface Section {
   subtitle?: string;
   description: string;
   icon: React.ReactNode;
+  onClick?: () => void;
 }
 
 interface PageTemplateProps {
@@ -26,27 +27,73 @@ interface PageTemplateProps {
   primaryColor?: string;
 }
 
+const COLOR_MAPS: Record<string, { bg: string, text: string, border: string, btn: string, glow: string }> = {
+  primary: {
+    bg: "bg-primary",
+    text: "text-primary",
+    border: "border-primary",
+    btn: "bg-primary",
+    glow: "bg-primary/5"
+  },
+  "emerald-500": {
+    bg: "bg-emerald-500",
+    text: "text-emerald-500",
+    border: "border-emerald-500",
+    btn: "bg-emerald-500",
+    glow: "bg-emerald-500/5"
+  },
+  "blue-600": {
+    bg: "bg-blue-600",
+    text: "text-blue-600",
+    border: "border-blue-600",
+    btn: "bg-blue-600",
+    glow: "bg-blue-600/5"
+  },
+  "purple-600": {
+    bg: "bg-purple-600",
+    text: "text-purple-600",
+    border: "border-purple-600",
+    btn: "bg-purple-600",
+    glow: "bg-purple-600/5"
+  },
+  "indigo-600": {
+    bg: "bg-indigo-600",
+    text: "text-indigo-600",
+    border: "border-indigo-600",
+    btn: "bg-indigo-600",
+    glow: "bg-indigo-600/5"
+  },
+  "amber-600": {
+    bg: "bg-amber-600",
+    text: "text-amber-600",
+    border: "border-amber-600",
+    btn: "bg-amber-600",
+    glow: "bg-amber-600/5"
+  }
+};
+
 export default function GenericContentPage({ 
   title, subtitle, heroBadge, heroDescription, 
   sections, ctaTitle, ctaDescription, ctaButton,
   primaryColor = "primary"
 }: PageTemplateProps) {
   const { success } = useToast();
+  const colors = COLOR_MAPS[primaryColor] || COLOR_MAPS.primary;
 
   return (
-    <div className="space-y-32 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-32 py-12 animate-in fade-in duration-700">
       {/* 1. Hero Section */}
       <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 sm:p-12 lg:p-16 rounded-xl shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
-        <div className={`absolute top-0 right-0 w-1/2 h-full bg-${primaryColor}/5 blur-[120px] rounded-full pointer-events-none`} />
+        <div className={`absolute top-0 right-0 w-1/2 h-full ${colors.glow} blur-[120px] rounded-full pointer-events-none`} />
         
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
           <div className="space-y-6 max-w-2xl">
-            <div className={`inline-flex items-center gap-2 px-4 py-1.5 bg-${primaryColor}/5 text-${primaryColor} rounded-sm text-[10px] font-black uppercase tracking-[0.2em] border border-${primaryColor}/10`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 ${colors.glow} ${colors.text} rounded-sm text-[10px] font-black uppercase tracking-[0.2em] border ${colors.border}/10`}>
               <Zap className="w-4 h-4" /> {heroBadge}
             </div>
             <h1 className="text-5xl md:text-7xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">
-              {title} <br /> <span className={`text-${primaryColor}`}>{subtitle}</span>
+              {title} <br /> <span className={`${colors.text}`}>{subtitle}</span>
             </h1>
             <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed tracking-tight">
               {heroDescription}
@@ -59,13 +106,13 @@ export default function GenericContentPage({
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Status</p>
                </div>
                <div className="bg-slate-100/50 dark:bg-slate-800/40 p-6 rounded-xl border border-slate-100 dark:border-slate-800 text-center w-32">
-                 <p className={`text-3xl font-black text-${primaryColor}`}>2.0</p>
+                 <p className={`text-3xl font-black ${colors.text}`}>2.0</p>
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Protocol</p>
                </div>
             </div>
             <button 
               onClick={() => success("Protocol established. Initializing technical program...")}
-              className={`w-full bg-slate-950 dark:bg-${primaryColor} text-white font-black px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-xl active:scale-95`}
+              className={`w-full bg-slate-950 dark:${colors.bg} text-white font-black px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-xl active:scale-95`}
             >
               Initialize Program
             </button>
@@ -77,7 +124,7 @@ export default function GenericContentPage({
       <section className="space-y-16">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3">
-             <Layers className={`w-5 h-5 text-${primaryColor}`} /> Operational Modules
+             <Layers className={`w-5 h-5 ${colors.text}`} /> Operational Modules
           </h2>
           <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800 mx-8" />
         </div>
@@ -85,10 +132,10 @@ export default function GenericContentPage({
           {sections.map((section, i) => (
             <div 
               key={i} 
-              onClick={() => success(`Accessing ${section.title} module...`)}
-              className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer"
+              onClick={section.onClick || (() => success(`Accessing ${section.title} module...`))}
+              className="bg-white dark:bg-slate-900 p-10 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-xl transition-all duration-500 group cursor-pointer active:scale-[0.98]"
             >
-              <div className={`w-14 h-14 bg-${primaryColor}/10 rounded-2xl flex items-center justify-center text-${primaryColor} mb-8 group-hover:scale-110 transition-transform`}>
+              <div className={`w-14 h-14 ${colors.glow} rounded-2xl flex items-center justify-center ${colors.text} mb-8 group-hover:scale-110 transition-transform`}>
                 {section.icon}
               </div>
               <h3 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter mb-4">{section.title}</h3>
@@ -135,7 +182,7 @@ export default function GenericContentPage({
               className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-xl flex items-center justify-between group hover:border-primary/30 transition-all cursor-pointer"
             >
               <span className="font-black text-slate-950 dark:text-white text-lg tracking-tight">{q}</span>
-              <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+              <ChevronDown className={`w-5 h-5 text-slate-400 group-hover:${colors.text} transition-colors`} />
             </div>
           ))}
         </div>
@@ -144,7 +191,7 @@ export default function GenericContentPage({
       {/* 5. Final CTA Section */}
       <section className="bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-8 sm:p-16 lg:p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
          <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
-         <div className={`absolute top-0 right-0 w-1/3 h-full bg-${primaryColor}/20 blur-[150px] rounded-full pointer-events-none`} />
+         <div className={`absolute top-0 right-0 w-1/3 h-full ${colors.bg}/20 blur-[150px] rounded-full pointer-events-none`} />
          
          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
             <div className="space-y-8 max-w-2xl text-center lg:text-left">
@@ -155,7 +202,7 @@ export default function GenericContentPage({
             </div>
             <button 
               onClick={() => success("Program enrollment protocol initiated.")}
-              className={`bg-${primaryColor} text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl active:scale-95`}
+              className={`${colors.bg} text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl active:scale-95`}
             >
               {ctaButton}
             </button>

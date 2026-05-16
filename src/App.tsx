@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 import PublicLayout from "@/components/layout/PublicLayout";
 import AuthLayout from "@/components/layout/AuthLayout";
 import ScrollToTop from "@/components/layout/ScrollToTop";
@@ -49,6 +50,10 @@ import PartnerProgramPage from "@/pages/PartnerProgramPage";
 import CareersPage from "@/pages/CareersPage";
 import AIAssistantPage from "@/pages/AIAssistantPage";
 import CoursesPage from "@/pages/CoursesPage";
+import AITutorialPage from "@/pages/AITutorialPage";
+import SysDesignTutorialPage from "@/pages/SysDesignTutorialPage";
+import DevOpsTutorialPage from "@/pages/DevOpsTutorialPage";
+import PracticeLabPage from "@/pages/PracticeLabPage";
 
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
@@ -95,15 +100,12 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function DynamicLayout() {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <AuthLayout /> : <PublicLayout />;
-}
+
 
 function AppRoutes() {
   return (
     <Routes>
-      {/* Strictly Public routes (No sidebar even if logged in) */}
+      {/* Publicly accessible pages (No sidebar even if logged in) */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
@@ -113,28 +115,23 @@ function AppRoutes() {
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
         <Route path="/cookies" element={<CookiePolicyPage />} />
-      </Route>
-
-      {/* Feature pages (Sidebar if logged in, none if guest) */}
-      <Route element={<DynamicLayout />}>
-        {/* Questions & Topics */}
+        
+        {/* Nav Subpages (Moved from DynamicLayout) */}
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/questions/:id" element={<QuestionsPage />} />
         <Route path="/questions/companies" element={<CompanyWisePage />} />
         <Route path="/questions/topics" element={<TopicWisePage />} />
-
-        {/* Practice Tracks */}
         <Route path="/practice" element={<QuestionsPage />} />
         <Route path="/practice/data-structures" element={<DataStructuresPage />} />
         <Route path="/practice/algorithms" element={<AlgorithmsPage />} />
         <Route path="/practice/system-design" element={<SystemDesignPage />} />
-
-        {/* Tutorials */}
+        <Route path="/practice/lab/:module" element={<PracticeLabPage />} />
         <Route path="/tutorials" element={<TutorialsPage />} />
         <Route path="/tutorials/python" element={<PythonTutorialPage />} />
         <Route path="/tutorials/mern" element={<MERNStackPage />} />
-
-        {/* Career & Knowledge */}
+        <Route path="/tutorials/ai" element={<AITutorialPage />} />
+        <Route path="/tutorials/sysdesign" element={<SysDesignTutorialPage />} />
+        <Route path="/tutorials/devops" element={<DevOpsTutorialPage />} />
         <Route path="/knowledge" element={<KnowledgeBasePage />} />
         <Route path="/knowledge/:id" element={<KnowledgeBasePage />} />
         <Route path="/author-guides" element={<AuthorGuidesPage />} />
@@ -186,10 +183,12 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <ToastProvider>
-          <BrowserRouter>
-            <ScrollToTop />
-            <AppRoutes />
-          </BrowserRouter>
+          <SidebarProvider>
+            <BrowserRouter>
+              <ScrollToTop />
+              <AppRoutes />
+            </BrowserRouter>
+          </SidebarProvider>
         </ToastProvider>
       </AuthProvider>
     </ThemeProvider>

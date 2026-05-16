@@ -27,7 +27,19 @@ export default function RegisterPage() {
     role: "developer" as UserRole,
   });
 
-  const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  const update = (field: string, value: string) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    if (field === "password") {
+      let strength = 0;
+      if (value.length >= 8) strength++;
+      if (/[A-Z]/.test(value)) strength++;
+      if (/[0-9]/.test(value)) strength++;
+      if (/[^A-Za-z0-9]/.test(value)) strength++;
+      setPasswordStrength(strength);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,17 +49,32 @@ export default function RegisterPage() {
       return;
     }
 
+    if (passwordStrength < 2) {
+      error("Weak Credentials", "Please use a stronger password with numbers and symbols.");
+      return;
+    }
+
+    if (selectedSkills.length === 0) {
+      error("Profile Incomplete", "Please select at least one technical skill.");
+      return;
+    }
+
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    loginAsRole(form.role);
-    setIsLoading(false);
-    success("Registration Complete", "Welcome to the StackTruth community.");
-    const paths: Record<string, string> = {
-      developer: "/dashboard/developer",
-      expert: "/dashboard/expert",
-      recruiter: "/dashboard/recruiter",
-    };
-    navigate(paths[form.role] || "/dashboard/developer");
+    try {
+      await new Promise((r) => setTimeout(r, 1500));
+      loginAsRole(form.role);
+      success("Registration Complete", "Welcome to the StackTruth community.");
+      const paths: Record<string, string> = {
+        developer: "/dashboard/developer",
+        expert: "/dashboard/expert",
+        recruiter: "/dashboard/recruiter",
+      };
+      navigate(paths[form.role] || "/dashboard/developer");
+    } catch (err) {
+      error("System Error", "Failed to initialize account protocol.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleSkill = (skill: string) => {
@@ -156,6 +183,16 @@ export default function RegisterPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {form.password && (
+                <div className="flex gap-1 mt-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={`h-1 flex-1 rounded-full transition-all duration-500 ${i < passwordStrength ? (passwordStrength <= 2 ? "bg-amber-500" : "bg-emerald-500") : "bg-slate-100 dark:bg-slate-800"}`} 
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

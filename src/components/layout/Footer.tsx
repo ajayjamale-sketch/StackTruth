@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Github, Twitter, Linkedin, Heart, ExternalLink, Mail, MessageSquare, Shield, Globe, Terminal, Database, Layout, Settings, Cpu, Zap, Award, BookOpen, Users, Trophy } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const FOOTER_LINKS = {
   "Trending Now": [
@@ -9,6 +10,9 @@ const FOOTER_LINKS = {
     { label: "System Design", path: "/practice/system-design" },
     { label: "Python Tutorial", path: "/tutorials/python" },
     { label: "MERN Stack", path: "/tutorials/mern" },
+    { label: "AI & ML", path: "/tutorials/ai" },
+    { label: "Architectural Audits", path: "/tutorials/sysdesign" },
+    { label: "Cloud DevOps", path: "/tutorials/devops" },
   ],
   "Practice": [
     { label: "All Questions", path: "/questions" },
@@ -41,6 +45,7 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
+  const { isAuthenticated } = useAuth();
   const handleSocialClick = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -75,10 +80,10 @@ export default function Footer() {
                   <button
                     key={social.label}
                     onClick={() => handleSocialClick(social.url)}
-                    aria-label={social.label}
-                    className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-900 hover:bg-primary hover:text-white transition-all rounded-xl border border-slate-100 dark:border-slate-800 group"
+                    aria-label={`Follow us on ${social.label}`}
+                    className="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-900 hover:bg-primary hover:text-white transition-all rounded-xl border border-slate-200 dark:border-slate-800 group active:scale-90 shadow-sm"
                   >
-                    <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform text-slate-600 dark:text-slate-400 group-hover:text-white" />
                   </button>
                 ))}
               </div>
@@ -95,7 +100,7 @@ export default function Footer() {
               <h4 className="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-[0.2em]">{section}</h4>
               <ul className="space-y-4 text-sm">
                 {links.map((link) => (
-                  <li key={link.label}>
+                  <li key={`${section}-${link.label}`}>
                     <Link to={link.path} className="hover:text-primary flex items-center gap-2 transition-colors group font-medium">
                       {link.label}
                       <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />

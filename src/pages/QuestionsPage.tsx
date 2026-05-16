@@ -44,14 +44,16 @@ function QuestionCard({ question }: { question: Question }) {
         <div className="flex sm:flex-col items-center gap-4 sm:gap-3 flex-shrink-0 bg-slate-50 dark:bg-slate-800/40 p-3 sm:p-4 rounded-xl border border-slate-100 dark:border-slate-800 transition-all duration-500 group-hover:border-primary/20 group-hover:bg-primary/5 w-full sm:w-16 justify-center">
           <button 
             onClick={() => handleVote(1)}
-            className={`p-1 rounded-xl hover:bg-primary/10 transition-colors ${voted === 1 ? 'text-primary' : 'text-slate-300'}`}
+            aria-label="Upvote question"
+            className={`p-1 rounded-xl hover:bg-primary/10 transition-all active:scale-90 ${voted === 1 ? 'text-primary' : 'text-slate-300'}`}
           >
             <ChevronUp className="w-5 h-5 sm:w-8 sm:h-8" />
           </button>
-          <span className="text-lg sm:text-2xl font-black text-slate-950 dark:text-white tracking-tighter">{voteCount}</span>
+          <span className="text-lg sm:text-2xl font-black text-slate-950 dark:text-white tracking-tighter" aria-live="polite">{voteCount}</span>
           <button 
              onClick={() => handleVote(-1)}
-             className={`p-1 rounded-xl hover:bg-primary/10 transition-colors ${voted === -1 ? 'text-primary' : 'text-slate-300'}`}
+             aria-label="Downvote question"
+             className={`p-1 rounded-xl hover:bg-primary/10 transition-all active:scale-90 ${voted === -1 ? 'text-primary' : 'text-slate-300'}`}
           >
             <ChevronDown className="w-5 h-5 sm:w-8 sm:h-8" />
           </button>
@@ -113,6 +115,8 @@ export default function QuestionsPage() {
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [showAsk, setShowAsk] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => { setTimeout(() => setIsLoading(false), 800); }, []);
 
@@ -131,6 +135,20 @@ export default function QuestionsPage() {
     if (sort === "Hot") return b.votes - a.votes;
     return 0;
   });
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const paginatedQuestions = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null) {
+      setSearch(q);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, sort, search, selectedTag]);
 
   const selectedQuestion = id ? MOCK_QUESTIONS.find(q => q.id === id) : null;
 
@@ -314,17 +332,25 @@ export default function QuestionsPage() {
                  value={search}
                  onChange={(e) => setSearch(e.target.value)}
                  placeholder="Search protocols..."
+                 aria-label="Search technical audits"
                  className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-lg pl-12 sm:pl-16 pr-4 py-3 sm:py-5 text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400"
                />
              </div>
-             <div className="flex gap-2 w-full lg:w-auto p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar">
+             <div className="flex gap-2 w-full lg:w-auto p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner">
                {SORT_OPTIONS.map((opt) => (
                  <button
                    key={opt.label}
-                   onClick={() => setSort(opt.label)}
-                   className={`flex-1 lg:flex-none px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xl' : 'text-slate-500 hover:text-primary'}`}
+                   onClick={() => {
+                     console.log(`Sorting by: ${opt.label}`);
+                     setSort(opt.label);
+                   }}
+                   aria-label={`Sort by ${opt.label}`}
+                   className={`flex-1 lg:flex-none px-6 sm:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-primary shadow-2xl ring-2 ring-primary/20' : 'text-slate-500 hover:text-primary hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
                  >
-                   {opt.label}
+                   <span className="flex items-center gap-2 pointer-events-none">
+                     <opt.icon className={`w-4 h-4 ${sort === opt.label ? 'text-primary' : 'text-slate-400'}`} />
+                     {opt.label}
+                   </span>
                  </button>
                ))}
              </div>
@@ -334,16 +360,47 @@ export default function QuestionsPage() {
           <div className="space-y-8">
             {isLoading
               ? [1, 2, 3].map((i) => <QuestionSkeleton key={i} />)
-              : filtered.length > 0
-              ? filtered.map((q) => <QuestionCard key={q.id} question={q} />)
+              : paginatedQuestions.length > 0
+              ? paginatedQuestions.map((q) => <QuestionCard key={q.id} question={q} />)
               : (
                 <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-32 text-center rounded-xl shadow-sm">
                   <MessageCircle className="w-24 h-24 text-slate-100 dark:text-slate-800 mx-auto mb-8 animate-pulse" />
                   <h3 className="text-2xl font-black text-slate-950 dark:text-white mb-4">No matching audits</h3>
                   <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto">Our registry couldn't find any discussions matching your current search parameters.</p>
-                  {isAuthenticated && <button onClick={() => setShowAsk(true)} className="mt-8 bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest shadow-xl">Initiate New Audit</button>}
+                  {isAuthenticated && <button onClick={() => setShowAsk(true)} className="mt-8 bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">Initiate New Audit</button>}
                 </div>
               )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                >
+                  <ChevronRight className="w-4 h-4 rotate-180" /> Previous Node
+                </button>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`w-10 h-10 rounded-lg text-[10px] font-black transition-all active:scale-90 ${currentPage === i + 1 ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-primary hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                >
+                  Next Registry <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
