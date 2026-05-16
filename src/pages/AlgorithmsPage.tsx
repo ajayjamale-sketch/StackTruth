@@ -1,8 +1,8 @@
 import React from "react";
-import { Zap, Target, Search, Share2, GitBranch, Terminal } from "lucide-react";
-import GenericContentPage from "@/components/templates/GenericContentPage";
-
+import { Zap, TrendingUp, GitBranch, Target, Cpu, Terminal, Layers } from "lucide-react";
+/** High-Fidelity Algorithms Mastery Protocol */
 import { useNavigate } from "react-router-dom";
+import GenericContentPage from "@/components/templates/GenericContentPage";
 
 export default function AlgorithmsPage() {
   const navigate = useNavigate();
@@ -10,39 +10,34 @@ export default function AlgorithmsPage() {
   return (
     <GenericContentPage
       title="Algorithms"
-      subtitle="Execution Protocols"
+      subtitle="Mastery Track"
       heroBadge="Computational Logic"
-      heroDescription="Professional-grade optimization and problem-solving protocols for complex industrial logic."
+      heroDescription="Verify mission-critical logic protocols through rigorous computational complexity audits and optimization labs."
+      primaryColor="primary"
       sections={[
         {
-          title: "Search Optimization",
-          description: "Master binary search variants and high-speed data retrieval protocols.",
-          icon: <Search className="w-6 h-6" />,
-          onClick: () => navigate("/practice/lab/search-optimization")
-        },
-        {
           title: "Sorting Protocols",
-          description: "Industrial-grade sorting algorithms and memory-efficient ordering audits.",
-          icon: <Zap className="w-6 h-6" />,
-          onClick: () => navigate("/practice/lab/sorting-protocols")
+          description: "Quicksort, Mergesort, and Heapsort implementation audits for high-volume data streams.",
+          icon: <Target className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/sorting")
         },
         {
-          title: "Dynamic Strategy",
-          description: "Optimization through memoization and bottom-up computational protocols.",
-          icon: <Target className="w-6 h-6" />,
-          onClick: () => navigate("/practice/lab/dynamic-strategy")
+          title: "Search Optimization",
+          description: "Binary search variations, jump search, and exponential search protocol verification.",
+          icon: <Zap className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/searching")
         },
         {
           title: "Graph Traversal",
-          description: "BFS, DFS, and shortest path protocols for complex network analysis.",
-          icon: <Share2 className="w-6 h-6" />,
-          onClick: () => navigate("/practice/lab/graph-traversal")
+          description: "BFS, DFS, and shortest-path algorithm audits (Dijkstra, A*) for network coordination.",
+          icon: <GitBranch className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/graph")
         },
         {
-          title: "Greedy Heuristics",
-          description: "Local optimization strategies for complex global constraint resolution.",
-          icon: <GitBranch className="w-6 h-6" />,
-          onClick: () => navigate("/practice/lab/greedy-heuristics")
+          title: "Dynamic Programming",
+          description: "Overlapping subproblems, optimal substructure audits, and memoization protocols.",
+          icon: <Layers className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/dynamic-programming")
         },
         {
           title: "Backtracking",
@@ -54,7 +49,7 @@ export default function AlgorithmsPage() {
       ctaTitle="Initiate Logic Audit"
       ctaDescription="Access advanced algorithmic challenges and performance verification labs."
       ctaButton="Start Algorithm Audit"
-      primaryColor="emerald-500"
+      ctaOnClick={() => navigate("/practice/lab/algorithms-elite")}
     />
   );
 }

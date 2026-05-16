@@ -170,7 +170,7 @@ export default function PricingPage() {
                 <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-tight text-slate-950 dark:text-white">Audit with the <br /> <span className="text-primary underline decoration-primary/20 decoration-8 underline-offset-8">Best.</span></h2>
                 <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">Our mastery programs are curated by senior engineers and architects from FAANG labs and high-growth technical institutes.</p>
                 <div className="flex flex-col sm:flex-row items-center gap-8 justify-center lg:justify-start">
-                  <button onClick={() => success("Accessing faculty directory...")} className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
+                  <button onClick={() => navigate("/faculty")} className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
                     Explore Faculty
                   </button>
                   <div className="flex items-center gap-4 px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm">

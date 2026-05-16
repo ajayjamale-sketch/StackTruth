@@ -41,8 +41,10 @@ export default function RecruiterDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/jobs" className="btn-secondary text-sm px-6 py-2.5">Manage Roles</Link>
-          <button onClick={() => success("Job Editor Initialized", "Create a new technical mandate...")} className="btn-primary text-sm px-6 py-2.5">Post New Role</button>
+          <Link to="/jobs" className="btn-secondary text-sm px-6 py-2.5 active:scale-95 transition-all">Manage Roles</Link>
+          <Link to="/dashboard/recruiter/post-job" className="btn-primary text-sm px-6 py-2.5 active:scale-95 transition-all flex items-center gap-2">
+            <Plus className="w-4 h-4" /> Post New Role
+          </Link>
         </div>
       </div>
 

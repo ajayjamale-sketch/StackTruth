@@ -24,6 +24,7 @@ interface PageTemplateProps {
   ctaTitle: string;
   ctaDescription: string;
   ctaButton: string;
+  ctaOnClick?: () => void;
   primaryColor?: string;
 }
 
@@ -75,6 +76,7 @@ const COLOR_MAPS: Record<string, { bg: string, text: string, border: string, btn
 export default function GenericContentPage({ 
   title, subtitle, heroBadge, heroDescription, 
   sections, ctaTitle, ctaDescription, ctaButton,
+  ctaOnClick,
   primaryColor = "primary"
 }: PageTemplateProps) {
   const { success } = useToast();
@@ -111,7 +113,7 @@ export default function GenericContentPage({
                </div>
             </div>
             <button 
-              onClick={() => success("Protocol established. Initializing technical program...")}
+              onClick={ctaOnClick || (() => success("Protocol established. Initializing technical program..."))}
               className={`w-full bg-slate-950 dark:${colors.bg} text-white font-black px-8 py-4 rounded-xl hover:opacity-90 transition-all shadow-xl active:scale-95`}
             >
               Initialize Program
@@ -201,7 +203,7 @@ export default function GenericContentPage({
               </p>
             </div>
             <button 
-              onClick={() => success("Program enrollment protocol initiated.")}
+              onClick={ctaOnClick || (() => success("Program enrollment protocol initiated."))}
               className={`${colors.bg} text-white px-12 py-5 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl active:scale-95`}
             >
               {ctaButton}

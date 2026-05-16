@@ -179,7 +179,7 @@ export default function TutorialsPage() {
                    </div>
                 </div>
                 <button 
-                  onClick={() => success("Protocol deployed. Laboratory initialized.")}
+                  onClick={() => navigate("/practice/lab/track-initialization")}
                   className="w-full py-4 bg-emerald-500 text-white rounded-lg font-black uppercase tracking-widest text-xs hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20 active:scale-95"
                 >
                   Join Track
@@ -360,12 +360,12 @@ export default function TutorialsPage() {
                  Enroll in Track
                </button>
              </div>
-             <div className="w-full lg:w-[400px] aspect-square bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden relative shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=800&q=80" 
-                  alt="System Design"
-                  className="w-full h-full object-cover opacity-60 dark:opacity-40"
-                />
+              <div className="w-full lg:w-[400px] aspect-square bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden relative shadow-2xl">
+                 <img 
+                   src="/assets/images/system-design-blueprint.png" 
+                   alt="System Design Blueprint"
+                   className="w-full h-full object-cover opacity-80 dark:opacity-60 group-hover:scale-110 transition-transform duration-1000"
+                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
                 <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-xl">
                    <p className="text-xs font-black text-white uppercase tracking-widest mb-2">Next Cohort</p>

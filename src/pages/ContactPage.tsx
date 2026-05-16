@@ -19,11 +19,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="space-y-32 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-32 py-12">
       {/* 1. Industrial Header Section */}
       <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
-        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/10 dark:bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
           <div className="space-y-6 max-w-2xl">
@@ -68,7 +68,7 @@ export default function ContactPage() {
       <section className="grid lg:grid-cols-12 gap-16 items-start">
         <div className="lg:col-span-8">
            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-12 rounded-xl shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 grid-pattern opacity-5" />
+              <div className="absolute inset-0 grid-pattern opacity-5 dark:invert-0 invert" />
               {submitted ? (
                 <div className="text-center py-20 space-y-8 animate-in fade-in zoom-in duration-700 relative z-10">
                   <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto border border-emerald-500/20">
@@ -78,7 +78,7 @@ export default function ContactPage() {
                     <h2 className="text-4xl font-black text-slate-950 dark:text-white tracking-tighter">Protocol Initiated</h2>
                     <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md mx-auto font-medium">Your inquiry has been logged in our global registry. A technical auditor will respond shortly.</p>
                   </div>
-                  <button onClick={() => setSubmitted(false)} className="bg-slate-950 dark:bg-slate-800 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-primary transition-all">Send New Protocol</button>
+                  <button onClick={() => setSubmitted(false)} className="bg-white dark:bg-slate-800 text-slate-950 dark:text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-white/10 shadow-sm active:scale-95">Send New Protocol</button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
@@ -114,27 +114,27 @@ export default function ContactPage() {
         </div>
 
         <div className="lg:col-span-4 space-y-10">
-           <div className="bg-slate-950 text-white p-10 rounded-xl space-y-8 relative overflow-hidden">
-              <div className="absolute inset-0 grid-pattern opacity-10" />
+           <div className="bg-white dark:bg-slate-950 text-slate-950 dark:text-white border border-slate-100 dark:border-slate-800 p-10 rounded-xl space-y-8 relative overflow-hidden shadow-xl">
+              <div className="absolute inset-0 grid-pattern opacity-10 dark:invert-0 invert" />
               <h3 className="text-2xl font-black tracking-tighter relative z-10">Global Labs</h3>
               <div className="space-y-6 relative z-10">
                  <div className="flex gap-4">
                     <MapPin className="w-6 h-6 text-primary flex-shrink-0" />
                     <div>
-                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Industrial Hub</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Industrial Hub</p>
                       <p className="text-sm font-bold leading-relaxed">123 Engineering Plaza, Suite 500<br />San Francisco, CA 94105</p>
                     </div>
                  </div>
                  <div className="flex gap-4">
                     <Phone className="w-6 h-6 text-primary flex-shrink-0" />
                     <div>
-                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Support Protocol</p>
+                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">Support Protocol</p>
                       <p className="text-sm font-bold">+1 (555) 000-0000</p>
                     </div>
                  </div>
               </div>
-              <div className="pt-8 border-t border-white/10 relative z-10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Availability</p>
+              <div className="pt-8 border-t border-slate-100 dark:border-white/10 relative z-10">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4">Availability</p>
                 <div className="flex items-center gap-2 text-emerald-500 text-[11px] font-black uppercase tracking-widest">
                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                    Nodes Online 24/7

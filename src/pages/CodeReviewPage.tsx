@@ -25,9 +25,10 @@ const STATUS_BADGE: Record<CodeReview["status"], string> = {
   "needs-work": "text-red-600 bg-red-50 border-red-100",
 };
 
-function ReviewCard({ review }: { review: CodeReview }) {
+function ReviewCard({ review, onFix }: { review: CodeReview; onFix: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [patching, setPatching] = useState(false);
   const { success, info } = useToast();
 
   const handleAIReview = async () => {
@@ -37,8 +38,13 @@ function ReviewCard({ review }: { review: CodeReview }) {
     success("Neural Audit Complete", `Analyzed ${review.issues.length} logic blocks. Quality Index: ${review.score}%`);
   };
 
-  const handleImplementFixes = () => {
-    success("Patch Protocol Initiated", "Automated remediation of identified logic errors is underway.");
+  const handleImplementFixes = async () => {
+    setPatching(true);
+    info("Patch Protocol Initialized", "Neural remediation sequence has been deployed to the source architecture...");
+    await new Promise(r => setTimeout(r, 2000));
+    onFix(review.id);
+    setPatching(false);
+    success("Sovereignty Restored", "Automated remediation of identified logic errors is complete. Quality Index: 100%");
   };
 
   return (
@@ -173,9 +179,11 @@ function ReviewCard({ review }: { review: CodeReview }) {
           <button 
             type="button"
             onClick={handleImplementFixes}
-            className="flex items-center gap-3 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
+            disabled={patching || review.status === 'approved'}
+            className="flex items-center gap-3 px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-xl shadow-primary/20 hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-             <Shield className="w-4 h-4" /> Implement Fixes
+             {patching ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Shield className="w-4 h-4" />}
+             {patching ? "Neural Patching..." : review.status === 'approved' ? "Remediation Applied" : "Implement Fixes"}
           </button>
         </div>
       </div>
@@ -185,11 +193,20 @@ function ReviewCard({ review }: { review: CodeReview }) {
 
 export default function CodeReviewPage() {
   const { success, warning, info } = useToast();
+  const [reviews, setReviews] = useState<CodeReview[]>(MOCK_CODE_REVIEWS);
   const [showSubmit, setShowSubmit] = useState(false);
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("typescript");
   const [title, setTitle] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const handleFix = (id: string) => {
+    setReviews(prev => prev.map(r => 
+      r.id === id 
+        ? { ...r, status: 'approved', issues: [], score: 100 } 
+        : r
+    ));
+  };
 
   const handleSubmit = async () => {
     if (submitting) return;
@@ -209,6 +226,20 @@ export default function CodeReviewPage() {
     
     await new Promise(r => setTimeout(r, 2000));
     
+    const newReview: CodeReview = {
+      id: Math.random().toString(36).substr(2, 9),
+      title,
+      description: "Neural audit pending for user-submitted logic block.",
+      language: language as any,
+      status: "pending",
+      score: 0,
+      issues: [],
+      suggestions: ["Initial scan pending complete neural verification."],
+      author: { name: "Current Auditor", username: "auditor_node", avatar: "" },
+      createdAt: new Date().toISOString(),
+    };
+
+    setReviews([newReview, ...reviews]);
     setSubmitting(false);
     setShowSubmit(false);
     setCode("");
@@ -334,7 +365,7 @@ export default function CodeReviewPage() {
           <div className="w-1.5 h-4 bg-primary rounded-full" />
           <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">Registry Feed</h2>
         </div>
-        {MOCK_CODE_REVIEWS.map((review) => <ReviewCard key={review.id} review={review} />)}
+        {reviews.map((review) => <ReviewCard key={review.id} review={review} onFix={handleFix} />)}
       </div>
     </div>
   );

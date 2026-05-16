@@ -258,7 +258,7 @@ export default function KnowledgeBasePage() {
             <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Top contributors defining the technical standards of the sovereignty.</p>
           </div>
           <button 
-            onClick={() => success("Global Rankings Index", "Navigating to the community Hall of Fame protocols.")}
+            onClick={() => navigate("/leaderboard")}
             className="text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1 hover:text-primary/80 transition-all"
           >
             View Hall of Fame
@@ -268,7 +268,7 @@ export default function KnowledgeBasePage() {
           {[1, 2, 3, 4, 5, 6].map(i => (
             <div 
               key={i} 
-              onClick={() => success("Auditor Identity", `Displaying technical credentials for Auditor_0${i}.`)}
+              onClick={() => navigate(`/profile/auditor_0${i}`)}
               className="flex flex-col items-center gap-4 p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-primary/30 transition-all cursor-pointer group active:scale-95"
             >
               <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors text-xl font-black border border-slate-100 dark:border-slate-700">

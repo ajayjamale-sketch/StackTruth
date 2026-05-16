@@ -1,50 +1,54 @@
 import React from "react";
-import { Network, Server, Database, Shield, Globe, Cpu } from "lucide-react";
+import { Shield, Zap, Award, CheckCircle, ArrowRight, Network, Database, Cpu, Globe, Layers } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import GenericContentPage from "@/components/templates/GenericContentPage";
 
 export default function SystemDesignPage() {
+  const navigate = useNavigate();
+
   return (
     <GenericContentPage
       title="System Design"
-      subtitle="Architectural Audits"
-      heroBadge="Infrastructure"
-      heroDescription="Industrial-grade architectural design for high-availability, distributed engineering ecosystems."
+      subtitle="Mastery Track"
+      heroBadge="Architectural Audit"
+      heroDescription="Master the deployment and scaling of high-concurrency clusters and atomic data integrity protocols."
+      primaryColor="amber-600"
       sections={[
         {
-          title: "Distributed Systems",
-          description: "Master CAP theorem trade-offs and consistency protocol audits.",
-          icon: <Network className="w-6 h-6" />
-        },
-        {
           title: "Load Balancing",
-          description: "Traffic management protocols and high-availability redirection audits.",
-          icon: <Server className="w-6 h-6" />
+          description: "Global traffic distribution, health monitoring, and failover coordination protocols.",
+          icon: <Globe className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/load-balancing")
         },
         {
-          title: "Scalable Databases",
-          description: "Sharding, replication, and multi-region data synchronization protocols.",
-          icon: <Database className="w-6 h-6" />
+          title: "Distributed Caching",
+          description: "Redis clustering, eviction policies, and eventual consistency audit protocols.",
+          icon: <Zap className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/caching")
+        },
+        {
+          title: "Database Sharding",
+          description: "Horizontal scaling, shard key selection, and cross-shard consistency audits.",
+          icon: <Database className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/sharding")
+        },
+        {
+          title: "Message Queues",
+          description: "Asynchronous processing, event-driven architecture, and dead-letter queue protocols.",
+          icon: <Layers className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/message-queues")
         },
         {
           title: "Microservices",
-          description: "Decoupled architecture and inter-service communication protocol audits.",
-          icon: <Shield className="w-6 h-6" />
-        },
-        {
-          title: "Global CDNs",
-          description: "Edge computing and low-latency content delivery network audits.",
-          icon: <Globe className="w-6 h-6" />
-        },
-        {
-          title: "Caching Layers",
-          description: "Multi-tier caching strategies and invalidation protocol audits.",
-          icon: <Cpu className="w-6 h-6" />
+          description: "Service discovery, circuit breakers, and distributed tracing audit protocols.",
+          icon: <Network className="w-6 h-6" />,
+          onClick: () => navigate("/practice/lab/microservices")
         }
       ]}
-      ctaTitle="Begin Design Audit"
-      ctaDescription="Access the architectural laboratory and design your next global ecosystem."
-      ctaButton="Initialize Design"
-      primaryColor="purple-500"
+      ctaTitle="Initialize Architect Audit"
+      ctaDescription="Access the full architectural laboratory for advanced system design verification."
+      ctaButton="Join Architect Lab"
+      ctaOnClick={() => navigate("/practice/lab/system-design-elite")}
     />
   );
 }

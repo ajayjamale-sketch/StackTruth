@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Star, Award, Zap, Code2, MessageSquare, Search, ChevronRight, Sparkles, Target, Users, Calendar, Layers } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Trophy, TrendingUp, TrendingDown, Minus, Crown, Search, ChevronRight, Sparkles, Target, Users, Calendar, Layers, Award } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
-import { MOCK_LEADERBOARD, MOCK_USERS } from "@/constants/mockData";
+import { MOCK_LEADERBOARD } from "@/constants/mockData";
 import type { LeaderboardEntry } from "@/types";
 
 const PERIODS = ["All Time", "This Month", "This Week"];
@@ -14,14 +14,14 @@ function ChangeIndicator({ change }: { change: number }) {
   return <span className="flex items-center gap-1 text-slate-400 text-xs"><Minus className="w-3 h-3" /></span>;
 }
 
-function TopThreeCard({ entry, onClick }: { entry: LeaderboardEntry, onClick: (id: string) => void }) {
+function TopThreeCard({ entry, onClick }: { entry: LeaderboardEntry; onClick: (id: string) => void }) {
   const isFirst = entry.rank === 1;
   return (
     <div 
       onClick={() => onClick(entry.user.id)}
       className={`flex flex-col items-center group cursor-pointer active:scale-95 transition-all ${isFirst ? "scale-110 lg:-translate-y-12" : "scale-95 translate-y-4"}`}
     >
-      <div className={`relative mb-8 group`}>
+      <div className="relative mb-8 group">
         {isFirst && <Crown className="w-12 h-12 text-amber-400 absolute -top-16 left-1/2 -translate-x-1/2 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] animate-pulse" />}
         <div className={`w-32 h-32 rounded-xl flex items-center justify-center text-primary font-black text-4xl border-4 transition-all duration-700 group-hover:scale-110 ${isFirst ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/20' : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl'}`}>
            {entry.user.name.charAt(0)}
@@ -50,34 +50,88 @@ export default function LeaderboardPage() {
   const [period, setPeriod] = useState("All Time");
   const [category, setCategory] = useState("Overall");
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filtered = MOCK_LEADERBOARD
-    .filter(e => {
-      const matchesSearch = !search || 
-        e.user.name.toLowerCase().includes(search.toLowerCase()) || 
-        e.user.username.toLowerCase().includes(search.toLowerCase());
-      
-      // Category filter (mocked)
-      const matchesCategory = category === "Overall" || 
-        e.user.skills.some(s => s.toLowerCase().includes(category.toLowerCase().split(' ')[0]));
-      
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      // Period filter (mocked score adjustments)
-      if (period === "This Week") return b.change - a.change;
-      return b.score - a.score;
-    });
+  const itemsPerPage = 5;
 
-  const top3 = filtered.slice(0, 3);
-  const rest = filtered.slice(3);
+  // Wrap evaluation processing logic completely in a useMemo listening directly to selection switches
+  const sortedAndFiltered = useMemo(() => {
+    return [...MOCK_LEADERBOARD]
+      .filter(e => {
+        const matchesSearch = !search || 
+          e.user.name.toLowerCase().includes(search.toLowerCase()) || 
+          e.user.username.toLowerCase().includes(search.toLowerCase());
+        
+        const matchesCategory = 
+          category === "Overall" ||
+          (category === "Problem Solving" && (e.answers > 0 || e.questions > 0)) ||
+          (category === "Code Audits" && e.codeReviews > 0) ||
+          (category === "Contributions" && (e.answers + e.codeReviews) > 10);
+        
+        return matchesSearch && matchesCategory;
+      })
+      .sort((a, b) => {
+        let scoreA = 0;
+        let scoreB = 0;
+        
+        if (category === "Problem Solving") {
+          scoreA = (a.answers || 0) + (a.questions || 0);
+          scoreB = (b.answers || 0) + (b.questions || 0);
+        } else if (category === "Code Audits") {
+          scoreA = a.codeReviews || 0;
+          scoreB = b.codeReviews || 0;
+        } else if (category === "Contributions") {
+          scoreA = (a.answers || 0) + (a.codeReviews || 0);
+          scoreB = (b.answers || 0) + (b.codeReviews || 0);
+        } else {
+          scoreA = a.score || 0;
+          scoreB = b.score || 0;
+        }
+
+        // Apply Time Horizon Velocity Multipliers
+        if (period === "This Week") {
+          scoreA = scoreA * 0.1 + (a.change || 0) * 100;
+          scoreB = scoreB * 0.1 + (b.change || 0) * 100;
+        } else if (period === "This Month") {
+          scoreA = scoreA * 0.5 + (a.change || 0) * 50;
+          scoreB = scoreB * 0.5 + (b.change || 0) * 50;
+        }
+        
+        // Tie-breaker fallback if values match perfectly
+        if (scoreB === scoreA) {
+          return b.score - a.score; 
+        }
+
+        return scoreB - scoreA;
+      })
+      .map((entry, index) => ({
+        ...entry,
+        rank: index + 1 // Re-assign global placement cleanly
+      }));
+  }, [period, category, search]);
+
+  // Reset pagination safely inside state initialization when dependencies shift
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [period, category, search]);
+
+  const totalPages = Math.ceil(sortedAndFiltered.length / itemsPerPage);
+  
+  // Calculate top 3 directly from the mutated global dataset context
+  const top3 = sortedAndFiltered.slice(0, 3);
+  
+  // Paginate items correctly
+  const paginatedItems = sortedAndFiltered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  
+  // Filter table records to exclude current podium figures completely from view
+  const rest = paginatedItems.filter(item => !top3.some(t => t.user.id === item.user.id));
 
   const handleProfileClick = (id: string) => {
     navigate(`/profile/${id}`);
   };
 
   return (
-    <div className="space-y-32 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-32 py-12">
       {/* 1. Hall of Sovereignty Header */}
       <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
@@ -177,53 +231,81 @@ export default function LeaderboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-                {rest.map((entry) => (
-                  <tr 
-                    key={entry.rank} 
-                    onClick={() => handleProfileClick(entry.user.id)}
-                    className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all duration-500 cursor-pointer"
-                  >
-                    <td className="px-10 py-8">
-                      <span className="text-xl font-black text-slate-300 group-hover:text-primary transition-colors tracking-tighter">#{entry.rank}</span>
-                    </td>
-                    <td className="px-10 py-8">
-                      <div className="flex items-center gap-5">
-                        <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-primary font-black text-lg group-hover:scale-110 transition-transform duration-500">
-                          {entry.user.name.charAt(0)}
+                {rest.length > 0 ? (
+                  rest.map((entry) => (
+                    <tr 
+                      key={entry.user.id} 
+                      onClick={() => handleProfileClick(entry.user.id)}
+                      className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all duration-500 cursor-pointer"
+                    >
+                      <td className="px-10 py-8">
+                        <span className="text-xl font-black text-slate-300 group-hover:text-primary transition-colors tracking-tighter">#{entry.rank}</span>
+                      </td>
+                      <td className="px-10 py-8">
+                        <div className="flex items-center gap-5">
+                          <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-primary font-black text-lg group-hover:scale-110 transition-transform duration-500">
+                             {entry.user.name.charAt(0)}
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-lg font-black text-slate-950 dark:text-white tracking-tight group-hover:text-primary transition-colors duration-500">{entry.user.name}</p>
+                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">Expert ID: ST_{entry.user.id.slice(0, 8)}</p>
+                          </div>
                         </div>
-                        <div className="space-y-1">
-                          <p className="text-lg font-black text-slate-950 dark:text-white tracking-tight group-hover:text-primary transition-colors duration-500">{entry.user.name}</p>
-                          <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">Expert ID: ST_{entry.user.id.slice(0, 8)}</p>
+                      </td>
+                      <td className="px-10 py-8">
+                        <div className="flex gap-2">
+                          {entry.user.skills.slice(0, 2).map(s => (
+                            <span key={s} className="px-2.5 py-1 bg-slate-50 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-400 rounded-lg border border-slate-100 dark:border-slate-800 group-hover:border-primary/30 transition-all">{s}</span>
+                          ))}
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-10 py-8">
-                      <div className="flex gap-2">
-                        {entry.user.skills.slice(0, 2).map(s => (
-                          <span key={s} className="px-2.5 py-1 bg-slate-50 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-400 rounded-lg border border-slate-100 dark:border-slate-800 group-hover:border-primary/30 transition-all">{s}</span>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-10 py-8 text-right font-black text-slate-950 dark:text-white text-xl tracking-tighter">
-                      {entry.score.toLocaleString()}
-                    </td>
-                    <td className="px-10 py-8 text-right">
-                      <ChangeIndicator change={entry.change} />
-                    </td>
-                    <td className="px-10 py-8 text-right">
-                      <button className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500 ml-auto">
-                        <ChevronRight className="w-6 h-6" />
-                      </button>
+                      </td>
+                      <td className="px-10 py-8 text-right font-black text-slate-950 dark:text-white text-xl tracking-tighter">
+                        {entry.score.toLocaleString()}
+                      </td>
+                      <td className="px-10 py-8 text-right">
+                        <ChangeIndicator change={entry.change} />
+                      </td>
+                      <td className="px-10 py-8 text-right">
+                        <button className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-300 group-hover:text-primary group-hover:bg-primary/5 transition-all duration-500 ml-auto">
+                          <ChevronRight className="w-6 h-6" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-10 py-16 text-center text-slate-400 font-medium">
+                      No matching contributors found for the current filter views.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="px-10 py-8 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                Showing {Math.min(paginatedItems.length, itemsPerPage)} of {sortedAndFiltered.length} Auditors
+              </p>
+              <div className="flex gap-2">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`w-10 h-10 rounded-lg font-black text-[10px] transition-all ${currentPage === i + 1 ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-white dark:bg-slate-900 text-slate-400 hover:text-primary border border-slate-100 dark:border-slate-800"}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* 5. Seasonal Achievements Section (New) */}
+      {/* 5. Seasonal Achievements Section */}
       <section className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl p-20 text-slate-950 dark:text-white relative overflow-hidden group shadow-2xl dark:shadow-none">
          <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
          <div className="absolute top-0 left-0 w-1/3 h-full bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
@@ -237,7 +319,7 @@ export default function LeaderboardPage() {
               <p className="text-slate-500 dark:text-slate-400 text-xl leading-relaxed font-medium tracking-tight">The contributors with the highest reputation velocity and protocol audit quality over the current seasonal quarter.</p>
               <div className="flex flex-col sm:flex-row items-center gap-8">
                 <button 
-                  onClick={() => success("Seasonal report protocol initiated. Generating data...")}
+                  onClick={() => navigate("/analytics")}
                   className="w-full sm:w-auto bg-primary text-white px-12 py-5 rounded-lg font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95"
                 >
                   View Seasonal Report

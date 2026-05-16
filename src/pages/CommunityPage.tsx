@@ -28,8 +28,8 @@ export default function CommunityPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 space-y-24 animate-in fade-in duration-700">
       {/* 1. Community Hero */}
-      <section className="relative bg-slate-950 rounded-3xl p-8 sm:p-16 overflow-hidden border border-white/5 shadow-2xl">
-        <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
+      <section className="relative bg-white dark:bg-slate-950 rounded-3xl p-8 sm:p-16 overflow-hidden border border-slate-100 dark:border-white/5 shadow-2xl">
+        <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none dark:invert-0 invert" />
         <div className="absolute top-0 right-0 w-2/3 h-full bg-primary/10 blur-[150px] rounded-full" />
         
         <div className="relative z-10 grid lg:grid-cols-2 gap-16 items-center">
@@ -37,10 +37,10 @@ export default function CommunityPage() {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest border border-primary/20">
                <Users className="w-4 h-4" /> Global Engineering Collective
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none">
+            <h1 className="text-5xl md:text-7xl font-black text-slate-950 dark:text-white tracking-tighter leading-none">
               The Protocol <br /> <span className="text-primary underline decoration-primary/20 decoration-8 underline-offset-8">Collective.</span>
             </h1>
-            <p className="text-xl text-slate-400 font-medium leading-relaxed max-w-xl">
+            <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-xl">
               Collaborate with the world's elite engineers to solve complex technical challenges and verify architectural protocols.
             </p>
             <div className="flex flex-wrap gap-4">

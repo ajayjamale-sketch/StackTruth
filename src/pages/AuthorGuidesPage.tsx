@@ -43,7 +43,7 @@ export default function AuthorGuidesPage() {
   const [activeSection, setActiveSection] = useState("guidelines");
 
   return (
-    <div className="space-y-24 py-12 pb-32">
+    <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 py-12 pb-32 space-y-24 animate-in fade-in duration-700">
       {/* 1. Hero/Header Section */}
       <section className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-16 rounded-xl shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />

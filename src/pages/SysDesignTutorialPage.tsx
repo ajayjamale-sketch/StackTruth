@@ -44,7 +44,7 @@ export default function SysDesignTutorialPage() {
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
             <button 
-              onClick={() => success("Architectural Lab initialized. System protocols active.")}
+              onClick={() => navigate("/practice/lab/sysdesign-core")}
               className="bg-emerald-500 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/20 active:scale-95"
             >
               Start Architecting
@@ -57,8 +57,8 @@ export default function SysDesignTutorialPage() {
         </div>
         <div className="relative aspect-square bg-slate-100 dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl">
            <img 
-             src="https://images.unsplash.com/photo-1558494949-ef0109121c64?auto=format&fit=crop&w=1200&q=80" 
-             className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000" 
+             src="/assets/images/system-design-blueprint.png" 
+             className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-1000" 
              alt="System Architecture"
            />
            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
@@ -91,7 +91,10 @@ export default function SysDesignTutorialPage() {
           {modules.map(module => (
             <div 
               key={module.id} 
-              onClick={() => setActiveModule(module.id)}
+              onClick={() => {
+                setActiveModule(module.id);
+                navigate(`/practice/lab/sysdesign-${module.id}`);
+              }}
               className={`p-8 bg-white dark:bg-slate-900 border rounded-2xl flex items-center justify-between group cursor-pointer transition-all ${activeModule === module.id ? "border-emerald-500 shadow-xl shadow-emerald-500/5 ring-4 ring-emerald-500/5" : "border-slate-100 dark:border-slate-800 hover:border-emerald-500/30"}`}
             >
               <div className="flex items-center gap-8">
@@ -126,12 +129,16 @@ export default function SysDesignTutorialPage() {
              { title: "Caching Protocols", icon: Zap, desc: "Multi-layer data retrieval" },
              { title: "Message Queues", icon: Terminal, desc: "Asynchronous coordination" },
            ].map(tech => (
-             <div key={tech.title} className="p-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-emerald-500/50 transition-all group hover:shadow-xl">
+              <div 
+                key={tech.title} 
+                onClick={() => success(`Accessing ${tech.title} specialized audit node...`)}
+                className="p-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-emerald-500/50 transition-all group hover:shadow-xl cursor-pointer"
+              >
                 <tech.icon className="w-10 h-10 text-emerald-500 mb-6 group-hover:scale-110 transition-transform" />
                 <h3 className="text-xl font-black text-slate-950 dark:text-white tracking-tight">{tech.title}</h3>
                 <p className="text-sm text-slate-500 mt-2 font-medium">{tech.desc}</p>
-             </div>
-           ))}
+              </div>
+            ))}
         </div>
       </section>
 
@@ -155,19 +162,19 @@ export default function SysDesignTutorialPage() {
               ))}
             </div>
          </div>
-         <div className="md:col-span-5 p-12 bg-slate-950 text-white rounded-3xl space-y-8 relative overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 grid-pattern opacity-10" />
-            <h3 className="text-2xl font-black tracking-tighter">Industry Impact</h3>
+         <div className="md:col-span-5 p-12 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-3xl space-y-8 relative overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 grid-pattern opacity-10 dark:invert-0 invert" />
+            <h3 className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter">Industry Impact</h3>
             <div className="space-y-4 relative z-10">
-               <p className="text-sm text-slate-400 leading-relaxed font-medium">Architects with verified mastery in these protocols are responsible for the infrastructure of global platforms.</p>
+               <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Architects with verified mastery in these protocols are responsible for the infrastructure of global platforms.</p>
                <div className="pt-6 space-y-4">
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                     <p className="text-xs text-emerald-400 font-black uppercase tracking-widest mb-1">Target Role</p>
-                     <p className="text-lg font-black text-white">Staff Systems Architect</p>
+                  <div className="p-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
+                     <p className="text-xs text-emerald-500 font-black uppercase tracking-widest mb-1">Target Role</p>
+                     <p className="text-lg font-black text-slate-950 dark:text-white">Staff Systems Architect</p>
                   </div>
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                     <p className="text-xs text-emerald-400 font-black uppercase tracking-widest mb-1">Average Salary</p>
-                     <p className="text-lg font-black text-white">$250k - $450k</p>
+                  <div className="p-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
+                     <p className="text-xs text-emerald-500 font-black uppercase tracking-widest mb-1">Average Salary</p>
+                     <p className="text-lg font-black text-slate-950 dark:text-white">$250k - $450k</p>
                   </div>
                </div>
             </div>
@@ -177,7 +184,7 @@ export default function SysDesignTutorialPage() {
       {/* 5. Final Certification */}
       <section className="p-16 md:p-24 bg-emerald-500 rounded-3xl text-center space-y-12 shadow-2xl shadow-emerald-500/30 relative overflow-hidden">
          <div className="absolute top-0 left-0 w-64 h-64 bg-white/20 blur-[100px] rounded-full" />
-         <div className="absolute bottom-0 right-0 w-64 h-64 bg-slate-950/10 blur-[100px] rounded-full" />
+         <div className="absolute bottom-0 right-0 w-64 h-64 bg-slate-900/10 blur-[100px] rounded-full" />
          <div className="space-y-6 relative z-10">
             <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-white mx-auto">
                <Award className="w-10 h-10" />
@@ -187,8 +194,8 @@ export default function SysDesignTutorialPage() {
          </div>
          <div className="relative z-10 pt-8">
             <button 
-              onClick={() => success("Sovereignty protocol initiated.")}
-              className="bg-slate-950 text-white font-black px-16 py-6 rounded-xl hover:bg-slate-900 transition-all shadow-2xl active:scale-95 uppercase text-sm tracking-widest"
+              onClick={() => navigate("/practice/lab/sysdesign-elite")}
+              className="bg-white dark:bg-slate-900 text-slate-950 dark:text-white font-black px-16 py-6 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-2xl active:scale-95 uppercase text-sm tracking-widest"
             >
               Begin Final Evaluation
             </button>

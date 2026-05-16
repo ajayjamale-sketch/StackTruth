@@ -30,10 +30,10 @@ const ICONS: Record<ToastType, React.ReactNode> = {
 };
 
 const BG: Record<ToastType, string> = {
-  success: "border-green-500/50 bg-slate-950",
-  error: "border-red-500/50 bg-slate-950",
-  info: "border-blue-500/50 bg-slate-950",
-  warning: "border-amber-500/50 bg-slate-950",
+  success: "border-green-500/20 dark:border-green-500/50 bg-white dark:bg-slate-950 shadow-xl",
+  error: "border-red-500/20 dark:border-red-500/50 bg-white dark:bg-slate-950 shadow-xl",
+  info: "border-blue-500/20 dark:border-blue-500/50 bg-white dark:bg-slate-950 shadow-xl",
+  warning: "border-amber-500/20 dark:border-amber-500/50 bg-white dark:bg-slate-950 shadow-xl",
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -60,20 +60,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ toasts, toast, success, error, info, warning, dismiss }}>
       {children}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-3 min-w-80 max-w-sm">
+      <div className="fixed top-6 right-6 z-[100] flex flex-col gap-4 min-w-80 max-w-sm">
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`flex items-start gap-3 p-4 rounded-xl border shadow-2xl animate-slide-in-right ${BG[t.type]}`}
+            className={`flex items-start gap-3 p-5 rounded-2xl border animate-slide-in-right backdrop-blur-xl ${BG[t.type]}`}
           >
             <div className="mt-0.5 flex-shrink-0">{ICONS[t.type]}</div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white">{t.title}</p>
-              {t.message && <p className="text-xs text-slate-400 mt-0.5">{t.message}</p>}
+              <p className="text-sm font-black text-slate-950 dark:text-white tracking-tight">{t.title}</p>
+              {t.message && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">{t.message}</p>}
             </div>
             <button
               onClick={() => dismiss(t.id)}
-              className="text-slate-500 hover:text-white transition-colors flex-shrink-0"
+              className="text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all flex-shrink-0 active:scale-90"
             >
               <X className="w-4 h-4" />
             </button>

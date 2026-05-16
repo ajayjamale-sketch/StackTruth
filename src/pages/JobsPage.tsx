@@ -186,7 +186,7 @@ export default function JobsPage() {
   });
 
   return (
-    <div className="space-y-20 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-20 py-12">
       {/* 1. Header Section */}
       <section className="bg-white dark:bg-slate-900 text-slate-950 dark:text-white border border-slate-100 dark:border-slate-800 rounded-2xl p-12 relative overflow-hidden shadow-2xl dark:shadow-none">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
@@ -244,7 +244,11 @@ export default function JobsPage() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {FEATURED_COMPANIES.map(company => (
-            <div key={company.name} className="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center grayscale hover:grayscale-0 hover:border-primary/50 transition-all duration-300 group cursor-pointer shadow-sm">
+            <div 
+              key={company.name} 
+              onClick={() => success(`Initializing ${company.name} institutional registry audit...`)}
+              className="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center grayscale hover:grayscale-0 hover:border-primary/50 transition-all duration-300 group cursor-pointer shadow-sm"
+            >
               <CompanyLogo src={company.logo} name={company.name} className="h-6 object-contain opacity-50 group-hover:opacity-100 transition-all dark:brightness-200" />
             </div>
           ))}

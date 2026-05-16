@@ -54,6 +54,11 @@ import AITutorialPage from "@/pages/AITutorialPage";
 import SysDesignTutorialPage from "@/pages/SysDesignTutorialPage";
 import DevOpsTutorialPage from "@/pages/DevOpsTutorialPage";
 import PracticeLabPage from "@/pages/PracticeLabPage";
+import PracticePage from "@/pages/PracticePage";
+import GuidelinesPage from "@/pages/GuidelinesPage";
+import PublicProfilePage from "@/pages/PublicProfilePage";
+import FacultyPage from "@/pages/FacultyPage";
+import PostJobPage from "@/pages/PostJobPage";
 
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
@@ -121,7 +126,7 @@ function AppRoutes() {
         <Route path="/questions/:id" element={<QuestionsPage />} />
         <Route path="/questions/companies" element={<CompanyWisePage />} />
         <Route path="/questions/topics" element={<TopicWisePage />} />
-        <Route path="/practice" element={<QuestionsPage />} />
+        <Route path="/practice" element={<PracticePage />} />
         <Route path="/practice/data-structures" element={<DataStructuresPage />} />
         <Route path="/practice/algorithms" element={<AlgorithmsPage />} />
         <Route path="/practice/system-design" element={<SystemDesignPage />} />
@@ -143,6 +148,7 @@ function AppRoutes() {
         <Route path="/partner" element={<PartnerProgramPage />} />
         <Route path="/contests" element={<ContestsPage />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/faculty" element={<FacultyPage />} />
       </Route>
 
       {/* Strictly Authenticated routes (Always has sidebar) */}
@@ -163,6 +169,7 @@ function AppRoutes() {
         <Route path="/workspace" element={<ProtectedRoute><TeamWorkspacePage /></ProtectedRoute>} />
         <Route path="/live-coding" element={<ProtectedRoute><LiveCodingPage /></ProtectedRoute>} />
         <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistantPage /></ProtectedRoute>} />
+        <Route path="/dashboard/recruiter/post-job" element={<ProtectedRoute requiredRole="recruiter"><PostJobPage /></ProtectedRoute>} />
 
         {/* Admin Specific */}
         <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
@@ -173,7 +180,9 @@ function AppRoutes() {
       </Route>
 
       {/* 404 */}
-      <Route path="*" element={<NotFoundPage />} />
+        <Route path="/guidelines" element={<GuidelinesPage />} />
+        <Route path="/profile/:id" element={<PublicProfilePage />} />
+        <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

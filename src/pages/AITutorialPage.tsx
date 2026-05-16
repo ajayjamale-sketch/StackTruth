@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { 
   Bot, Cpu, Network, Zap, CheckCircle, PlayCircle, 
   ArrowLeft, Clock, Target, BookOpen, Layers, Award,
-  Terminal, Database, Sparkles, Shield
+  Terminal, Database, Sparkles, Shield, Globe
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/contexts/ToastContext";
@@ -44,7 +44,7 @@ export default function AITutorialPage() {
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
             <button 
-              onClick={() => success("AI Core initialized. Deployment protocol active.")}
+              onClick={() => navigate("/practice/lab/ai-foundations")}
               className="bg-purple-500 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-purple-600 transition-all shadow-xl shadow-purple-500/20 active:scale-95"
             >
               Initialize Mastery
@@ -93,7 +93,10 @@ export default function AITutorialPage() {
           {modules.map(module => (
             <div 
               key={module.id} 
-              onClick={() => setActiveModule(module.id)}
+              onClick={() => {
+                setActiveModule(module.id);
+                navigate(`/practice/lab/ai-${module.id}`);
+              }}
               className={`p-8 bg-white dark:bg-slate-900 border rounded-2xl flex items-center justify-between group cursor-pointer transition-all ${activeModule === module.id ? "border-purple-500 shadow-xl shadow-purple-500/5 ring-4 ring-purple-500/5" : "border-slate-100 dark:border-slate-800 hover:border-purple-500/30"}`}
             >
               <div className="flex items-center gap-8">
@@ -114,11 +117,11 @@ export default function AITutorialPage() {
       </section>
 
       {/* 3. Technology Stack */}
-      <section className="p-16 bg-slate-950 rounded-3xl text-white space-y-16 relative overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
+      <section className="p-16 bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-3xl space-y-16 relative overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
         <div className="relative z-10 text-center space-y-4">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Standardized Tech Stack</h2>
-          <p className="text-slate-400 text-lg font-medium tracking-tight">Industrial tools utilized throughout this mastery track.</p>
+          <h2 className="text-3xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tighter">Standardized Tech Stack</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-lg font-medium tracking-tight">Industrial tools utilized throughout this mastery track.</p>
         </div>
         <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8">
            {[
@@ -127,10 +130,14 @@ export default function AITutorialPage() {
              { name: "CUDA 12", icon: Zap, desc: "GPU Compute" },
              { name: "HuggingFace", icon: Globe, desc: "Model Registry" },
            ].map(tech => (
-             <div key={tech.name} className="p-8 bg-white/5 border border-white/10 rounded-2xl text-center space-y-4 hover:border-purple-500/50 transition-all group">
+             <div 
+               key={tech.name} 
+               onClick={() => success(`Accessing ${tech.name} standardized protocol node...`)}
+               className="p-8 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl text-center space-y-4 hover:border-purple-500/50 transition-all group cursor-pointer"
+             >
                 <tech.icon className="w-10 h-10 text-purple-500 mx-auto group-hover:scale-110 transition-transform" />
                 <div>
-                   <p className="text-base font-black tracking-tight">{tech.name}</p>
+                   <p className="text-base font-black text-slate-950 dark:text-white tracking-tight">{tech.name}</p>
                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{tech.desc}</p>
                 </div>
              </div>
@@ -185,12 +192,12 @@ export default function AITutorialPage() {
             <h2 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white tracking-tighter">Neural Mastery Protocol</h2>
             <p className="text-lg text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">Complete the AI/ML track to receive a verifiable cryptographic credential of infrastructure mastery.</p>
          </div>
-         <div className="flex justify-center gap-8 relative z-10">
+         <div className="relative z-10 pt-8">
             <button 
-              onClick={() => success("Certification process initialized.")}
-              className="bg-slate-950 dark:bg-purple-500 text-white font-black px-12 py-5 rounded-xl hover:opacity-90 transition-all shadow-2xl active:scale-95 uppercase text-xs tracking-widest"
+              onClick={() => navigate("/practice/lab/neural-certification")}
+              className="bg-white dark:bg-slate-900 text-slate-950 dark:text-white font-black px-16 py-6 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-2xl active:scale-95 uppercase text-sm tracking-widest"
             >
-              Begin Certification
+              Begin Final Evaluation
             </button>
          </div>
       </section>

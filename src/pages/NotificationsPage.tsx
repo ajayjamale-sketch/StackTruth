@@ -70,17 +70,17 @@ export default function NotificationsPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-950 dark:text-white flex items-center gap-2">
             <Bell className="w-6 h-6 text-blue-400" />
             Notifications
             {unreadCount > 0 && (
               <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{unreadCount}</span>
             )}
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Stay up to date with your community activity</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Stay up to date with your community activity</p>
         </div>
         {unreadCount > 0 && (
-          <button onClick={markAllRead} className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors">
+          <button onClick={markAllRead} className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-400 transition-colors">
             <Check className="w-4 h-4" /> Mark all read
           </button>
         )}
@@ -89,7 +89,11 @@ export default function NotificationsPage() {
       {/* Filters */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar">
         {FILTER_OPTIONS.map(f => (
-          <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${filter === f ? "bg-blue-600 text-white" : "bg-white/5 border border-border text-slate-400 hover:text-white"}`}>
+          <button 
+            key={f} 
+            onClick={() => setFilter(f)} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${filter === f ? "bg-blue-600 text-white" : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-blue-500"}`}
+          >
             {f}
           </button>
         ))}
@@ -101,26 +105,26 @@ export default function NotificationsPage() {
           {filtered.map((notif) => (
             <div
               key={notif.id}
-              className={`flex items-start gap-3 p-4 rounded-xl border transition-all group ${!notif.isRead ? "border-blue-500/20 bg-blue-500/5" : "border-border bg-white/5 hover:bg-white/10"}`}
+              className={`flex items-start gap-3 p-4 rounded-xl border transition-all group ${!notif.isRead ? "border-blue-500/20 bg-blue-500/5" : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50"}`}
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${TYPE_BG[notif.type]}`}>
                 {TYPE_ICONS[notif.type]}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-semibold text-white">{notif.title}</p>
+                  <p className="text-sm font-semibold text-slate-950 dark:text-white">{notif.title}</p>
                   {!notif.isRead && <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1" />}
                 </div>
-                <p className="text-sm text-slate-400 mt-0.5 leading-relaxed">{notif.message}</p>
-                <p className="text-xs text-slate-600 mt-1.5">{timeAgo(notif.createdAt)}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed font-medium">{notif.message}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">{timeAgo(notif.createdAt)}</p>
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                 {!notif.isRead && (
-                  <button onClick={() => markRead(notif.id)} className="p-1.5 text-slate-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all" title="Mark as read">
+                  <button onClick={() => markRead(notif.id)} className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all" title="Mark as read">
                     <Check className="w-3.5 h-3.5" />
                   </button>
                 )}
-                <button onClick={() => deleteNotification(notif.id)} className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all" title="Delete">
+                <button onClick={() => deleteNotification(notif.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Delete">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -128,10 +132,10 @@ export default function NotificationsPage() {
           ))}
         </div>
       ) : (
-        <div className="glass-card p-12 text-center">
-          <Bell className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-white font-semibold mb-2">No notifications</p>
-          <p className="text-slate-500 text-sm">You're all caught up!</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-12 rounded-xl text-center shadow-sm">
+          <Bell className="w-12 h-12 text-slate-200 dark:text-slate-800 mx-auto mb-4" />
+          <p className="text-slate-900 dark:text-white font-bold mb-1">No protocol alerts</p>
+          <p className="text-slate-500 text-sm">You're all caught up with the registry!</p>
         </div>
       )}
     </div>

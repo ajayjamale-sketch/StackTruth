@@ -66,9 +66,25 @@ export default function LiveCodingPage() {
 
   const runCode = async () => {
     setRunning(true);
-    setOutput("Running...");
-    await new Promise(r => setTimeout(r, 1500));
-    setOutput(OUTPUT);
+    setOutput("Initializing verification suite...\n");
+    await new Promise(r => setTimeout(r, 600));
+    setOutput(prev => prev + "Compiling TypeScript source...\n");
+    await new Promise(r => setTimeout(r, 800));
+    setOutput(prev => prev + "Running unit tests [0/3]...\n");
+    await new Promise(r => setTimeout(r, 400));
+    setOutput(prev => prev + "✓ Test 1: [0, 1] PASS\n");
+    await new Promise(r => setTimeout(r, 300));
+    setOutput(prev => prev + "✓ Test 2: [1, 2] PASS\n");
+    await new Promise(r => setTimeout(r, 300));
+    setOutput(prev => prev + "✓ Test 3: [0, 1] PASS\n");
+    await new Promise(r => setTimeout(r, 500));
+    setOutput(prev => prev + "\nAnalyzing computational complexity...\n");
+    await new Promise(r => setTimeout(r, 1000));
+    setOutput(prev => prev + "--------------------------------\n");
+    setOutput(prev => prev + "All tests passed! ✅\n");
+    setOutput(prev => prev + "Time Complexity: O(n)\n");
+    setOutput(prev => prev + "Space Complexity: O(n)\n");
+    setOutput(prev => prev + "Memory Audit: CLEAN\n");
     setRunning(false);
   };
 

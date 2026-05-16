@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Code2, Users, Zap, Shield, Globe, Award, ArrowRight, Star, Target, Sparkles, Building, Layers } from "lucide-react";
 import { MOCK_USERS } from "@/constants/mockData";
 import { useToast } from "@/contexts/ToastContext";
@@ -20,9 +20,10 @@ const VALUES = [
 
 export default function AboutPage() {
   const { success } = useToast();
+  const navigate = useNavigate();
 
   return (
-    <div className="space-y-32 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 space-y-32 py-12">
       {/* 1. Sovereign Mission Header */}
       <section className="relative bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 text-slate-950 dark:text-white rounded-2xl p-16 overflow-hidden group shadow-2xl dark:shadow-none">
         <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none dark:invert-0 invert" />
@@ -39,7 +40,10 @@ export default function AboutPage() {
             StackTruth was founded to eliminate knowledge fragmentation. We are building the world's most rigorous industrial laboratory for technical validation, architectural auditing, and expert collaboration.
           </p>
           <div className="flex flex-wrap gap-6 pt-4">
-            <button className="bg-primary text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95">
+            <button 
+              onClick={() => navigate("/guidelines")}
+              className="bg-primary text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl shadow-primary/30 active:scale-95"
+            >
               Read the Manifesto
             </button>
             <div className="flex items-center gap-4 px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl shadow-sm">

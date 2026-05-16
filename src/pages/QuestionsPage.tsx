@@ -124,6 +124,16 @@ export default function QuestionsPage() {
     if (filter === "Unanswered") return !q.isAnswered;
     if (filter === "Featured") return q.isFeatured;
     if (filter === "Bounty") return !!q.bounty;
+    if (filter === "Week") {
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return new Date(q.createdAt) >= weekAgo;
+    }
+    if (filter === "Month") {
+      const monthAgo = new Date();
+      monthAgo.setMonth(monthAgo.getMonth() - 1);
+      return new Date(q.createdAt) >= monthAgo;
+    }
     return true;
   }).filter((q) => {
     if (search) return q.title.toLowerCase().includes(search.toLowerCase()) || q.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
@@ -322,38 +332,51 @@ export default function QuestionsPage() {
       {/* 3. Main Discussion Feed & Search Section */}
       <section className="grid lg:grid-cols-12 gap-12 items-start">
         <div className="lg:col-span-8 space-y-12">
-          {/* Advanced Search & Sorting */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 sm:p-6 rounded-xl shadow-xl flex flex-col lg:flex-row gap-4 sm:gap-6 items-center relative overflow-hidden">
-             <div className="absolute inset-0 grid-pattern opacity-5" />
-             <div className="relative flex-1 w-full group">
-               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-6 sm:h-6 text-slate-300 group-focus-within:text-primary transition-colors" />
-               <input
-                 type="text"
-                 value={search}
-                 onChange={(e) => setSearch(e.target.value)}
-                 placeholder="Search protocols..."
-                 aria-label="Search technical audits"
-                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-lg pl-12 sm:pl-16 pr-4 py-3 sm:py-5 text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400"
-               />
-             </div>
-             <div className="flex gap-2 w-full lg:w-auto p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner">
-               {SORT_OPTIONS.map((opt) => (
-                 <button
-                   key={opt.label}
-                   onClick={() => {
-                     console.log(`Sorting by: ${opt.label}`);
-                     setSort(opt.label);
-                   }}
-                   aria-label={`Sort by ${opt.label}`}
-                   className={`flex-1 lg:flex-none px-6 sm:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-primary shadow-2xl ring-2 ring-primary/20' : 'text-slate-500 hover:text-primary hover:bg-white/50 dark:hover:bg-slate-700/50'}`}
-                 >
-                   <span className="flex items-center gap-2 pointer-events-none">
-                     <opt.icon className={`w-4 h-4 ${sort === opt.label ? 'text-primary' : 'text-slate-400'}`} />
-                     {opt.label}
-                   </span>
-                 </button>
-               ))}
-             </div>
+          {/* Advanced Search, Filtering & Sorting */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 sm:p-6 rounded-xl shadow-xl flex flex-col lg:flex-row gap-4 sm:gap-6 items-center relative overflow-hidden">
+               <div className="absolute inset-0 grid-pattern opacity-5" />
+               <div className="relative flex-1 w-full group">
+                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-6 sm:h-6 text-slate-300 group-focus-within:text-primary transition-colors" />
+                 <input
+                   type="text"
+                   value={search}
+                   onChange={(e) => setSearch(e.target.value)}
+                   placeholder="Search protocols..."
+                   aria-label="Search technical audits"
+                   className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-lg pl-12 sm:pl-16 pr-4 py-3 sm:py-5 text-sm sm:text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm text-foreground placeholder:text-slate-400"
+                 />
+               </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+              {/* Filter Tabs */}
+              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full md:w-auto">
+                {FILTERS.map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 ${filter === f ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sort Tabs */}
+              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full md:w-auto">
+                {SORT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.label}
+                    onClick={() => setSort(opt.label)}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
+                  >
+                    <opt.icon className={`w-3.5 h-3.5 ${sort === opt.label ? 'text-primary' : 'text-slate-400'}`} />
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Discussion Registry */}
@@ -431,7 +454,7 @@ export default function QuestionsPage() {
                  {[1, 2, 3].map(i => (
                     <div 
                       key={i} 
-                      onClick={() => success(`Opening profile for Expert_${i}...`)}
+                      onClick={() => navigate(`/profile/${i}`)}
                       className="flex items-center justify-between group cursor-pointer active:scale-95 transition-all"
                     >
                       <div className="flex items-center gap-3">
@@ -464,7 +487,7 @@ export default function QuestionsPage() {
                ))}
              </ul>
              <button 
-               onClick={() => success("Guideline protocol opened. Please review carefully.")}
+               onClick={() => navigate("/guidelines")}
                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-950 dark:text-white font-black py-4 rounded-lg text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all relative z-10 active:scale-95"
              >
                Read Guidelines

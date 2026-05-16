@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Users, Shield, Flag, TrendingUp, AlertTriangle, CheckCircle, 
   XCircle, Eye, BarChart3, Zap, Clock, UserCheck, Bell, Sparkles,
@@ -36,7 +36,9 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [verificationActions, setVerificationActions] = useState<Record<number, string>>({});
   const [reportActions, setReportActions] = useState<Record<number, string>>({});
+  const [restrictedUsers, setRestrictedUsers] = useState<Set<string>>(new Set());
   const { success, warning, info } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => { 
     const t = setTimeout(() => setIsLoading(false), 800); 
@@ -61,8 +63,33 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleUserAction = (name: string, action: string) => {
-    info(`User Protocol: ${action}`, `Administrative action initiated for ${name}.`);
+  const handleUserAction = async (user: typeof MOCK_USERS[0], action: "Restrict" | "Audit" | "View") => {
+    if (action === "View") {
+      navigate(`/profile/${user.id}`);
+      return;
+    }
+
+    if (action === "Audit") {
+      info("Audit Initialized", `Running technical integrity scan on ${user.name}...`);
+      await new Promise(r => setTimeout(r, 1000));
+      success("Audit Complete", `No anomalies detected in ${user.name}'s contribution registry.`);
+      return;
+    }
+
+    if (action === "Restrict") {
+      const isRestricting = !restrictedUsers.has(user.id);
+      if (isRestricting) {
+        setRestrictedUsers(prev => new Set(prev).add(user.id));
+        warning("Access Restricted", `${user.name} has been barred from community interactions.`);
+      } else {
+        setRestrictedUsers(prev => {
+          const next = new Set(prev);
+          next.delete(user.id);
+          return next;
+        });
+        success("Access Restored", `${user.name}'s account authority has been reinstated.`);
+      }
+    }
   };
 
   const renderOverview = () => (
@@ -160,39 +187,66 @@ export default function AdminDashboard() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-            {MOCK_USERS.map((u) => (
-              <tr key={u.id} className="group hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
-                <td className="px-8 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-black border border-primary/20">
-                      {u.name.charAt(0)}
+            {MOCK_USERS.map((u) => {
+              const isRestricted = restrictedUsers.has(u.id);
+              return (
+                <tr key={u.id} className="group hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
+                  <td className="px-8 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-black border border-primary/20">
+                        {u.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-slate-950 dark:text-white">{u.name}</p>
+                        <p className="text-[10px] text-slate-500 font-medium lowercase">@{u.username}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-black text-slate-950 dark:text-white">{u.name}</p>
-                      <p className="text-[10px] text-slate-500 font-medium lowercase">@{u.username}</p>
+                  </td>
+                  <td className="px-8 py-4">
+                    <span className="text-[10px] font-black text-slate-500 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded uppercase tracking-widest">{u.role}</span>
+                  </td>
+                  <td className="px-8 py-4 font-black text-primary text-sm">
+                    {u.reputation.toLocaleString()}
+                  </td>
+                  <td className="px-8 py-4">
+                    {isRestricted ? (
+                      <span className="flex items-center gap-2 text-[10px] font-black text-red-500 uppercase tracking-widest">
+                        <XCircle className="w-3.5 h-3.5" /> Restricted
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Active
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-8 py-4 text-right">
+                    <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={() => handleUserAction(u, "Restrict")} 
+                        title={isRestricted ? "Restore Access" : "Restrict Access"}
+                        className={`p-2 rounded-lg transition-all ${isRestricted ? "text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10" : "text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10"}`}
+                      >
+                        {isRestricted ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
+                      </button>
+                      <button 
+                        onClick={() => handleUserAction(u, "Audit")} 
+                        title="Run Technical Audit"
+                        className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleUserAction(u, "View")} 
+                        title="View Public Profile"
+                        className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                     </div>
-                  </div>
-                </td>
-                <td className="px-8 py-4">
-                  <span className="text-[10px] font-black text-slate-500 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded uppercase tracking-widest">{u.role}</span>
-                </td>
-                <td className="px-8 py-4 font-black text-primary text-sm">
-                  {u.reputation.toLocaleString()}
-                </td>
-                <td className="px-8 py-4">
-                  <span className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" /> Active
-                  </span>
-                </td>
-                <td className="px-8 py-4 text-right">
-                  <div className="flex justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleUserAction(u.name, "Restrict")} className="p-2 text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-all"><Ban className="w-4 h-4" /></button>
-                    <button onClick={() => handleUserAction(u.name, "Audit")} className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"><RefreshCw className="w-4 h-4" /></button>
-                    <button onClick={() => handleUserAction(u.name, "View")} className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all"><MoreVertical className="w-4 h-4" /></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
