@@ -28,7 +28,7 @@ export default function PracticePage() {
           title: "Algorithms Mastery",
           description: "Computational complexity audits, graph traversal protocols, and dynamic optimization.",
           icon: <Zap className="w-6 h-6" />,
-          onClick: () => navigate("/practice/algorithms")
+          onClick: () => navigate("/practice/algorithm")
         },
         {
           title: "System Design",

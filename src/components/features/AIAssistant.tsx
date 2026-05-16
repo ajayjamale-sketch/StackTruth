@@ -111,38 +111,38 @@ export default function AIAssistant() {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[100] flex flex-col bg-slate-900 border border-border rounded-2xl shadow-2xl shadow-black/50 overflow-hidden transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[100] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/50 overflow-hidden transition-all duration-300 ${
         isMinimized ? "w-64 sm:w-72 h-12" : "w-[calc(100vw-2rem)] sm:w-96 h-[500px] sm:h-[520px]"
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600/20 to-purple-600/10 border-b border-border flex-shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-gradient-to-r dark:from-blue-600/20 dark:to-purple-600/10 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
             <Bot className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-xs font-bold text-white">AI Assistant</p>
-            <p className="text-[10px] text-green-400">● Online</p>
+            <p className="text-xs font-bold text-slate-900 dark:text-white">AI Assistant</p>
+            <p className="text-[10px] text-emerald-500 font-bold">● Online</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setMessages([messages[0]])}
-            className="p-1.5 text-slate-500 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+            className="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
             title="Reset conversation"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="p-1.5 text-slate-500 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+            className="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
           >
             {isMinimized ? <Maximize2 className="w-3.5 h-3.5" /> : <Minimize2 className="w-3.5 h-3.5" />}
           </button>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 text-slate-500 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/5 rounded-lg transition-all"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -156,15 +156,15 @@ export default function AIAssistant() {
             {messages.map((msg) => (
               <div key={msg.id} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                 {msg.role === "assistant" && (
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Bot className="w-3.5 h-3.5 text-white" />
                   </div>
                 )}
                 <div
                   className={`max-w-[85%] rounded-xl px-3 py-2 ${
                     msg.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white/5 border border-border text-slate-300"
+                      ? "bg-primary text-white"
+                      : "bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm"
                   }`}
                 >
                   <div className="space-y-1">
@@ -176,14 +176,14 @@ export default function AIAssistant() {
 
             {isTyping && (
               <div className="flex gap-2">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                   <Bot className="w-3.5 h-3.5 text-white" />
                 </div>
-                <div className="bg-white/5 border border-border rounded-xl px-3 py-2">
+                <div className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-slate-800 rounded-xl px-3 py-2">
                   <div className="flex gap-1 items-center h-4">
-                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function AIAssistant() {
                 <button
                   key={qp.label}
                   onClick={() => sendMessage(qp.prompt)}
-                  className="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 border border-border rounded-lg px-2.5 py-1.5 text-xs text-slate-300 hover:text-white transition-all flex-shrink-0"
+                  className="flex items-center gap-1.5 bg-slate-50 dark:bg-white/5 hover:bg-primary/5 border border-slate-100 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-primary transition-all flex-shrink-0"
                 >
                   <qp.icon className="w-3 h-3" />
                   {qp.label}
@@ -208,27 +208,29 @@ export default function AIAssistant() {
           )}
 
           {/* Input */}
-          <div className="p-3 border-t border-border flex-shrink-0">
-            <div className="flex items-end gap-2 bg-white/5 border border-border rounded-xl px-3 py-2 focus-within:border-blue-500 transition-all">
+          <div className="p-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
+            <div className="flex items-end gap-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 focus-within:border-primary transition-all">
               <textarea
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about bugs, code review, optimization..."
-                className="flex-1 bg-transparent text-sm text-white placeholder:text-slate-600 resize-none focus:outline-none max-h-20"
+                placeholder="Ask about technical protocols..."
+                className="flex-1 bg-transparent text-sm text-slate-900 dark:text-white placeholder:text-slate-400 resize-none focus:outline-none max-h-20"
                 rows={1}
                 style={{ height: "auto", minHeight: "20px" }}
               />
               <button
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim() || isTyping}
-                className="p-1.5 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all flex-shrink-0"
+                className="p-1.5 bg-primary hover:opacity-90 disabled:opacity-20 disabled:cursor-not-allowed rounded-lg transition-all flex-shrink-0 shadow-sm"
               >
                 <Send className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
-            <p className="text-[10px] text-slate-700 mt-1.5 text-center">Shift+Enter for new line</p>
+            <p className="text-[9px] font-bold text-slate-400 mt-2 text-center uppercase tracking-widest flex items-center justify-center gap-1">
+              <Zap className="w-3 h-3 text-amber-500" /> Neural Context Active
+            </p>
           </div>
         </>
       )}

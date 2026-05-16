@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Star, Code2, BookOpen, Users, TrendingUp, Award, ArrowRight, CheckCircle, Clock, Zap, Play, MessageSquare, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MOCK_CODE_REVIEWS, MOCK_QUESTIONS, MOCK_ANALYTICS } from "@/constants/mockData";

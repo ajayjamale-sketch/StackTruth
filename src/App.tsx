@@ -59,6 +59,7 @@ import GuidelinesPage from "@/pages/GuidelinesPage";
 import PublicProfilePage from "@/pages/PublicProfilePage";
 import FacultyPage from "@/pages/FacultyPage";
 import PostJobPage from "@/pages/PostJobPage";
+import PracticeAlgorithmPage from "@/pages/PracticeAlgorithmPage";
 
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
@@ -129,6 +130,7 @@ function AppRoutes() {
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/practice/data-structures" element={<DataStructuresPage />} />
         <Route path="/practice/algorithms" element={<AlgorithmsPage />} />
+        <Route path="/practice/algorithm" element={<PracticeAlgorithmPage />} />
         <Route path="/practice/system-design" element={<SystemDesignPage />} />
         <Route path="/practice/lab/:module" element={<PracticeLabPage />} />
         <Route path="/tutorials" element={<TutorialsPage />} />

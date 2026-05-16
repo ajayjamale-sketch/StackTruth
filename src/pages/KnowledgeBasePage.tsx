@@ -68,6 +68,33 @@ const TrackCard = ({ icon, title, onClick }: { icon: React.ReactNode; title: str
 
 // --- Main Page ---
 
+const DETAILED_CONTENT: Record<string, { sections: { title: string, content: string, type: 'text' | 'code' | 'highlight' }[] }> = {
+  "a1": {
+    sections: [
+      { 
+        title: "Architecture Overview", 
+        content: "tRPC allows you to build end-to-end typesafe APIs without the need for code generation or runtime validation boilerplate. By sharing types between the server and client, we eliminate the 'contract drift' common in traditional REST implementations.",
+        type: "text" 
+      },
+      { 
+        title: "Router Implementation", 
+        content: "const appRouter = router({\n  getUser: publicProcedure\n    .input(z.string())\n    .query(async (opts) => {\n      const { input } = opts;\n      const user = await db.user.findById(input);\n      return user;\n    }),\n});",
+        type: "code" 
+      },
+      { 
+        title: "The Zod Registry", 
+        content: "Every procedure in our tRPC architecture is gated by a Zod schema. This ensures that the incoming data packet is validated at the edge before it reaches our business logic layer, maintaining a 100% integrity rate for internal state transitions.",
+        type: "highlight" 
+      },
+      { 
+        title: "Client Consumption", 
+        content: "On the frontend, consuming these procedures is as simple as calling a hook. TypeScript will automatically infer the input and output types based on the server-side router definition.",
+        type: "text" 
+      }
+    ]
+  }
+};
+
 export default function KnowledgeBasePage() {
   const { success } = useToast();
   const navigate = useNavigate();
@@ -87,6 +114,10 @@ export default function KnowledgeBasePage() {
 
   const selectedArticle = useMemo(() => 
     MOCK_ARTICLES.find(a => a.id === id), [id]
+  );
+
+  const detailedContent = useMemo(() => 
+    id ? DETAILED_CONTENT[id] : null, [id]
   );
 
   useEffect(() => {
@@ -130,13 +161,43 @@ export default function KnowledgeBasePage() {
           </div>
         </header>
 
-        <div className="prose dark:prose-invert max-w-none">
-          <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8">
+        <div className="space-y-12">
+          <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
             {selectedArticle.excerpt}
           </p>
-          <div className="aspect-video rounded-2xl bg-slate-50 dark:bg-slate-800/30 border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 font-mono italic">
-            [Technical Documentation Content]
-          </div>
+          
+          {detailedContent ? (
+            <div className="space-y-16">
+              {detailedContent.sections.map((section, index) => (
+                <div key={index} className="space-y-6">
+                  <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight flex items-center gap-3">
+                    <span className="text-primary opacity-20">0{index + 1}</span> {section.title}
+                  </h2>
+                  
+                  {section.type === 'text' && (
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{section.content}</p>
+                  )}
+                  
+                  {section.type === 'code' && (
+                    <div className="bg-slate-950 rounded-2xl border border-white/5 p-8 font-mono text-sm text-slate-300 shadow-2xl relative group">
+                      <div className="absolute top-4 right-4 text-[9px] font-black uppercase tracking-widest text-slate-600 group-hover:text-primary transition-colors">TypeScript Registry</div>
+                      <pre className="whitespace-pre-wrap">{section.content}</pre>
+                    </div>
+                  )}
+                  
+                  {section.type === 'highlight' && (
+                    <div className="bg-primary/5 border-l-4 border-primary p-8 rounded-r-2xl">
+                      <p className="text-slate-900 dark:text-white font-bold leading-relaxed">{section.content}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="aspect-video rounded-2xl bg-slate-50 dark:bg-slate-800/30 border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 font-mono italic">
+              [Technical Documentation Content Pending Verification]
+            </div>
+          )}
         </div>
       </div>
     );

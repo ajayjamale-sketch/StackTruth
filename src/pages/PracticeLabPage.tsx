@@ -1,26 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   PlayCircle, Code2, Terminal, Shield, Zap, 
   ArrowLeft, Clock, Target, BookOpen, Layers,
-  CheckCircle, HelpCircle, MessageSquare
+  CheckCircle, HelpCircle, MessageSquare, RotateCcw
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@/contexts/ToastContext";
+
+const MODULE_CONTENT: Record<string, { title: string, tasks: string[], hint: string, boilerplate: string }> = {
+  "mern-comprehensive": {
+    title: "MERN Stack Full-Cycle Audit",
+    tasks: [
+      "Implement JWT-based authentication protocol",
+      "Verify MongoDB aggregation pipeline efficiency",
+      "Configure Express middleware for rate limiting",
+      "Audit React state synchronization with Redux/Zustand"
+    ],
+    hint: "Focus on the atomic consistency between the MongoDB cluster and the React frontend state.",
+    boilerplate: "// MERN Comprehensive Audit Registry\n\nconst auditMernProtocol = async () => {\n  // 1. Initialize Auth Cluster\n  // 2. Validate Data Integrity\n  // 3. Verify API Throughput\n};"
+  },
+  "sorting": {
+    title: "Sorting Algorithm Optimization",
+    tasks: [
+      "Implement Quicksort with median-of-three pivot",
+      "Optimize for O(N log N) time complexity",
+      "Maintain O(log N) space overhead",
+      "Verify stability of the sorting protocol"
+    ],
+    hint: "Use the median-of-three strategy to avoid worst-case O(N^2) scenarios in the audit.",
+    boilerplate: "function quicksort(arr) {\n  // Implementation logic for optimized sorting\n}"
+  }
+};
 
 export default function PracticeLabPage() {
   const navigate = useNavigate();
   const { success } = useToast();
   const { module } = useParams();
   
-  const [code, setCode] = useState("// Initialize your technical audit here...\n\nfunction auditProtocol() {\n  // Implementation logic\n}");
+  const content = MODULE_CONTENT[module || ""] || {
+    title: "Technical Audit Laboratory",
+    tasks: ["Implement a time-optimized solution", "Maintain space complexity within O(N)", "Handle edge-case coordinate registries", "Verify atomic data consistency"],
+    hint: "Consider using a distributed coordinate registry to handle concurrent node updates without deadlocks.",
+    boilerplate: "// Initialize your technical audit here...\n\nfunction auditProtocol() {\n  // Implementation logic\n}"
+  };
+
+  const [code, setCode] = useState(content.boilerplate);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+
+  // Sync code when module changes
+  useEffect(() => {
+    setCode(content.boilerplate);
+    setConsoleOutput([]);
+  }, [module]);
 
   const runAudit = async () => {
     setIsRunning(true);
     setConsoleOutput(["[SYSTEM] Initializing industrial-grade verification suite..."]);
     await new Promise(r => setTimeout(r, 800));
-    setConsoleOutput(prev => [...prev, "[COMPILER] Compiling source protocols...", "[COMPILER] Type-check passed. No critical regressions found."]);
+    setConsoleOutput(prev => [...prev, `[COMPILER] Compiling ${module?.toUpperCase()} protocols...`, "[COMPILER] Type-check passed. No critical regressions found."]);
     await new Promise(r => setTimeout(r, 1200));
     setConsoleOutput(prev => [...prev, "[RUNNER] Executing audit benchmarks...", "✓ Complexity: O(N log N) verified", "✓ Memory overhead: 12.4MB PASS", "✓ Atomic consistency: STABLE"]);
     await new Promise(r => setTimeout(r, 1000));
@@ -123,12 +161,7 @@ export default function PracticeLabPage() {
               <Shield className="w-5 h-5 text-primary" /> Mission Protocols
             </h3>
             <div className="space-y-4">
-              {[
-                "Implement a time-optimized solution",
-                "Maintain space complexity within O(N)",
-                "Handle edge-case coordinate registries",
-                "Verify atomic data consistency"
-              ].map(task => (
+              {content.tasks.map(task => (
                 <div key={task} className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
                   <span className="text-xs font-medium text-slate-600 dark:text-slate-400 leading-relaxed">{task}</span>
@@ -141,7 +174,7 @@ export default function PracticeLabPage() {
              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-[60px] rounded-full group-hover:scale-150 transition-transform duration-1000" />
              <h3 className="text-xl font-black tracking-tighter">Technical Hint</h3>
              <p className="text-sm opacity-90 leading-relaxed font-medium">
-               Consider using a distributed coordinate registry to handle concurrent node updates without deadlocks.
+               {content.hint}
              </p>
              <button 
                onClick={() => success("Solution protocol unlocked. Retrieving architectural audit and optimized code registry...")}

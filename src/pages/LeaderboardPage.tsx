@@ -191,19 +191,6 @@ export default function LeaderboardPage() {
                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-lg pl-16 pr-6 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm" 
              />
            </div>
-           <div className="flex flex-wrap gap-3 w-full xl:w-auto">
-             <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-               {PERIODS.map(p => (
-                 <button key={p} onClick={() => setPeriod(p)} className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${period === p ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-xl" : "text-slate-500 hover:text-primary"}`}>{p}</button>
-               ))}
-             </div>
-             <div className="w-px h-12 bg-slate-200 dark:bg-slate-700 hidden xl:block" />
-             <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar">
-               {CATEGORIES.map(c => (
-                 <button key={c} onClick={() => setCategory(c)} className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${category === c ? "bg-primary text-white shadow-xl shadow-primary/20" : "text-slate-500 hover:text-primary"}`}>{c}</button>
-               ))}
-             </div>
-           </div>
         </div>
       </section>
 
