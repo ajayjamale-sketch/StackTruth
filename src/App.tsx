@@ -60,6 +60,7 @@ import PublicProfilePage from "@/pages/PublicProfilePage";
 import FacultyPage from "@/pages/FacultyPage";
 import PostJobPage from "@/pages/PostJobPage";
 import PracticeAlgorithmPage from "@/pages/PracticeAlgorithmPage";
+import RoleSwitcher from "@/components/features/RoleSwitcher";
 
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
@@ -173,12 +174,21 @@ function AppRoutes() {
         <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistantPage /></ProtectedRoute>} />
         <Route path="/dashboard/recruiter/post-job" element={<ProtectedRoute requiredRole="recruiter"><PostJobPage /></ProtectedRoute>} />
 
+        {/* Expert Sub-routes */}
+        <Route path="/expert/mentorship" element={<ProtectedRoute requiredRole="expert"><ExpertDashboard /></ProtectedRoute>} />
+
+        {/* Recruiter Sub-routes */}
+        <Route path="/recruiter/candidates" element={<ProtectedRoute requiredRole="recruiter"><RecruiterDashboard /></ProtectedRoute>} />
+        <Route path="/recruiter/interviews" element={<ProtectedRoute requiredRole="recruiter"><RecruiterDashboard /></ProtectedRoute>} />
+
         {/* Admin Specific */}
         <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
         <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/moderation" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/verification" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
       </Route>
 
       {/* 404 */}
@@ -198,6 +208,7 @@ export default function App() {
             <BrowserRouter>
               <ScrollToTop />
               <AppRoutes />
+              <RoleSwitcher />
             </BrowserRouter>
           </SidebarProvider>
         </ToastProvider>

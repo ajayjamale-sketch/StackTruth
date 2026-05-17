@@ -30,89 +30,78 @@ interface SidebarSection {
 const SIDEBAR_CONFIG: Record<UserRole, SidebarSection[]> = {
   developer: [
     {
+      title: "Core Workspace",
       items: [
-        { label: "Overview", icon: LayoutDashboard, path: "/dashboard/developer" },
+        { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard/developer" },
+        { label: "Questions", icon: MessageSquare, path: "/questions" },
         { label: "Code Reviews", icon: Code2, path: "/code-review" },
-        { label: "AI Assistant", icon: Bot, path: "/ai-assistant", badge: "New", badgeColor: "bg-amber-500" },
+        { label: "AI Assistant", icon: Bot, path: "/ai-assistant", badge: "AI", badgeColor: "bg-amber-500" },
       ],
     },
     {
-      title: "Mastery Tracks",
+      title: "Resources & Careers",
       items: [
-        { 
-          label: "Engineering Hub", 
-          icon: Shield, 
-          path: "/practice",
-          subItems: [
-            { label: "Data Structures", path: "/practice/data-structures" },
-            { label: "Algorithms", path: "/practice/algorithms" },
-            { label: "System Design", path: "/practice/system-design" },
-          ]
-        },
-        { 
-          label: "Tutorials", 
-          icon: BookOpen, 
-          path: "/tutorials",
-          subItems: [
-            { label: "Python Mastery", path: "/tutorials/python" },
-            { label: "MERN Stack", path: "/tutorials/mern" },
-            { label: "AI & ML", path: "/tutorials/ai" },
-            { label: "System Design", path: "/tutorials/sysdesign" },
-            { label: "Cloud DevOps", path: "/tutorials/devops" },
-          ]
-        },
-      ],
-    },
-    {
-      title: "Ecosystem",
-      items: [
-        { label: "Live Coding", icon: Play, path: "/live-coding" },
+        { label: "Team Workspace", icon: Users, path: "/workspace" },
+        { label: "Jobs", icon: Briefcase, path: "/jobs" },
+        { label: "Analytics", icon: BarChart3, path: "/analytics" },
+        { label: "Profile Settings", icon: Settings, path: "/profile/settings" },
       ],
     },
   ],
   expert: [
     {
+      title: "Expert Portal",
       items: [
-        { label: "Expert Hub", icon: LayoutDashboard, path: "/dashboard/expert" },
-        { label: "Manage Questions", icon: Star, path: "/questions" },
-        { label: "Review Tasks", icon: Code2, path: "/code-review", badge: "8", badgeColor: "bg-primary" },
+        { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard/expert" },
+        { label: "Mentorship", icon: Award, path: "/expert/mentorship" },
+        { label: "Code Reviews", icon: Code2, path: "/code-review", badge: "8", badgeColor: "bg-primary" },
       ],
     },
     {
-      title: "Resources",
+      title: "Contributions",
       items: [
-        { label: "Author Guides", icon: BookOpen, path: "/author-guides" },
-        { label: "Expert Lab", icon: Play, path: "/live-coding" },
+        { label: "Tutorials", icon: BookOpen, path: "/tutorials" },
+        { label: "Live Coding", icon: Play, path: "/live-coding" },
+        { label: "Analytics", icon: BarChart3, path: "/analytics" },
+        { label: "Community Contributions", icon: Users, path: "/community" },
       ],
     },
   ],
   recruiter: [
     {
+      title: "Recruiter Portal",
       items: [
-        { label: "Recruitment Portal", icon: LayoutDashboard, path: "/dashboard/recruiter" },
+        { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard/recruiter" },
+        { label: "Job Postings", icon: Briefcase, path: "/jobs" },
       ],
     },
     {
-      title: "Interviewing",
+      title: "Talent Acquisition",
       items: [
-        { label: "Live Assessment", icon: Calendar, path: "/live-coding" },
-        { label: "Analytics", icon: BarChart3, path: "/analytics" },
+        { label: "Candidates", icon: Users, path: "/recruiter/candidates" },
+        { label: "Interviews", icon: Calendar, path: "/recruiter/interviews" },
+        { label: "Hiring Analytics", icon: BarChart3, path: "/analytics" },
+        { label: "Company Profile", icon: Building, path: "/profile" },
       ],
     },
   ],
   admin: [
     {
+      title: "Control Panel",
       items: [
-        { label: "System Console", icon: LayoutDashboard, path: "/dashboard/admin" },
-        { label: "User Directory", icon: Users, path: "/admin/users" },
+        { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard/admin" },
+        { label: "User Management", icon: Users, path: "/admin/users" },
         { label: "Moderation", icon: Shield, path: "/admin/moderation" },
+        { label: "Reports", icon: Flag, path: "/admin/reports", badge: "12", badgeColor: "bg-red-500" },
       ],
     },
     {
-      title: "Controls",
+      title: "System Administration",
       items: [
-        { label: "System Reports", icon: Flag, path: "/admin/reports", badge: "12", badgeColor: "bg-red-500" },
-        { label: "Verification", icon: UserCheck, path: "/admin/verification", badge: "3", badgeColor: "bg-amber-500" },
+        { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
+        { label: "System Settings", icon: Settings, path: "/admin/settings" },
+        { label: "Expert Verification", icon: UserCheck, path: "/admin/verification", badge: "3", badgeColor: "bg-amber-500" },
+        { label: "Notifications", icon: Bell, path: "/notifications" },
       ],
     },
   ],

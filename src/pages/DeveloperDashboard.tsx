@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   MessageSquare, Code2, TrendingUp, Award, ArrowRight, Flame,
   ThumbsUp, Eye, BookmarkCheck, Zap, Star, Clock, CheckCircle,
-  Users, Briefcase, Bot, Play, Sparkles, ChevronRight,
+  Users, Briefcase, Bot, Play, Sparkles, ChevronRight, Shield,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MOCK_QUESTIONS, MOCK_CODE_REVIEWS, MOCK_NOTIFICATIONS, MOCK_ANALYTICS } from "@/constants/mockData";
@@ -132,6 +132,39 @@ export default function DeveloperDashboard() {
           <Link to="/profile" className="block text-center text-xs font-bold text-primary hover:underline pt-4 border-t border-slate-100 dark:border-slate-800">
             View Complete Skill Map
           </Link>
+        </div>
+      </div>
+
+      {/* RBAC Security Credentials Matrix */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] rounded-full" />
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Shield className="w-5 h-5 text-primary" />
+            RBAC Authority & Clearance
+          </h2>
+          <span className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded uppercase tracking-widest animate-pulse">Developer Clearance Verified</span>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { action: "Create own content", permitted: true, detail: "Q&A, Profiles, Projects" },
+            { action: "AI Sandbox & Reviews", permitted: true, detail: "AI Assistant & static analysis" },
+            { action: "Moderate Q&A Board", permitted: false, detail: "Platform-wide content cleanup" },
+            { action: "Platform Administrator", permitted: false, detail: "Global console configuration" },
+          ].map((perm, index) => (
+            <div key={index} className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 truncate">{perm.action}</span>
+                {perm.permitted ? (
+                  <span className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-xs">✓</span>
+                ) : (
+                  <span className="w-4 h-4 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold text-[10px]">🔒</span>
+                )}
+              </div>
+              <p className="text-[9px] text-slate-400 font-medium leading-normal">{perm.detail}</p>
+            </div>
+          ))}
         </div>
       </div>
 

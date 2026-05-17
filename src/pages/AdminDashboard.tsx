@@ -3,10 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Users, Shield, Flag, TrendingUp, AlertTriangle, CheckCircle, 
   XCircle, Eye, BarChart3, Zap, Clock, UserCheck, Bell, Sparkles,
-  Search, Filter, MoreVertical, Ban, RefreshCw
+  Search, Filter, MoreVertical, Ban, RefreshCw, Settings, Play, Database,
+  ArrowRight, Key, ShieldAlert
 } from "lucide-react";
-import { MOCK_USERS, MOCK_NOTIFICATIONS } from "@/constants/mockData";
-import { StatCardSkeleton } from "@/components/ui/SkeletonLoader";
+import { MOCK_USERS } from "@/constants/mockData";
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 import { useToast } from "@/contexts/ToastContext";
 
@@ -40,8 +40,22 @@ export default function AdminDashboard() {
   const { success, warning, info } = useToast();
   const navigate = useNavigate();
 
+  // Admin Settings states
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [regGateway, setRegGateway] = useState(true);
+  const [auditEngine, setAuditEngine] = useState(true);
+  const [repMultiplier, setRepMultiplier] = useState("1.5");
+  const [maxReviews, setMaxReviews] = useState("10");
+
+  // Console Logs Simulator State
+  const [consoleLogs, setConsoleLogs] = useState([
+    { time: "12:45:19", source: "API GATEWAY", msg: "Security token rotation success. 248 active clients synchronized.", status: "success" },
+    { time: "12:45:10", source: "WORKER 3", msg: "Verified answer validation accepted for Q-391. Score multiplier adjusted.", status: "success" },
+    { time: "12:44:55", source: "AI REVIEW ENGINE", msg: "Static audit pool capacity at 12%. Performance indices stable.", status: "info" },
+  ]);
+
   useEffect(() => { 
-    const t = setTimeout(() => setIsLoading(false), 800); 
+    const t = setTimeout(() => setIsLoading(false), 500); 
     return () => clearTimeout(t); 
   }, [pathname]);
 
@@ -90,6 +104,26 @@ export default function AdminDashboard() {
         success("Access Restored", `${user.name}'s account authority has been reinstated.`);
       }
     }
+  };
+
+  const handleSaveSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    success("Settings Updated", "Platform configurations synchronized successfully across all cluster nodes.");
+    setConsoleLogs(prev => [
+      { time: new Date().toTimeString().split(" ")[0], source: "SYSTEM CONSOLE", msg: `Config sync: Rep Mult set to ${repMultiplier}x, Max Reviews to ${maxReviews}.`, status: "success" },
+      ...prev
+    ]);
+  };
+
+  const handleFlushCache = () => {
+    info("Flushing Cache Buffers", "Reclaiming system memory blocks...");
+    setTimeout(() => {
+      success("Buffers Flushed", "Cleaned up 412 MB of stale database cache fragments.");
+      setConsoleLogs(prev => [
+        { time: new Date().toTimeString().split(" ")[0], source: "REDIS CLUSTER", msg: "Stale cache entries evicted. 412MB reclaimed.", status: "success" },
+        ...prev
+      ]);
+    }, 1000);
   };
 
   const renderOverview = () => (
@@ -324,6 +358,187 @@ export default function AdminDashboard() {
     </div>
   );
 
+  // Subview: System Settings
+  const renderSettings = () => (
+    <div className="grid lg:grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <form onSubmit={handleSaveSettings} className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+        <h2 className="text-xl font-black text-slate-950 dark:text-white uppercase tracking-tighter flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <Settings className="w-5 h-5 text-primary" /> System Variable Configurations
+        </h2>
+
+        <div className="grid sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Reputation Point Multiplier</label>
+            <input 
+              type="text" 
+              value={repMultiplier} 
+              onChange={(e) => setRepMultiplier(e.target.value)} 
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-xs focus:ring-1 focus:ring-primary outline-none font-bold"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Max Reviews per Dev / Month</label>
+            <input 
+              type="text" 
+              value={maxReviews} 
+              onChange={(e) => setMaxReviews(e.target.value)} 
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-xs focus:ring-1 focus:ring-primary outline-none font-bold"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Global Maintenance Mode</p>
+              <p className="text-[10px] text-slate-400 font-medium">Render standard offline landing pages globally.</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => {
+                setMaintenanceMode(!maintenanceMode);
+                warning("Maintenance Mode Status", `Global maintenance mode is now ${!maintenanceMode ? 'ACTIVE' : 'INACTIVE'}.`);
+              }}
+              className={`w-12 h-6 rounded-full p-1 transition-colors ${maintenanceMode ? 'bg-amber-500' : 'bg-slate-200 dark:bg-slate-700'}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${maintenanceMode ? 'translate-x-6' : 'translate-x-0'}`} />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Developer Registration Gateway</p>
+              <p className="text-[10px] text-slate-400 font-medium">Permit open signup pools across standard paths.</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => {
+                setRegGateway(!regGateway);
+                info("Registration Gate Status", `Signup portal is now ${!regGateway ? 'OPENED' : 'CLOSED'}.`);
+              }}
+              className={`w-12 h-6 rounded-full p-1 transition-colors ${regGateway ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${regGateway ? 'translate-x-6' : 'translate-x-0'}`} />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200">AI Static Code Audit Engine</p>
+              <p className="text-[10px] text-slate-400 font-medium">Leverage standard LLM filters on initial review cycles.</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => {
+                setAuditEngine(!auditEngine);
+                info("AI Audit Engine Status", `AI reviewer pipeline is now ${!auditEngine ? 'ENABLED' : 'DISABLED'}.`);
+              }}
+              className={`w-12 h-6 rounded-full p-1 transition-colors ${auditEngine ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${auditEngine ? 'translate-x-6' : 'translate-x-0'}`} />
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" className="w-full btn-primary py-3.5 text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20">
+          Save Configuration Variables
+        </button>
+      </form>
+
+      <div className="lg:col-span-4 space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-4">
+          <h3 className="text-base font-black text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <Database className="w-5 h-5 text-primary" /> Memory & Buffer Controls
+          </h3>
+          <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
+            Reclaim memory, clear stale database indices, and reset rate limiter pools globally.
+          </p>
+          <button 
+            type="button" 
+            onClick={handleFlushCache}
+            className="w-full py-3 border border-slate-200 dark:border-slate-800 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary hover:border-primary/20 transition-all flex items-center justify-center gap-1 bg-slate-50 dark:bg-slate-800/40"
+          >
+            <RefreshCw className="w-3.5 h-3.5" /> Flush Cache Buffers
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Subview: System Analytics & Terminal Logs
+  const renderAnalytics = () => (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: "Active Developers", value: "38,204", trend: "+14.8%" },
+          { label: "Solves Verified", value: "14,809", trend: "+8.2%" },
+          { label: "Code Audits Done", value: "8,291", trend: "+24.5%" },
+          { label: "AI Tokens Consumed", value: "12,940k", trend: "Normal load" },
+        ].map(s => (
+          <div key={s.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl shadow-sm">
+            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.label}</span>
+            <p className="text-2xl font-black text-slate-950 dark:text-white tracking-tighter mt-1">{s.value}</p>
+            <span className="text-[9px] font-black text-primary uppercase mt-1 inline-block">{s.trend}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid lg:grid-cols-12 gap-6">
+        {/* Growth Chart */}
+        <div className="lg:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6">
+          <h3 className="text-base font-black text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary" /> System Volume Growth Index
+          </h3>
+          <div className="h-[260px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={GROWTH_DATA}>
+                <XAxis dataKey="month" stroke="#94a3b8" fontSize={10} fontWeight={600} />
+                <YAxis stroke="#94a3b8" fontSize={10} fontWeight={600} />
+                <Tooltip contentStyle={{ borderRadius: 8 }} />
+                <Area type="monotone" dataKey="users" stroke="var(--primary)" strokeWidth={3} fill="var(--primary)" fillOpacity={0.1} />
+                <Area type="monotone" dataKey="questions" stroke="#cbd5e1" strokeWidth={2} fill="transparent" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Console Logs Terminal Simulator */}
+        <div className="lg:col-span-4 bg-slate-950 text-slate-300 border border-slate-850 p-6 rounded-xl font-mono flex flex-col justify-between">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Diagnostic Live Logs</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <div className="space-y-3.5 max-h-[220px] overflow-y-auto text-[10px] leading-normal font-medium">
+              {consoleLogs.map((log, idx) => (
+                <div key={idx} className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-600">[{log.time}]</span>
+                    <span className="text-primary font-bold">[{log.source}]</span>
+                  </div>
+                  <p className="text-slate-400">{log.msg}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => {
+              setConsoleLogs(prev => [
+                { time: new Date().toTimeString().split(" ")[0], source: "SYSTEM DIAG", msg: "Global audit scan completed in 12ms. Healthy.", status: "success" },
+                ...prev
+              ]);
+              success("System Audit Scan Done");
+            }}
+            className="w-full mt-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-[9px] font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-all text-center"
+          >
+            Trigger Integrity Scan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-8 pb-12">
       {/* Header - Admin Portal Style */}
@@ -353,6 +568,8 @@ export default function AdminDashboard() {
           { label: "Moderation", path: "/admin/moderation", icon: Shield },
           { label: "Reports", path: "/admin/reports", icon: Flag },
           { label: "Verification", path: "/admin/verification", icon: UserCheck },
+          { label: "Analytics", path: "/admin/analytics", icon: BarChart3 },
+          { label: "System Settings", path: "/admin/settings", icon: Settings },
         ].map((tab) => {
           const isActive = pathname === tab.path;
           return (
@@ -379,6 +596,41 @@ export default function AdminDashboard() {
         {pathname === "/admin/moderation" && renderModeration()}
         {pathname === "/admin/reports" && renderModeration()}
         {pathname === "/admin/verification" && renderModeration()}
+        {pathname === "/admin/settings" && renderSettings()}
+        {pathname === "/admin/analytics" && renderAnalytics()}
+      </div>
+
+      {/* RBAC Security Credentials Matrix */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm space-y-6 relative overflow-hidden group mt-8">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 blur-[60px] rounded-full" />
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-red-500 animate-pulse" />
+            RBAC Root Authority Security Matrix
+          </h2>
+          <span className="text-[9px] font-black bg-red-500/10 text-red-500 border border-red-500/20 px-2 py-0.5 rounded uppercase tracking-widest animate-pulse">Root Administration Active</span>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { action: "Configure Platform Settings", permitted: true, detail: "Modify gateways, point systems, and offline triggers" },
+            { action: "Audit Member Directories", permitted: true, detail: "Audit and restriction capabilities" },
+            { action: "Approve Expert Verifications", permitted: true, detail: "Grant expert credentialing privileges" },
+            { action: "Moderate Technical Platform", permitted: true, detail: "Platform-wide content and spam moderation" },
+          ].map((perm, index) => (
+            <div key={index} className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 truncate">{perm.action}</span>
+                {perm.permitted ? (
+                  <span className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-xs">✓</span>
+                ) : (
+                  <span className="w-4 h-4 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold text-[10px]">🔒</span>
+                )}
+              </div>
+              <p className="text-[9px] text-slate-400 font-medium leading-normal">{perm.detail}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
