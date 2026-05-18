@@ -159,10 +159,10 @@ export default function Sidebar({
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 lg:hidden" onClick={onClose} />
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] lg:hidden" onClick={onClose} />
       )}
 
-      <aside className={`fixed left-0 ${isAdminPage ? "top-0 h-screen" : "top-20 h-[calc(100vh-80px)]"} bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col z-40 transition-all duration-500 shadow-2xl dark:shadow-none ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${isCollapsed ? "w-20" : "w-80"}`}>
+      <aside className={`fixed left-0 ${isAdminPage ? "top-0 h-screen" : "top-0 h-screen lg:top-20 lg:h-[calc(100vh-80px)]"} bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col z-[70] lg:z-40 transition-all duration-500 shadow-2xl dark:shadow-none ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${isCollapsed ? "w-20" : "w-80"}`}>
         
         {/* Collapse Toggle - Desktop Only */}
         <button 
@@ -174,15 +174,28 @@ export default function Sidebar({
 
         {/* User Profile Summary */}
         <div className={`p-6 border-b border-slate-50 dark:border-slate-800/50 transition-all overflow-hidden ${isCollapsed ? "px-4" : "px-6"}`}>
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-black border border-primary/20 flex-shrink-0">
-               {user.name.charAt(0)}
-            </div>
-            {!isCollapsed && (
-              <div className="flex-1 min-w-0 animate-in fade-in slide-in-from-left-2 duration-500">
-                <p className="text-sm font-black text-slate-950 dark:text-white truncate">{user.name}</p>
-                <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-0.5">{user.role}</p>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-black border border-primary/20 flex-shrink-0">
+                 {user.name.charAt(0)}
               </div>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0 animate-in fade-in slide-in-from-left-2 duration-500">
+                  <p className="text-sm font-black text-slate-950 dark:text-white truncate">{user.name}</p>
+                  <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mt-0.5">{user.role}</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Mobile Close Button */}
+            {isOpen && (
+              <button 
+                onClick={onClose}
+                aria-label="Close sidebar"
+                className="lg:hidden p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             )}
           </div>
         </div>

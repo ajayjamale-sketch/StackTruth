@@ -60,7 +60,6 @@ import PublicProfilePage from "@/pages/PublicProfilePage";
 import FacultyPage from "@/pages/FacultyPage";
 import PostJobPage from "@/pages/PostJobPage";
 import PracticeAlgorithmPage from "@/pages/PracticeAlgorithmPage";
-import RoleSwitcher from "@/components/features/RoleSwitcher";
 
 
 function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode; requiredRole?: string }) {
@@ -210,7 +209,6 @@ export default function App() {
             <BrowserRouter>
               <ScrollToTop />
               <AppRoutes />
-              <RoleSwitcher />
             </BrowserRouter>
           </SidebarProvider>
         </ToastProvider>

@@ -41,7 +41,7 @@ function QuestionCard({ question }: { question: Question }) {
     <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6 sm:p-8 rounded-xl hover:shadow-[0_40px_100px_rgba(0,0,0,0.06)] dark:hover:shadow-primary/5 transition-all duration-500 group relative overflow-hidden">
       <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-10">
         {/* Vote Counter - Ultra Clean */}
-        <div className="flex sm:flex-col items-center gap-4 sm:gap-3 flex-shrink-0 bg-slate-50 dark:bg-slate-800/40 p-3 sm:p-4 rounded-xl border border-slate-100 dark:border-slate-800 transition-all duration-500 group-hover:border-primary/20 group-hover:bg-primary/5 w-full sm:w-16 justify-center">
+        <div className="flex sm:flex-col items-center gap-4 sm:gap-3 flex-shrink-0 bg-slate-50 dark:bg-slate-800/40 p-3 sm:p-4 rounded-xl border border-slate-100 dark:border-slate-800 transition-all duration-500 group-hover:border-primary/20 group-hover:bg-primary/5 w-fit sm:w-16 justify-center">
           <button 
             onClick={() => handleVote(1)}
             aria-label="Upvote question"
@@ -349,14 +349,14 @@ export default function QuestionsPage() {
                </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full">
               {/* Filter Tabs */}
-              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full md:w-auto">
+              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full max-w-full md:w-auto">
                 {FILTERS.map((f) => (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 ${filter === f ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
+                    className={`px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 flex-shrink-0 ${filter === f ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
                   >
                     {f}
                   </button>
@@ -364,12 +364,12 @@ export default function QuestionsPage() {
               </div>
 
               {/* Sort Tabs */}
-              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full md:w-auto">
+              <div className="flex gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-x-auto no-scrollbar shadow-inner w-full max-w-full md:w-auto">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.label}
                     onClick={() => setSort(opt.label)}
-                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 flex-shrink-0 ${sort === opt.label ? 'bg-white dark:bg-slate-900 text-primary shadow-md' : 'text-slate-500 hover:text-primary'}`}
                   >
                     <opt.icon className={`w-3.5 h-3.5 ${sort === opt.label ? 'text-primary' : 'text-slate-400'}`} />
                     {opt.label}

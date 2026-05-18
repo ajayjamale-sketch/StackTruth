@@ -170,7 +170,7 @@ export default function LeaderboardPage() {
         </div>
         <div className="relative group">
           <div className="absolute inset-0 grid-pattern opacity-10 pointer-events-none" />
-          <div className="relative z-10 flex flex-col md:flex-row items-end justify-center gap-16 lg:gap-32 pb-12">
+          <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end justify-center gap-16 lg:gap-32 pb-12">
             {top3[1] && <TopThreeCard entry={top3[1]} onClick={handleProfileClick} />}
             {top3[0] && <TopThreeCard entry={top3[0]} onClick={handleProfileClick} />}
             {top3[2] && <TopThreeCard entry={top3[2]} onClick={handleProfileClick} />}

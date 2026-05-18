@@ -56,7 +56,7 @@ export default function Navbar({ onMenuClick, minimal }: { onMenuClick?: () => v
     <nav className="sticky top-0 z-50 h-20 bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl border-b border-slate-100/50 dark:border-slate-800/50 shadow-sm">
       <div className="h-full px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4 lg:gap-12 max-w-[2000px] mx-auto">
         {/* Left: Logo + Menu */}
-        <div className="flex items-center gap-6 flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-6 flex-shrink-0">
           {onMenuClick ? (
             <button
               onClick={onMenuClick}
@@ -82,7 +82,7 @@ export default function Navbar({ onMenuClick, minimal }: { onMenuClick?: () => v
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <div className="flex flex-col leading-none">
+            <div className="hidden min-[400px]:flex flex-col leading-none">
               <span className="logo-font text-xl sm:text-2xl text-primary leading-none">
                 StackTruth
               </span>
@@ -134,7 +134,7 @@ export default function Navbar({ onMenuClick, minimal }: { onMenuClick?: () => v
           <button
             onClick={toggleTheme}
             aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-            className="p-2 text-muted-foreground hover:text-foreground transition-all active:scale-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
+            className="hidden sm:block p-2 text-muted-foreground hover:text-foreground transition-all active:scale-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-md"
           >
             {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -267,7 +267,7 @@ export default function Navbar({ onMenuClick, minimal }: { onMenuClick?: () => v
 
       {/* Mobile Nav Menu */}
       {showMobileNav && !minimal && (
-        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-in-up">
+        <div className="absolute top-full left-0 w-full lg:hidden border-b border-border bg-white dark:bg-slate-900 shadow-2xl backdrop-blur-xl animate-fade-in-up">
           <div className="px-6 py-4 space-y-1">
             {[
               { label: "Tutorials", path: "/tutorials" },

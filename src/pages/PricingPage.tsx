@@ -17,6 +17,8 @@ export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showPayment, setShowPayment] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [txnRef, setTxnRef] = useState("");
 
   const handleCTA = (plan: any) => {
     if (plan.cta === "Contact Sales") {
@@ -36,8 +38,10 @@ export default function PricingPage() {
 
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
-    success("Transaction Initialized", "Payment protocol successful. Provisioning technical access...");
+    const mockRef = `TXN-${Math.random().toString(36).substr(2, 9).toUpperCase()}-ST`;
+    setTxnRef(mockRef);
     setShowPayment(false);
+    setShowSuccess(true);
   };
 
   return (
@@ -304,6 +308,64 @@ export default function PricingPage() {
                    </div>
                 </div>
              </form>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Transaction Completed Modal */}
+      {showSuccess && selectedPlan && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowSuccess(false)} />
+          <div className="relative bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 p-8 text-center space-y-6">
+            <div className="absolute inset-0 grid-pattern opacity-[0.05] pointer-events-none" />
+            
+            <div className="w-20 h-20 bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10 animate-bounce">
+              <CheckCircle className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[9px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                Protocol Success
+              </div>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Transaction Completed</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Your technical sovereignty access has been provisioned successfully.</p>
+            </div>
+
+            {/* Receipt Box */}
+            <div className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl p-6 text-left space-y-3 relative z-10">
+              <div className="flex justify-between items-center text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                <span>Access Plan</span>
+                <span className="text-slate-900 dark:text-white font-bold">{selectedPlan.name}</span>
+              </div>
+              <div className="h-px bg-slate-200/50 dark:bg-white/10" />
+              <div className="flex justify-between items-center text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                <span>Amount Paid</span>
+                <span className="text-emerald-500 font-bold">${annual ? Math.floor(selectedPlan.price * 0.75) : selectedPlan.price}</span>
+              </div>
+              <div className="h-px bg-slate-200/50 dark:bg-white/10" />
+              <div className="flex justify-between items-center text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                <span>Reference ID</span>
+                <span className="font-mono text-slate-900 dark:text-white select-all">{txnRef}</span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <button 
+                onClick={() => {
+                  setShowSuccess(false);
+                  navigate("/dashboard/developer");
+                }}
+                className="w-full bg-primary hover:bg-emerald-600 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+              >
+                Enter Developer Workspace <ArrowRight className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={() => setShowSuccess(false)}
+                className="text-[10px] font-black text-slate-400 hover:text-slate-600 dark:hover:text-white uppercase tracking-widest transition-colors"
+              >
+                Close Window
+              </button>
+            </div>
           </div>
         </div>
       )}
