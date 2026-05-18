@@ -5,7 +5,7 @@ import {
   BarChart3, Settings, BookOpen, Play, Trophy, Star, UserCheck,
   Shield, Flag, Bell, FileText, Building, Search, Calendar,
   GitBranch, Sparkles, X, ChevronRight, Zap, Sun, Moon, LogOut,
-  ChevronDown, PanelLeftClose, PanelLeft
+  ChevronDown, PanelLeftClose, PanelLeft, Award
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";

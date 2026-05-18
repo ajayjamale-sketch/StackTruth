@@ -110,6 +110,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 
 function AppRoutes() {
+  console.log("[StackTruth Diagnostics] Rendering AppRoutes routing configuration...");
   return (
     <Routes>
       {/* Publicly accessible pages (No sidebar even if logged in) */}
@@ -200,6 +201,7 @@ function AppRoutes() {
 }
 
 export default function App() {
+  console.log("[StackTruth Diagnostics] Rendering App core root layout...");
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -216,3 +218,4 @@ export default function App() {
     </ThemeProvider>
   );
 }
+

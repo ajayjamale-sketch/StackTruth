@@ -48,8 +48,11 @@ export default function LandingPage() {
       <section className="relative pt-32 pb-24 border-b border-slate-100 dark:border-slate-800 overflow-hidden">
         <img 
           src="/assets/images/hero_premium.png" 
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.08] dark:opacity-[0.15] pointer-events-none" 
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.25] dark:opacity-[0.35] pointer-events-none" 
           alt="Hero background"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1200&q=80";
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#f8f9fa]/50 via-transparent to-white dark:from-slate-950/50 dark:via-transparent dark:to-slate-900 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
@@ -172,7 +175,14 @@ export default function LandingPage() {
                 { title: "Python for Data Science", count: "64 Chapters", image: "/assets/images/track_python.png", color: "border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20", path: "/tutorials/python" },
               ].map((path) => (
                 <Link key={path.title} to={path.path} className={`group relative h-80 rounded-xl border-2 ${path.color} overflow-hidden hover:shadow-2xl transition-all duration-500`}>
-                   <img src="/assets/images/track_premium.png" alt={path.title} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" />
+                   <img 
+                     src={path.image || "/assets/images/track_premium.png"} 
+                     alt={path.title} 
+                     className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-85 group-hover:scale-110 transition-all duration-700" 
+                     onError={(e) => {
+                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80";
+                     }}
+                   />
                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60" />
                    <div className="relative z-10 p-10 h-full flex flex-col gap-6">
                      <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
@@ -287,7 +297,14 @@ export default function LandingPage() {
                 ].map((article) => (
                   <Link key={article.id} to={`/knowledge/${article.id}`} className="flex flex-col gap-6 group cursor-pointer">
                     <div className="h-64 bg-slate-100 rounded-xl overflow-hidden relative">
-                       <img src={article.img} alt={article.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                       <img 
+                         src={article.img} 
+                         alt={article.title} 
+                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                         onError={(e) => {
+                           (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80";
+                         }}
+                       />
                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent opacity-60" />
                     </div>
                     <div className="space-y-4">
