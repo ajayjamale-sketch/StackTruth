@@ -1,0 +1,221 @@
+export const mockUser = {
+  id: '1',
+  name: 'Alex Chen',
+  username: 'alexchen',
+  email: 'alex@example.com',
+  avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+  bio: 'Senior Full-Stack Engineer @ TechCorp. Passionate about distributed systems, Rust, and TypeScript.',
+  location: 'San Francisco, CA',
+  website: 'https://alexchen.dev',
+  github: 'alexchen',
+  reputation: 4820,
+  joinedAt: '2023-01-15',
+  role: 'developer',
+  skills: ['TypeScript', 'Rust', 'React', 'Node.js', 'PostgreSQL', 'Kubernetes', 'GraphQL'],
+  badges: ['Top Contributor', 'Code Reviewer', 'Mentor', 'Early Adopter'],
+  stats: {
+    questions: 47,
+    answers: 183,
+    reviews: 92,
+    upvotes: 2841,
+  },
+};
+
+export const mockQuestions = [
+  {
+    id: '1',
+    title: 'How to efficiently handle concurrent database transactions in PostgreSQL with TypeScript?',
+    body: 'I am working on a high-traffic e-commerce application and facing issues with concurrent database transactions...',
+    tags: ['typescript', 'postgresql', 'concurrency', 'transactions'],
+    author: { name: 'Sarah Kim', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop&crop=face', reputation: 3200 },
+    votes: 42, answers: 7, views: 1840, accepted: true, createdAt: '2024-01-20T10:30:00Z',
+  },
+  {
+    id: '2',
+    title: 'Memory leak in React useEffect cleanup with WebSocket connections',
+    body: 'Getting memory leak warnings in React when using WebSocket connections inside useEffect...',
+    tags: ['react', 'websocket', 'hooks', 'memory-leak'],
+    author: { name: 'Marcus Lee', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face', reputation: 1750 },
+    votes: 31, answers: 5, views: 920, accepted: false, createdAt: '2024-01-19T14:22:00Z',
+  },
+  {
+    id: '3',
+    title: 'Best practices for implementing CQRS pattern in microservices architecture',
+    body: 'Trying to understand the proper way to implement CQRS with event sourcing in a microservices setup...',
+    tags: ['microservices', 'cqrs', 'architecture', 'event-sourcing'],
+    author: { name: 'Diana Patel', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face', reputation: 5100 },
+    votes: 68, answers: 12, views: 3200, accepted: true, createdAt: '2024-01-18T09:15:00Z',
+  },
+];
+
+export const mockBlogs = [
+  {
+    id: '1',
+    title: 'Building High-Performance APIs with Rust and Actix-Web',
+    excerpt: 'Dive deep into creating blazing-fast REST APIs using Rust\'s Actix-Web framework, exploring async patterns, error handling, and deployment strategies.',
+    author: { name: 'Alex Chen', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face' },
+    tags: ['rust', 'api', 'performance', 'actix'],
+    readTime: 12, views: 8420, likes: 284, createdAt: '2024-01-22T08:00:00Z',
+    image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&h=300&fit=crop',
+  },
+  {
+    id: '2',
+    title: 'TypeScript 5.0 Generic Patterns You Should Know',
+    excerpt: 'Explore advanced TypeScript generics including conditional types, infer keyword, template literal types, and how to leverage them in real-world scenarios.',
+    author: { name: 'Sarah Kim', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop&crop=face' },
+    tags: ['typescript', 'generics', 'patterns'],
+    readTime: 8, views: 12300, likes: 445, createdAt: '2024-01-20T12:00:00Z',
+    image: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=600&h=300&fit=crop',
+  },
+  {
+    id: '3',
+    title: 'PostgreSQL Query Optimization: From Slow to Blazing Fast',
+    excerpt: 'Learn how to analyze slow queries, understand query plans, create proper indexes, and optimize complex SQL queries for production workloads.',
+    author: { name: 'Marcus Lee', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face' },
+    tags: ['postgresql', 'optimization', 'database', 'sql'],
+    readTime: 15, views: 6750, likes: 312, createdAt: '2024-01-18T10:30:00Z',
+    image: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&h=300&fit=crop',
+  },
+  {
+    id: '4',
+    title: 'Kubernetes Deployment Patterns for Node.js Applications',
+    excerpt: 'A comprehensive guide to deploying Node.js microservices on Kubernetes, covering health checks, autoscaling, rolling updates, and observability.',
+    author: { name: 'Diana Patel', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face' },
+    tags: ['kubernetes', 'nodejs', 'devops', 'deployment'],
+    readTime: 18, views: 9100, likes: 521, createdAt: '2024-01-15T09:00:00Z',
+    image: 'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=600&h=300&fit=crop',
+  },
+];
+
+export const mockTestimonials = [
+  {
+    id: '1',
+    name: 'Jordan Rivera',
+    role: 'Senior Backend Engineer',
+    company: 'Stripe',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face',
+    content: 'StackTruth completely changed how I approach technical problems. The code validation engine caught a critical security flaw in my authentication module that I had missed.',
+    rating: 5,
+  },
+  {
+    id: '2',
+    name: 'Priya Nair',
+    role: 'Full-Stack Developer',
+    company: 'Vercel',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=face',
+    content: 'The quality of answers here is exceptional. Unlike other platforms, reviewers actually understand the full context of your code and architecture, not just the syntax.',
+    rating: 5,
+  },
+  {
+    id: '3',
+    name: 'Thomas Walsh',
+    role: 'Engineering Manager',
+    company: 'Linear',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop&crop=face',
+    content: 'I use StackTruth with my entire team. The collaborative workspaces and code review features have sped up our PR review process by 40%. It is a game changer.',
+    rating: 5,
+  },
+  {
+    id: '4',
+    name: 'Yuki Tanaka',
+    role: 'DevOps Engineer',
+    company: 'Notion',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=face',
+    content: 'The AI assistant is incredibly context-aware. It understands my tech stack and gives recommendations that actually fit my architecture, not generic suggestions.',
+    rating: 5,
+  },
+];
+
+export const pricingPlans = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: { monthly: 0, yearly: 0 },
+    description: 'Perfect for individual developers getting started',
+    features: [
+      '50 questions/month',
+      'Community Q&A access',
+      'Basic code snippet support',
+      'Public knowledge base access',
+      '5 code reviews/month',
+      'Community reputation system',
+    ],
+    cta: 'Get Started Free',
+    highlighted: false,
+    badge: null,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: { monthly: 19, yearly: 15 },
+    description: 'For serious developers who want to grow faster',
+    features: [
+      'Unlimited questions & answers',
+      'AI code review engine',
+      'Advanced syntax highlighting',
+      'Private workspaces (3)',
+      'Unlimited code reviews',
+      'Priority AI assistant',
+      'Badge & reputation boost',
+      'API access (1000 req/day)',
+    ],
+    cta: 'Start Pro Trial',
+    highlighted: true,
+    badge: 'Most Popular',
+  },
+  {
+    id: 'team',
+    name: 'Team',
+    price: { monthly: 49, yearly: 39 },
+    description: 'For engineering teams that collaborate daily',
+    features: [
+      'Everything in Pro',
+      'Unlimited team workspaces',
+      'Team analytics dashboard',
+      'Shared code review queue',
+      'Live coding sessions',
+      'Interview mode',
+      'SSO & access controls',
+      'Priority support',
+      'API access (10k req/day)',
+    ],
+    cta: 'Start Team Trial',
+    highlighted: false,
+    badge: 'For Teams',
+  },
+];
+
+export const faqData = [
+  {
+    question: 'How does StackTruth differ from Stack Overflow?',
+    answer: 'StackTruth goes beyond Q&A by providing automated AI code review, peer review workflows, team collaboration workspaces, live coding sessions, and a dedicated knowledge base. We are built for modern engineering teams who need more than just a forum.',
+  },
+  {
+    question: 'Is my code and data kept private?',
+    answer: 'Absolutely. Private workspace content, code submissions for review, and any content you mark as private is encrypted and never shared. Public questions and answers are searchable by the community, just like you intend.',
+  },
+  {
+    question: 'How does the AI code review engine work?',
+    answer: 'Our AI engine analyzes your code for security vulnerabilities, performance bottlenecks, code smells, best practice violations, and logic errors. It provides detailed line-by-line annotations with specific suggestions, much like a senior engineer reviewing your PR.',
+  },
+  {
+    question: 'Can I use StackTruth for technical interviews?',
+    answer: 'Yes! The Live Coding module supports real-time collaborative coding with an execution sandbox. Candidates and interviewers can code together, run code, and leave comments in real-time — making remote technical interviews smooth and fair.',
+  },
+  {
+    question: 'What languages and frameworks are supported?',
+    answer: 'StackTruth supports 40+ programming languages including TypeScript, JavaScript, Python, Rust, Go, Java, C++, Ruby, and more. Syntax highlighting, code validation, and AI suggestions are tailored per language.',
+  },
+  {
+    question: 'Do you offer discounts for open-source projects or students?',
+    answer: 'Yes! We offer free Pro plans for verified open-source maintainers and 70% discounts for students with a valid .edu email. Contact us at education@stacktruth.dev for verification.',
+  },
+  {
+    question: 'How does the reputation system work?',
+    answer: 'You earn reputation points through upvotes on your answers and questions, accepted answers (+15 pts), peer code reviews (+5 pts), and badges for consistent quality contributions. Reputation unlocks privileges like voting, editing, and mentoring roles.',
+  },
+  {
+    question: 'Can I export my data?',
+    answer: 'Yes. All plans include full data portability. You can export your profile, questions, answers, code snippets, and analytics in JSON or CSV format at any time from your settings.',
+  },
+];
