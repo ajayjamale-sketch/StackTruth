@@ -9,7 +9,7 @@ import StatsSection from '@/components/features/StatsSection';
 import FeaturesSection from '@/components/features/FeaturesSection';
 import QAPreviewSection from '@/components/features/QAPreviewSection';
 import CodeReviewPreview from '@/components/features/CodeReviewPreview';
-import AIAssistantPreview from '@/components/features/AIAssistantPreview';
+import DeveloperToolsPreview from '@/components/features/DeveloperToolsPreview';
 import ReputationSection from '@/components/features/ReputationSection';
 import TeamCollabSection from '@/components/features/TeamCollabSection';
 import JobMarketplaceSection from '@/components/features/JobMarketplaceSection';
@@ -28,7 +28,7 @@ export default function Index() {
       <FeaturesSection />
       <QAPreviewSection />
       <CodeReviewPreview />
-      <AIAssistantPreview />
+      <DeveloperToolsPreview />
       <ReputationSection />
       <TeamCollabSection />
       <JobMarketplaceSection />

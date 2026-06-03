@@ -55,7 +55,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-5/12 section-dark relative overflow-hidden flex-col justify-between p-12">
+      <div className="hidden lg:flex lg:w-5/12 section-dark relative overflow-hidden flex-col justify-between p-12 dark">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.2),transparent_60%)]" />
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.1),transparent_60%)]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)`, backgroundSize: '50px 50px' }} />
@@ -68,7 +68,7 @@ export default function Login() {
           </Link>
 
           {/* Code preview */}
-          <div className="bg-[#0a0f1e] border border-white/10 rounded-xl p-4 font-mono text-xs mb-8">
+          <div className="bg-card/90 border border-surface-10 rounded-xl p-4 font-mono text-xs mb-8">
             <div className="flex items-center gap-1.5 mb-3">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />

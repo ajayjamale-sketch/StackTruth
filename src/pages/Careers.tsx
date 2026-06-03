@@ -29,7 +29,7 @@ export default function Careers() {
       <Navbar />
       <ScrollToTop />
 
-      <section className="pt-32 pb-16 section-dark relative overflow-hidden">
+      <section className="pt-32 pb-16 section-dark relative overflow-hidden dark">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)]" />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">We're Hiring</Badge>

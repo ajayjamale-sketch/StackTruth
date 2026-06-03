@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
+import DashboardNavbar from '@/components/layout/DashboardNavbar';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,7 @@ export default function DashboardAdmin() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
+      <DashboardNavbar />
       <ScrollToTop />
 
       <div className="pt-16 flex">

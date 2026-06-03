@@ -73,16 +73,16 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-24 section-dark">
+    <section className="py-24 section-dark dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Feature Showcase</Badge>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Everything a developer team needs
             <br />
             <span className="text-gradient">in one platform</span>
           </h2>
-          <p className="text-slate-300/70 text-lg max-w-xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             From asking your first question to conducting live technical interviews — StackTruth covers the entire developer workflow.
           </p>
         </div>
@@ -94,16 +94,16 @@ export default function FeaturesSection() {
               <Link
                 key={f.href}
                 to={f.href}
-                className={`group bg-white/5 border ${f.border} ${f.hoverBorder} rounded-xl p-6 hover:bg-white/8 transition-all cursor-pointer block`}
+                className={`group bg-surface-5 border ${f.border} ${f.hoverBorder} rounded-xl p-6 hover:bg-surface-8 transition-all cursor-pointer block`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-10 h-10 rounded-xl ${f.bg} flex items-center justify-center`}>
                     <Icon className={`w-5 h-5 ${f.color}`} />
                   </div>
-                  <Badge className="text-xs bg-white/10 text-white/60 border-white/10">{f.badge}</Badge>
+                  <Badge className="text-xs bg-surface-5 text-muted-foreground/60 border-surface-10">{f.badge}</Badge>
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-slate-300/60 text-sm leading-relaxed mb-4">{f.desc}</p>
+                <h3 className="text-foreground font-semibold text-lg mb-2">{f.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">{f.desc}</p>
                 <div className={`flex items-center gap-1 text-sm font-medium ${f.color} group-hover:gap-2 transition-all`}>
                   Explore <ArrowRight className="w-3.5 h-3.5" />
                 </div>

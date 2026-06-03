@@ -45,11 +45,11 @@ export default function Leaderboard() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-white/10">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Badge className="mb-3 bg-primary/20 text-blue-300 border border-primary/30">Community</Badge>
-          <h1 className="text-3xl font-bold text-white mb-3">Developer Leaderboard</h1>
-          <p className="text-slate-200/70">Rankings based on answer quality, code reviews, and community contributions</p>
+          <h1 className="text-3xl font-bold text-foreground mb-3">Developer Leaderboard</h1>
+          <p className="text-muted-foreground">Rankings based on answer quality, code reviews, and community contributions</p>
 
           {/* Top 3 Podium */}
           <div className="flex justify-center items-end gap-4 mt-8">
@@ -59,8 +59,8 @@ export default function Leaderboard() {
                 <div className={`mt-2 flex items-center justify-center ${i === 1 ? 'w-14 h-14' : 'w-11 h-11'} bg-gradient-to-b ${i === 1 ? 'from-yellow-400/20' : 'from-slate-400/20'} rounded-t-lg border-t border-x ${i === 1 ? 'border-yellow-400/30' : 'border-slate-400/30'}`}>
                   {getRankIcon(dev.rank)}
                 </div>
-                <p className="text-xs text-white/80 font-medium mt-1">{dev.name.split(' ')[0]}</p>
-                <p className="text-xs text-slate-300/70">{dev.rep.toLocaleString()}</p>
+                <p className="text-xs text-foreground/80 font-medium mt-1">{dev.name.split(' ')[0]}</p>
+                <p className="text-xs text-muted-foreground">{dev.rep.toLocaleString()}</p>
               </div>
             ))}
           </div>

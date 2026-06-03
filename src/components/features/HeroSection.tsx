@@ -17,11 +17,11 @@ export default function HeroSection() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden section-hero">
+    <section className="relative min-h-screen flex items-center overflow-hidden section-hero dark">
       {/* Background */}
       <div className="absolute inset-0">
         <img src={heroBg} alt="Hero" className="w-full h-full object-cover opacity-10 dark:opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(215_55%_8%/0.6)] via-[hsl(215_55%_8%/0.75)] to-[hsl(215_55%_8%)] dark:from-[#020617]/40 dark:via-[#020617]/60 dark:to-[#020617]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background dark:from-[#020617]/40 dark:via-[#020617]/60 dark:to-[#020617]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_30%,rgba(37,99,235,0.18),transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(34,197,94,0.08),transparent_50%)]" />
         {/* Grid */}
@@ -39,7 +39,7 @@ export default function HeroSection() {
               </Badge>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-6xl font-bold text-white leading-[1.1] mb-6">
+            <h1 className="text-5xl sm:text-6xl lg:text-6xl font-bold text-foreground leading-[1.1] mb-6">
               The Platform
               <br />
               <span className="text-gradient">Where Code Gets</span>
@@ -55,7 +55,7 @@ export default function HeroSection() {
               <Button size="lg" className="bg-primary hover:bg-primary/90 btn-glow h-12 px-6" onClick={() => navigate('/register')}>
                 Join Community Free <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white/25 text-white hover:bg-white/10 hover:border-white/40 h-12 px-6" onClick={() => navigate('/questions')}>
+              <Button size="lg" variant="outline" className="border-surface-10 text-foreground hover:bg-surface-8 hover:border-surface-10 h-12 px-6" onClick={() => navigate('/questions')}>
                 <PlayCircle className="w-4 h-4 mr-2" /> Explore Questions
               </Button>
             </div>
@@ -64,7 +64,7 @@ export default function HeroSection() {
             <div className="flex flex-wrap gap-6">
               {stats.map(stat => (
                 <div key={stat.label}>
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
+                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
                   <div className="text-xs text-slate-300">{stat.label}</div>
                 </div>
               ))}
@@ -73,14 +73,14 @@ export default function HeroSection() {
 
           {/* Right: Code Panel */}
           <div className="hidden lg:block animate-float">
-            <div className="bg-[#0a0f1e]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl glow-blue">
+            <div className="bg-card/90 border border-surface-10 rounded-2xl overflow-hidden shadow-2xl glow-blue">
               {/* Terminal header */}
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-white/5">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-surface-10 bg-surface-5">
                 <span className="w-3 h-3 rounded-full bg-red-500/80" />
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80" />
                 <div className="flex-1 flex items-center justify-center">
-                  <span className="text-white/40 text-xs font-mono">ai-review.ts</span>
+                  <span className="text-muted-foreground/40 text-xs font-mono">ai-review.ts</span>
                 </div>
                 <Badge className="text-[10px] bg-green-500/20 text-green-400 border-green-500/30">AI Reviewing...</Badge>
               </div>
@@ -104,7 +104,7 @@ export default function HeroSection() {
               </div>
 
               {/* AI Review Panel */}
-              <div className="border-t border-white/10 p-4 bg-gradient-to-r from-green-500/5 to-primary/5">
+              <div className="border-t border-surface-10 p-4 bg-gradient-to-r from-green-500/5 to-primary/5">
                 <div className="flex items-start gap-3">
                   <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center flex-shrink-0">
                     <Zap className="w-3.5 h-3.5 text-white" />
@@ -124,7 +124,7 @@ export default function HeroSection() {
             {/* Floating tech badges */}
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
               {techBadges.map(t => (
-                <Badge key={t} variant="secondary" className="text-xs bg-white/5 text-white/60 border-white/10">{t}</Badge>
+                <Badge key={t} variant="secondary" className="text-xs bg-surface-5 text-muted-foreground/60 border-surface-10">{t}</Badge>
               ))}
             </div>
           </div>

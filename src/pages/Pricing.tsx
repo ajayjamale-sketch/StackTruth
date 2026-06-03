@@ -21,7 +21,7 @@ export default function Pricing() {
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 section-dark relative overflow-hidden">
+      <section className="pt-32 pb-16 section-dark relative overflow-hidden dark">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)]" />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <Badge className="mb-5 bg-primary/20 text-blue-300 border border-primary/30">Pricing</Badge>
@@ -31,7 +31,7 @@ export default function Pricing() {
             <span className={`text-sm ${!yearly ? 'text-white font-medium' : 'text-slate-300/60'}`}>Monthly</span>
             <button
               onClick={() => setYearly(!yearly)}
-              className={`w-12 h-6 rounded-full transition-colors relative ${yearly ? 'bg-primary' : 'bg-white/20'}`}
+              className={`w-12 h-6 rounded-full transition-colors relative ${yearly ? 'bg-primary' : 'bg-surface-8'}`}
             >
               <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${yearly ? 'left-7' : 'left-1'}`} />
             </button>

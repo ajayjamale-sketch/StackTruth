@@ -7,7 +7,7 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Bot, User, Send, Copy, ThumbsUp, ThumbsDown, RotateCcw, Zap, Code2, Bug, Settings2, Layers } from 'lucide-react';
+import { MessageSquare, User, Send, Copy, ThumbsUp, ThumbsDown, RotateCcw, Zap, Code2, Bug, Settings2, Layers } from 'lucide-react';
 
 const suggestions = [
   'How do I prevent memory leaks in Node.js WebSocket connections?',
@@ -34,16 +34,16 @@ const initialMessages: Message[] = [
   {
     role: 'ai',
     id: '0',
-    content: `Hello! I'm StackTruth AI — your expert coding assistant powered by GPT-4o.
+    content: `Welcome to StackTruth Developer Resources.
 
-I understand your tech stack context and can help you with:
-• **Bug detection** and root cause analysis
-• **Code review** and optimization suggestions
-• **Architecture design** patterns
+Get expert guidance on:
+• **Debugging tips** from experienced engineers
+• **Code patterns** and best practices
+• **Architecture design** guidance
 • **Tech stack recommendations**
-• **Documentation** and explanations
+• **Performance optimization** strategies
 
-What are you working on today?`,
+What technical challenge are you facing?`,
   },
 ];
 
@@ -92,13 +92,13 @@ export default function AIAssistant() {
           <div className="bg-card border border-border rounded-xl p-4">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+                <MessageSquare className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">StackTruth AI</h3>
+                <h3 className="font-semibold text-sm">Developer Guidance</h3>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  GPT-4o · Always on
+                  Powered by community expertise
                 </div>
               </div>
             </div>
@@ -145,9 +145,9 @@ export default function AIAssistant() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <Bot className="w-4 h-4 text-primary" />
-              <span className="font-semibold text-sm">AI Assistant</span>
-              <Badge className="text-xs bg-accent/10 text-accent border-accent/20">GPT-4o</Badge>
+              <MessageSquare className="w-4 h-4 text-primary" />
+              <span className="font-semibold text-sm">Expert Guidance</span>
+              <Badge className="text-xs bg-accent/10 text-accent border-accent/20">Community</Badge>
             </div>
             <button onClick={() => { setMessages(initialMessages); toast.success('Chat cleared'); }} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
               <RotateCcw className="w-3.5 h-3.5" /> New Chat
@@ -161,7 +161,7 @@ export default function AIAssistant() {
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                   msg.role === 'ai' ? 'bg-gradient-brand' : 'bg-primary/20'
                 }`}>
-                  {msg.role === 'ai' ? <Bot className="w-4 h-4 text-white" /> : <User className="w-4 h-4 text-primary" />}
+                  {msg.role === 'ai' ? <MessageSquare className="w-4 h-4 text-white" /> : <User className="w-4 h-4 text-primary" />}
                 </div>
                 <div className={`max-w-[80%] group ${msg.role === 'user' ? 'items-end' : 'items-start'} flex flex-col`}>
                   <div className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
@@ -186,7 +186,7 @@ export default function AIAssistant() {
             {loading && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full bg-gradient-brand flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-white" />
+                  <MessageSquare className="w-4 h-4 text-white" />
                 </div>
                 <div className="bg-muted rounded-xl px-4 py-3">
                   <div className="flex gap-1.5 items-center h-5">
@@ -216,7 +216,7 @@ export default function AIAssistant() {
                 <Send className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">AI can make mistakes. Verify critical code before deploying to production.</p>
+            <p className="text-xs text-muted-foreground mt-2 text-center">Always verify solutions against your specific requirements before implementation.</p>
           </div>
         </div>
       </div>

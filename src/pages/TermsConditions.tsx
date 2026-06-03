@@ -24,7 +24,7 @@ export default function TermsConditions() {
       <Navbar />
       <ScrollToTop />
 
-      <section className="pt-32 pb-12 section-dark">
+      <section className="pt-32 pb-12 section-dark dark">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <FileText className="w-12 h-12 text-primary mx-auto mb-4" />
           <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Legal</Badge>

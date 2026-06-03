@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Moon, Sun, Menu, X, Code2, ChevronDown,
   Bell, User, LogOut, Settings, LayoutDashboard,
-  MessageSquare, BookOpen, Bot, GitBranch, Users,
+  MessageSquare, BookOpen, GitBranch, Users,
   Monitor, Briefcase, Trophy, BarChart3, Search
 } from 'lucide-react';
 import {
@@ -18,8 +18,7 @@ import {
 const productLinks = [
   { href: '/questions', label: 'Questions', icon: MessageSquare, desc: 'Ask & answer technical questions' },
   { href: '/knowledge-base', label: 'Knowledge Base', icon: BookOpen, desc: 'Tutorials, guides & docs' },
-  { href: '/ai-assistant', label: 'AI Assistant', icon: Bot, desc: 'Smart coding & debug helper' },
-  { href: '/code-review', label: 'Code Reviews', icon: GitBranch, desc: 'AI-powered code validation' },
+  { href: '/code-review', label: 'Code Review', icon: GitBranch, desc: 'Peer code validation' },
   { href: '/teams', label: 'Teams', icon: Users, desc: 'Collaborative workspaces' },
   { href: '/live-coding', label: 'Live Coding', icon: Monitor, desc: 'Pair programming sessions' },
 ];

@@ -129,6 +129,12 @@
 }
 
 @layer utilities {
+  /* Theme-aware overlay utilities */
+  .bg-surface-5 { background-color: hsl(var(--card) / 0.05); }
+  .bg-surface-8 { background-color: hsl(var(--card) / 0.08); }
+  .border-surface-10 { border-color: hsl(var(--card) / 0.1); }
+  .text-surface-90 { color: hsl(var(--card-foreground) / 0.9); }
+
   .text-gradient {
     background: linear-gradient(135deg, hsl(221 83% 53%), hsl(142 71% 45%));
     -webkit-background-clip: text;
@@ -151,7 +157,7 @@
     background: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 7%));
   }
 
-  /* Dark section utility — adapts properly per theme */
+  /* Dark section utility — forced dark per theme */
   .section-dark {
     background-color: hsl(215 50% 12%);
   }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
+import DashboardNavbar from '@/components/layout/DashboardNavbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
@@ -33,7 +33,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
+      <DashboardNavbar />
       <ScrollToTop />
 
       <div className="pt-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

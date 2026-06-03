@@ -37,24 +37,24 @@ function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) 
     ? (count / 1000).toFixed(0) + suffix
     : count + suffix;
 
-  return <div ref={ref} className="text-4xl sm:text-5xl font-bold text-white">{display}</div>;
+  return <div ref={ref} className="text-4xl sm:text-5xl font-bold text-foreground">{display}</div>;
 }
 
 export default function StatsSection() {
   return (
-    <section className="py-20 section-dark-2">
+    <section className="py-20 section-dark-2 dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">Platform by the numbers</h2>
-          <p className="text-slate-300/70">Real metrics from a real community of developers</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">Platform by the numbers</h2>
+          <p className="text-muted-foreground">Real metrics from a real community of developers</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
-            <div key={i} className="relative bg-white/5 border border-white/10 rounded-2xl p-6 text-center overflow-hidden group hover:border-white/20 transition-all hover:-translate-y-1">
+            <div key={i} className="relative bg-surface-5 border border-surface-10 rounded-2xl p-6 text-center overflow-hidden group hover:border-surface-10 transition-all hover:-translate-y-1">
               <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${stat.color} opacity-60`} />
               <AnimatedNumber target={stat.value} suffix={stat.suffix} />
-              <p className="text-white font-semibold mt-2 mb-1">{stat.label}</p>
-              <p className="text-slate-300/60 text-sm">{stat.desc}</p>
+              <p className="text-foreground font-semibold mt-2 mb-1">{stat.label}</p>
+              <p className="text-muted-foreground text-sm">{stat.desc}</p>
             </div>
           ))}
         </div>

@@ -23,14 +23,14 @@ export default function Tutorials() {
       <Navbar isAuthenticated />
       <ScrollToTop />
 
-      <div className="pt-20 pb-8 section-dark border-b border-white/10">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Tutorials</Badge>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Learn by Building</h1>
           <p className="text-slate-400 mb-6">Step-by-step tutorials from expert engineers</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['All', 'Beginner', 'Intermediate', 'Advanced', 'React', 'TypeScript', 'Database', 'DevOps'].map(t => (
-              <button key={t} className="px-3 py-1.5 rounded-lg text-sm bg-white/10 text-white/70 hover:bg-primary/20 hover:text-white transition-colors">{t}</button>
+              <button key={t} className="px-3 py-1.5 rounded-lg text-sm bg-surface-5 text-muted-foreground/70 hover:bg-primary/20 hover:text-foreground transition-colors">{t}</button>
             ))}
           </div>
         </div>

@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 const footerLinks = {
   Product: [
     { label: 'Questions', href: '/questions' },
-    { label: 'AI Assistant', href: '/ai-assistant' },
     { label: 'Code Review', href: '/code-review' },
     { label: 'Teams', href: '/teams' },
     { label: 'Live Coding', href: '/live-coding' },

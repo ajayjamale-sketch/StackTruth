@@ -91,7 +91,7 @@ export default function Jobs() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-white/10">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <Badge className="mb-3 bg-primary/20 text-blue-300 border border-primary/30">Job Marketplace</Badge>

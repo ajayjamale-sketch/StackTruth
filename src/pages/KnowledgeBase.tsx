@@ -44,7 +44,7 @@ export default function KnowledgeBase() {
       <ScrollToTop />
 
       {/* Hero */}
-      <div className="pt-20 pb-10 section-dark border-b border-white/10">
+      <div className="pt-20 pb-10 section-dark border-b border-surface-10 dark">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Knowledge Base</Badge>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Technical Reference & Guides</h1>
