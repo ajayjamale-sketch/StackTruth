@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Code2, Github, Eye, EyeOff, ArrowRight, Loader2, Zap, Shield, Star, Briefcase, Sun, Moon } from 'lucide-react';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { useThemeContext } from '@/context/ThemeContext';
+import { useAuthContext } from '@/context/AuthContext';
 
 // Utility function – should be moved to @/lib/utils in a real project
 const cn = (...classes: (string | false | undefined | null)[]): string => {
@@ -33,9 +34,25 @@ export default function Login() {
   useScrollToTop();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useThemeContext();
+  const { login, isAuthenticated, userRole } = useAuthContext();
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bypassLoading, setBypassLoading] = useState<string | null>(null);
+
+  const getDashboardUrl = () => {
+    switch(userRole) {
+      case 'admin': return '/dashboard/admin';
+      case 'recruiter': return '/dashboard/recruiter';
+      case 'expert': return '/dashboard/expert';
+      default: return '/dashboard';
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(getDashboardUrl(), { replace: true });
+    }
+  }, [isAuthenticated, navigate, userRole]);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -47,6 +64,7 @@ export default function Login() {
     setLoading(false);
     // Use the entered email address for a personalized message
     toast.success(`Welcome back, ${data.email.split('@')[0]}!`);
+    login('developer');
     navigate('/dashboard');
   };
 
@@ -55,6 +73,7 @@ export default function Login() {
     await new Promise(r => setTimeout(r, 800));
     setBypassLoading(null);
     toast.success(`Logged in as ${label}`);
+    login(label.toLowerCase());
     navigate(dest);
   };
 

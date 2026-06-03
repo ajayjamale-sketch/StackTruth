@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useThemeContext } from '@/context/ThemeContext';
+import NotificationPopup from '@/components/features/NotificationPopup';
+import { useAuthContext } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -41,6 +43,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children, user, navItems, activeTab, setActiveTab }: DashboardLayoutProps) {
+  const { logout } = useAuthContext();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useThemeContext();
   const navigate = useNavigate();
@@ -120,7 +123,7 @@ export default function DashboardLayout({ children, user, navItems, activeTab, s
         <button onClick={() => { navigate('/settings'); setMobileOpen(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
           <Settings className="w-4 h-4" /> Settings
         </button>
-        <button onClick={() => navigate('/login')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
+        <button onClick={() => { logout(); navigate('/login'); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
           <LogOut className="w-4 h-4" /> Sign Out
         </button>
       </div>
@@ -172,10 +175,7 @@ export default function DashboardLayout({ children, user, navItems, activeTab, s
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            <button onClick={() => navigate('/notifications')} className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors relative">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
-            </button>
+            <NotificationPopup />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -194,7 +194,7 @@ export default function DashboardLayout({ children, user, navItems, activeTab, s
                 <DropdownMenuItem onClick={() => navigate('/settings')}><Settings className="w-4 h-4 mr-2" />Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate('/')}><Home className="w-4 h-4 mr-2" />Back to Home</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/login')} className="text-destructive"><LogOut className="w-4 h-4 mr-2" />Sign Out</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { logout(); navigate('/login'); }} className="text-destructive"><LogOut className="w-4 h-4 mr-2" />Sign Out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -1,6 +1,7 @@
 // Jobs.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '@/context/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -9,6 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Briefcase, MapPin, DollarSign, Clock, Search, Bookmark, BookmarkCheck, Filter, Building2, ExternalLink, CheckCircle } from 'lucide-react';
 import {
   Sheet,
@@ -71,6 +75,9 @@ export default function Jobs() {
   const [applying, setApplying] = useState<string | null>(null);
   const [filter, setFilter] = useState('All');
   const [selectedJob, setSelectedJob] = useState<typeof jobs[0] | null>(null);
+  const { isAuthenticated } = useAuthContext();
+  const [applyModalOpen, setApplyModalOpen] = useState(false);
+  const [jobToApply, setJobToApply] = useState<typeof jobs[0] | null>(null);
 
   const toggleSave = (id: string) => {
     const next = new Set(saved);
@@ -84,11 +91,23 @@ export default function Jobs() {
     setSaved(next);
   };
 
-  const handleApply = async (id: string, title: string) => {
-    setApplying(id);
+  const handleApplyClick = (job: typeof jobs[0]) => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/jobs' } });
+      return;
+    }
+    setJobToApply(job);
+    setApplyModalOpen(true);
+  };
+
+  const handleApplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!jobToApply) return;
+    setApplying(jobToApply.id);
     await new Promise(resolve => setTimeout(resolve, 1500));
     setApplying(null);
-    toast.success(`Application submitted for ${title}!`);
+    toast.success(`Application submitted for ${jobToApply.title}!`);
+    setApplyModalOpen(false);
   };
 
   const filtered = jobs.filter(job => {
@@ -108,7 +127,7 @@ export default function Jobs() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
+      <Navbar />
       <ScrollToTop />
 
       {/* Header */}
@@ -219,7 +238,7 @@ export default function Jobs() {
                 <Button
                   className="flex-1 h-8 text-xs bg-primary hover:bg-primary/90"
                   disabled={applying === job.id}
-                  onClick={() => handleApply(job.id, job.title)}
+                  onClick={() => handleApplyClick(job)}
                 >
                   {applying === job.id ? 'Applying...' : 'Quick Apply'}
                 </Button>
@@ -305,8 +324,8 @@ export default function Jobs() {
                     className="flex-1 bg-primary hover:bg-primary/90"
                     disabled={applying === selectedJob.id}
                     onClick={() => {
-                      handleApply(selectedJob.id, selectedJob.title);
                       setSelectedJob(null);
+                      handleApplyClick(selectedJob);
                     }}
                   >
                     {applying === selectedJob.id ? 'Applying...' : 'Apply Now'}
@@ -323,6 +342,38 @@ export default function Jobs() {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Apply Modal */}
+      <Dialog open={applyModalOpen} onOpenChange={setApplyModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Apply for {jobToApply?.title}</DialogTitle>
+            <DialogDescription>Submit your application to {jobToApply?.company}</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleApplySubmit}>
+            <div className="space-y-4 py-4">
+              <div>
+                <Label htmlFor="resume">Resume PDF</Label>
+                <Input id="resume" type="file" accept=".pdf" required className="mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="cover-letter">Cover Letter (Optional)</Label>
+                <Textarea
+                  id="cover-letter"
+                  placeholder="Tell us why you are a great fit for this role..."
+                  className="mt-1 min-h-[100px]"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setApplyModalOpen(false)}>Cancel</Button>
+              <Button type="submit" disabled={applying === jobToApply?.id}>
+                {applying === jobToApply?.id ? 'Submitting...' : 'Submit Application'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import {
-  Search, Filter, ArrowUpCircle, MessageSquare, CheckCircle,
-  Tag, Clock, Eye, TrendingUp, Plus, BookOpen, Star
+  Search, Plus, BookOpen, CheckCircle, TrendingUp, Star
 } from 'lucide-react';
 import { mockQuestions } from '@/lib/mockData';
 
@@ -46,17 +45,17 @@ export default function Questions() {
   const [activeFilter, setActiveFilter] = useState('Newest');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  // Helper: sort/filter questions based on active filter
   const filteredAndSorted = useMemo(() => {
+    // Step 1: Filter by search and tag
     let filtered = extendedQuestions.filter(q => {
-      const matchSearch = !search || 
+      const matchesSearch = !search || 
         q.title.toLowerCase().includes(search.toLowerCase()) || 
         q.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-      const matchTag = !selectedTag || q.tags.includes(selectedTag);
-      return matchSearch && matchTag;
+      const matchesTag = !selectedTag || q.tags.includes(selectedTag);
+      return matchesSearch && matchesTag;
     });
 
-    // Apply sorting/filtering based on activeFilter
+    // Step 2: Apply sort / special filters
     switch (activeFilter) {
       case 'Newest':
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -72,14 +71,12 @@ export default function Questions() {
         filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
       case 'Featured':
-        // Featured: show accepted answers first, then by votes
+        // Featured: accepted answers first, then by votes
         filtered.sort((a, b) => {
           if (a.accepted && !b.accepted) return -1;
           if (!a.accepted && b.accepted) return 1;
           return b.votes - a.votes;
         });
-        break;
-      default:
         break;
     }
     return filtered;

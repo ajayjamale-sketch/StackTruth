@@ -1,8 +1,7 @@
 // AIAssistant.tsx (optimized, no team section)
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import DashboardPageWrapper from '@/components/layout/DashboardPageWrapper';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -157,8 +156,7 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar isAuthenticated />
+    <DashboardPageWrapper activeTab="ai">
       <ScrollToTop />
 
       <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-20 pb-6 flex flex-col lg:flex-row gap-6">
@@ -316,6 +314,6 @@ export default function AIAssistant() {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardPageWrapper>
   );
 }

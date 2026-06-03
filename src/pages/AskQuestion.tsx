@@ -1,8 +1,7 @@
 // AskQuestion.tsx
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import DashboardPageWrapper from '@/components/layout/DashboardPageWrapper';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -106,9 +105,7 @@ export default function AskQuestion() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
-      <ScrollToTop />
+    <DashboardPageWrapper activeTab="questions">
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         <div className="mb-8">
@@ -285,7 +282,6 @@ export default function AskQuestion() {
         </div>
       </div>
 
-      <Footer />
-    </div>
+    </DashboardPageWrapper>
   );
 }

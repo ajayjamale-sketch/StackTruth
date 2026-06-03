@@ -9,8 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import {
   LayoutDashboard, MessageSquare, GitBranch, Bot, Bookmark,
   Bell, Plus, TrendingUp, Award, Code2, ArrowRight,
-  Users, ChevronRight, Zap, BarChart3, Settings, LogOut
+  Users, ChevronRight, Zap, BarChart3, Settings, LogOut, Trash2
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { mockUser, mockQuestions, mockBlogs } from '@/lib/mockData';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -36,11 +37,13 @@ const quickActions = [
   { label: 'Analytics', href: '/analytics', icon: BarChart3, color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' },
 ];
 
-const notifications = [
+const initialNotifications = [
   { id: 1, type: 'answer', msg: 'Priya N. answered your question about PostgreSQL transactions', time: '5m', read: false },
   { id: 2, type: 'upvote', msg: 'Your answer received 12 new upvotes today', time: '1h', read: false },
   { id: 3, type: 'review', msg: 'Code review request from Backend Team is ready', time: '2h', read: false },
   { id: 4, type: 'badge', msg: 'You earned the "Helpful Mentor" badge!', time: '1d', read: true },
+  { id: 5, type: 'system', msg: 'Welcome to StackTruth!', time: '2d', read: true },
+  { id: 6, type: 'answer', msg: 'Your question was marked as duplicate', time: '3d', read: true },
 ];
 
 // Mock data for answers
@@ -62,6 +65,26 @@ export default function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || 'overview');
+  const [notifs, setNotifs] = useState(initialNotifications);
+
+  const markAllAsRead = () => {
+    setNotifs(notifs.map(n => ({ ...n, read: true })));
+    toast.success('All notifications marked as read');
+  };
+
+  const clearAllNotifications = () => {
+    setNotifs([]);
+    toast.success('All notifications cleared');
+  };
+
+  const markAsRead = (id: number) => {
+    setNotifs(notifs.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const deleteNotification = (id: number) => {
+    setNotifs(notifs.filter(n => n.id !== id));
+    toast.success('Notification removed');
+  };
 
   useEffect(() => {
     if (location.state?.activeTab) {
@@ -149,10 +172,9 @@ export default function Dashboard() {
             <div className="bg-card border border-border rounded-xl overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <h3 className="font-semibold text-sm">Recent Activity</h3>
-                <Link to="/notifications" className="text-xs text-primary hover:underline">View all</Link>
               </div>
               <div className="divide-y divide-border">
-                {notifications.map((n) => (
+                {notifs.slice(0, 4).map((n) => (
                   <div key={n.id} className={`px-4 py-3 ${!n.read ? 'bg-primary/3' : ''}`}>
                     <p className={`text-xs leading-relaxed ${!n.read ? 'font-medium' : 'text-muted-foreground'}`}>{n.msg}</p>
                     <p className="text-[10px] text-muted-foreground mt-1">{n.time} ago</p>
@@ -316,18 +338,57 @@ export default function Dashboard() {
       )}
 
       {activeTab === 'notifications' && (
-        <div className="max-w-2xl">
-          <h2 className="text-xl font-bold mb-5">Notifications</h2>
-          <div className="bg-card border border-border rounded-xl divide-y divide-border">
-            {[...notifications, ...notifications.map((n) => ({ ...n, id: n.id + 4, read: true }))].map((n) => (
-              <div key={n.id} className={`p-4 flex items-start gap-3 ${!n.read ? 'bg-primary/5' : ''}`}>
-                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${!n.read ? 'bg-primary' : 'bg-muted-foreground opacity-30'}`} />
-                <div className="flex-1">
-                  <p className={`text-sm ${!n.read ? 'font-medium' : 'text-muted-foreground'}`}>{n.msg}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{n.time} ago</p>
+        <div className="max-w-3xl">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Bell className="w-5 h-5 text-primary" /> Notifications
+              {notifs.filter(n => !n.read).length > 0 && (
+                <Badge className="ml-2 bg-primary text-primary-foreground">
+                  {notifs.filter(n => !n.read).length} new
+                </Badge>
+              )}
+            </h2>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={markAllAsRead} disabled={notifs.filter(n => !n.read).length === 0}>
+                Mark all as read
+              </Button>
+              <Button variant="destructive" size="sm" onClick={clearAllNotifications} disabled={notifs.length === 0}>
+                Clear all
+              </Button>
+            </div>
+          </div>
+
+          <div className="bg-card border border-border rounded-xl divide-y divide-border overflow-hidden shadow-sm">
+            {notifs.length > 0 ? (
+              notifs.map((n) => (
+                <div 
+                  key={n.id} 
+                  className={`p-4 flex items-start gap-4 transition-colors ${!n.read ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-muted/50'}`}
+                >
+                  <div className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'bg-primary shadow-[0_0_8px_rgba(59,130,246,0.5)]' : 'bg-muted-foreground opacity-30'}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm ${!n.read ? 'font-medium' : 'text-muted-foreground'}`}>{n.msg}</p>
+                    <p className="text-xs text-muted-foreground mt-1 font-mono">{n.time} ago</p>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-0 hover:opacity-100 transition-opacity focus-within:opacity-100" style={{ opacity: 1 }}>
+                    {!n.read && (
+                      <Button variant="ghost" size="sm" className="h-8 text-xs px-2" onClick={() => markAsRead(n.id)}>
+                        Mark read
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive" onClick={() => deleteNotification(n.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="p-12 text-center text-muted-foreground flex flex-col items-center justify-center">
+                <Bell className="w-12 h-12 mb-4 opacity-20" />
+                <p>You're all caught up!</p>
+                <p className="text-sm mt-1">Check back later for new updates.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}

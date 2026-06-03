@@ -1,7 +1,7 @@
 // Analytics.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import DashboardPageWrapper from '@/components/layout/DashboardPageWrapper';
 import { LayoutDashboard, MessageSquare, GitBranch, Bot, Bookmark, Bell, BarChart3, TrendingUp, Users, Award, ArrowUp, ArrowDown } from 'lucide-react';
 import { mockUser } from '@/lib/mockData';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -108,24 +108,8 @@ export default function Analytics() {
   const reputationData = getReputationData(period);
   const weeklyData = getWeeklyData(period);
 
-  const handleTabChange = (tab: string) => {
-    if (tab === 'analytics') {
-      setActiveTab(tab);
-    } else {
-      navigate('/dashboard', { state: { activeTab: tab } });
-    }
-  };
-
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'questions', label: 'My Questions', icon: MessageSquare },
-    { id: 'answers', label: 'My Answers', icon: MessageSquare },
-    { id: 'reviews', label: 'Code Reviews', icon: GitBranch },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  ];
-
   return (
-    <DashboardLayout user={mockUser} navItems={navItems} activeTab={activeTab} setActiveTab={handleTabChange}>
+    <DashboardPageWrapper activeTab="overview">
       <ScrollToTop />
 
       <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -249,6 +233,6 @@ export default function Analytics() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </DashboardPageWrapper>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -22,14 +23,39 @@ interface ProfileFormData {
 
 export default function Profile() {
   useScrollToTop();
+  const { username } = useParams<{ username?: string }>();
+  
+  const publicUsers: Record<string, any> = {
+    'marcus_r': {
+      id: 2,
+      name: 'Marcus R.',
+      username: 'marcus_r',
+      email: 'marcus@example.com',
+      avatar: 'https://i.pravatar.cc/150?u=marcus_r',
+      bio: 'Database Architect | SQL Optimization Enthusiast',
+      role: 'Expert',
+      reputation: 6420,
+      badges: ['Database Master', 'Performance Guru', 'Top Reviewer'],
+      stats: { questions: 12, answers: 345, reviews: 89, upvotes: 1250 },
+      skills: ['SQL', 'Python', 'PostgreSQL', 'Redis', 'Database Design'],
+      location: 'Berlin, DE',
+      website: 'https://marcusr.dev',
+      github: 'marcusr',
+      joinedAt: '2023-01-15T00:00:00Z',
+    }
+  };
+
+  const isOwnProfile = !username || username === mockUser.username;
+  const profileUser = isOwnProfile ? mockUser : (publicUsers[username as string] || mockUser);
+
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<ProfileFormData>({
-    name: mockUser.name,
-    bio: mockUser.bio,
-    location: mockUser.location,
-    website: mockUser.website,
-    github: mockUser.github,
+    name: profileUser.name,
+    bio: profileUser.bio,
+    location: profileUser.location,
+    website: profileUser.website,
+    github: profileUser.github,
   });
 
   const handleSave = async () => {
@@ -57,10 +83,11 @@ export default function Profile() {
             <div className="bg-card border border-border rounded-xl p-6 text-center">
               <div className="relative inline-block mb-4">
                 <img
-                  src={mockUser.avatar}
-                  alt={`${mockUser.name}'s avatar`}
+                  src={profileUser.avatar}
+                  alt={`${profileUser.name}'s avatar`}
                   className="w-24 h-24 rounded-full object-cover ring-4 ring-primary/20 mx-auto"
                 />
+                {isOwnProfile && (
                 <button
                   type="button"
                   className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center border-2 border-background transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -69,17 +96,18 @@ export default function Profile() {
                 >
                   <Camera className="w-3.5 h-3.5 text-white" aria-hidden="true" />
                 </button>
+                )}
               </div>
-              <h2 className="text-xl font-bold">{form.name}</h2>
-              <p className="text-muted-foreground text-sm">@{mockUser.username}</p>
+              <h2 className="text-xl font-bold">{isOwnProfile ? form.name : profileUser.name}</h2>
+              <p className="text-muted-foreground text-sm">@{profileUser.username}</p>
               <div className="flex items-center justify-center gap-1.5 mt-2">
                 <Award className="w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
                 <span className="text-sm font-semibold text-primary">
-                  {mockUser.reputation.toLocaleString()} reputation
+                  {profileUser.reputation.toLocaleString()} reputation
                 </span>
               </div>
               <div className="flex flex-wrap justify-center gap-1.5 mt-3">
-                {mockUser.badges.map(badge => (
+                {profileUser.badges.map((badge: string) => (
                   <Badge key={badge} variant="secondary" className="text-xs">
                     {badge}
                   </Badge>
@@ -91,10 +119,10 @@ export default function Profile() {
               <h3 className="font-semibold text-sm mb-3">Community Stats</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: 'Questions', value: mockUser.stats.questions },
-                  { label: 'Answers', value: mockUser.stats.answers },
-                  { label: 'Reviews', value: mockUser.stats.reviews },
-                  { label: 'Upvotes', value: mockUser.stats.upvotes },
+                  { label: 'Questions', value: profileUser.stats.questions },
+                  { label: 'Answers', value: profileUser.stats.answers },
+                  { label: 'Reviews', value: profileUser.stats.reviews },
+                  { label: 'Upvotes', value: profileUser.stats.upvotes },
                 ].map(stat => (
                   <div key={stat.label} className="text-center bg-muted rounded-xl p-2.5">
                     <div className="text-lg font-bold text-primary">{stat.value}</div>
@@ -107,7 +135,7 @@ export default function Profile() {
             <div className="bg-card border border-border rounded-xl p-4">
               <h3 className="font-semibold text-sm mb-3">Skills</h3>
               <div className="flex flex-wrap gap-1.5">
-                {mockUser.skills.map(skill => (
+                {profileUser.skills.map((skill: string) => (
                   <Badge key={skill} variant="secondary" className="text-xs">
                     {skill}
                   </Badge>
@@ -120,8 +148,8 @@ export default function Profile() {
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-card border border-border rounded-xl p-6">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-xl font-bold">Profile Settings</h2>
-                {!editing ? (
+                <h2 className="text-xl font-bold">{isOwnProfile ? 'Profile Settings' : 'Profile Details'}</h2>
+                {isOwnProfile && !editing && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -131,7 +159,8 @@ export default function Profile() {
                     <Edit className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
                     Edit Profile
                   </Button>
-                ) : (
+                )}
+                {isOwnProfile && editing && (
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -168,7 +197,7 @@ export default function Profile() {
                   </Label>
                   <Input
                     id="full-name"
-                    value={form.name}
+                    value={isOwnProfile ? form.name : profileUser.name}
                     onChange={e => updateField('name', e.target.value)}
                     disabled={!editing}
                   />
@@ -179,7 +208,7 @@ export default function Profile() {
                   </Label>
                   <textarea
                     id="bio"
-                    value={form.bio}
+                    value={isOwnProfile ? form.bio : profileUser.bio}
                     onChange={e => updateField('bio', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -198,7 +227,7 @@ export default function Profile() {
                     </Label>
                     <Input
                       id="location"
-                      value={form.location}
+                      value={isOwnProfile ? form.location : profileUser.location}
                       onChange={e => updateField('location', e.target.value)}
                       disabled={!editing}
                     />
@@ -211,7 +240,7 @@ export default function Profile() {
                     <Input
                       id="website"
                       type="url"
-                      value={form.website}
+                      value={isOwnProfile ? form.website : profileUser.website}
                       onChange={e => updateField('website', e.target.value)}
                       disabled={!editing}
                       placeholder="https://..."
@@ -225,7 +254,7 @@ export default function Profile() {
                   </Label>
                   <Input
                     id="github"
-                    value={form.github}
+                    value={isOwnProfile ? form.github : profileUser.github}
                     onChange={e => updateField('github', e.target.value)}
                     disabled={!editing}
                     placeholder="username"
@@ -240,7 +269,7 @@ export default function Profile() {
                 <div className="flex items-center justify-between py-2 border-b border-border">
                   <div className="flex items-center gap-2 text-sm">
                     <Mail className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
-                    <span>{mockUser.email}</span>
+                    <span>{profileUser.email}</span>
                   </div>
                   <Badge className="text-xs bg-accent/10 text-accent border-accent/20">
                     Verified
@@ -251,14 +280,14 @@ export default function Profile() {
                     <Code2 className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
                     <span>
                       Joined{' '}
-                      {new Date(mockUser.joinedAt).toLocaleDateString('en-US', {
+                      {new Date(profileUser.joinedAt).toLocaleDateString('en-US', {
                         month: 'long',
                         year: 'numeric',
                       })}
                     </span>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {mockUser.role}
+                    {profileUser.role}
                   </Badge>
                 </div>
               </div>

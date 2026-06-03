@@ -1,8 +1,6 @@
-// CodeReview.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import DashboardPageWrapper from '@/components/layout/DashboardPageWrapper';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -49,7 +47,6 @@ export default function CodeReview() {
       return;
     }
     setLoading(true);
-    // Simulate AI processing
     await new Promise(resolve => setTimeout(resolve, 2500));
     setLoading(false);
     setReviewed(true);
@@ -89,8 +86,7 @@ export default function CodeReview() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
+    <DashboardPageWrapper activeTab="reviews">
       <ScrollToTop />
 
       {/* Header */}
@@ -138,7 +134,7 @@ export default function CodeReview() {
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    className="text-xs px-2 py-1 rounded-lg bg-background border border-border focus:outline-none focus:ring-1 focus:ring-primary/30"
+                    className="text-xs px-2 py-1 rounded-lg bg-background border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 text-foreground"
                   >
                     {languages.map((lang) => (
                       <option key={lang}>{lang}</option>
@@ -157,7 +153,7 @@ export default function CodeReview() {
 // Example: TypeScript, Python, Rust, Go, etc.
 // Click 'Load Sample' to see a review of insecure code."
                 rows={20}
-                className="border-0 rounded-none font-mono text-xs focus:ring-0 resize-none bg-[hsl(var(--code-bg))]"
+                className="font-mono text-sm bg-background text-foreground border-0 rounded-none focus:ring-0 resize-none"
               />
             </div>
           </div>
@@ -294,7 +290,6 @@ export default function CodeReview() {
         </div>
       </div>
 
-      <Footer />
-    </div>
+    </DashboardPageWrapper>
   );
 }

@@ -11,9 +11,11 @@ import {
   Bot, Code2, Award, TrendingUp, Briefcase, Quote, 
   Zap, Shield, Heart, Globe 
 } from 'lucide-react';
+import { useAuthContext } from '@/context/AuthContext';
 
 export default function Index() {
   useScrollToTop();
+  const { isAuthenticated } = useAuthContext();
 
   // Mock data
   const stats = [
@@ -132,7 +134,7 @@ export default function Index() {
                   <li key={item} className="flex items-center gap-2 text-sm"><CheckCircle className="w-4 h-4 text-accent" /> {item}</li>
                 ))}
               </ul>
-              <Button asChild className="bg-primary hover:bg-primary/90"><Link to="/questions">Browse Questions <ArrowRight className="w-4 h-4 ml-2" /></Link></Button>
+              <Button asChild className="bg-primary hover:bg-primary/90"><Link to={isAuthenticated ? "/questions" : "/login"}>Browse Questions <ArrowRight className="w-4 h-4 ml-2" /></Link></Button>
             </div>
             <div className="bg-card border border-border rounded-2xl p-6">
               <div className="space-y-4">
@@ -162,11 +164,11 @@ export default function Index() {
                   <li key={item} className="flex items-center gap-2 text-sm"><CheckCircle className="w-4 h-4 text-accent" /> {item}</li>
                 ))}
               </ul>
-              <Button asChild className="bg-primary hover:bg-primary/90"><Link to="/code-review">Try Code Review <ArrowRight className="w-4 h-4 ml-2" /></Link></Button>
+              <Button asChild className="bg-primary hover:bg-primary/90"><Link to={isAuthenticated ? "/code-review" : "/login"}>Try Code Review <ArrowRight className="w-4 h-4 ml-2" /></Link></Button>
             </div>
             <div className="bg-card border border-border rounded-2xl p-6 font-mono text-xs">
               <pre className="text-red-400">// SQL injection vulnerability</pre>
-              <pre className="text-foreground">const query = `SELECT * FROM users WHERE name = '${input}'`;</pre>
+              <pre className="text-foreground">{"const query = `SELECT * FROM users WHERE name = '${input}'`;"}</pre>
               <pre className="text-green-400 mt-2">// ✅ Use parameterized queries</pre>
               <pre className="text-foreground">const query = 'SELECT * FROM users WHERE name = $1';</pre>
             </div>
@@ -231,7 +233,7 @@ export default function Index() {
           <Badge className="mb-4 bg-pink-500/10 text-pink-600 border-pink-500/20">Team Workspaces</Badge>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Collaborate with your team</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-8">Private channels, shared code snippets, and collaborative docs – all in one place.</p>
-          <Button asChild variant="outline" className="border-primary/30"><Link to="/teams">Learn more →</Link></Button>
+          <Button asChild variant="outline" className="border-primary/30"><Link to="/teams-info">Learn more →</Link></Button>
         </div>
       </section>
 
@@ -242,8 +244,8 @@ export default function Index() {
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Find your next role</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-8">Companies trust StackTruth to find top engineering talent. Browse jobs or get discovered by recruiters.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild className="bg-primary hover:bg-primary/90"><Link to="/jobs">Browse Jobs</Link></Button>
-            <Button asChild variant="outline"><Link to="/post-job">Post a Job</Link></Button>
+            <Button asChild className="bg-primary hover:bg-primary/90"><Link to={isAuthenticated ? "/jobs" : "/login"}>Browse Jobs</Link></Button>
+            <Button asChild variant="outline"><Link to={isAuthenticated ? "/dashboard/recruiter" : "/login"}>Post a Job</Link></Button>
           </div>
         </div>
       </section>

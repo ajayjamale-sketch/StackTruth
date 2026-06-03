@@ -1,6 +1,4 @@
-// Leaderboard.tsx
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -8,42 +6,73 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Search, Trophy, Star, Award, Medal, TrendingUp, Filter, X } from 'lucide-react';
 import { toast } from 'sonner';
 
-const devs = [
-  { rank: 1, name: 'Priya Nair', username: 'priya_n', rep: 18420, answers: 842, reviews: 341, change: '+240', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=48&h=48&fit=crop&crop=face', badge: 'Expert', skills: ['TypeScript', 'Rust', 'Go'] },
-  { rank: 2, name: 'Marcus Rivera', username: 'marcus_r', rep: 14280, answers: 621, reviews: 198, change: '+180', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face', badge: 'Mentor', skills: ['Go', 'K8s', 'Terraform'] },
-  { rank: 3, name: 'Sarah Chen', username: 'sarah_c', rep: 12100, answers: 534, reviews: 267, change: '+95', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=48&h=48&fit=crop&crop=face', badge: 'Top Reviewer', skills: ['React', 'Python', 'ML'] },
-  { rank: 4, name: 'Alex Chen', username: 'alexchen', rep: 4820, answers: 183, reviews: 92, change: '+42', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=48&h=48&fit=crop&crop=face', badge: 'Contributor', skills: ['TypeScript', 'Rust', 'PostgreSQL'] },
-  { rank: 5, name: 'Diana Patel', username: 'diana_p', rep: 9800, answers: 441, reviews: 156, change: '+68', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=48&h=48&fit=crop&crop=face', badge: 'Expert', skills: ['Java', 'Microservices', 'AWS'] },
-  { rank: 6, name: 'James Wu', username: 'james_w', rep: 7650, answers: 312, reviews: 134, change: '+51', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=48&h=48&fit=crop&crop=face', badge: 'Reviewer', skills: ['Python', 'FastAPI', 'ML'] },
-  { rank: 7, name: 'Amara Johnson', username: 'amara_j', rep: 6200, answers: 278, reviews: 89, change: '+37', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=48&h=48&fit=crop&crop=face', badge: 'Contributor', skills: ['Node.js', 'GraphQL', 'MongoDB'] },
-  { rank: 8, name: 'Thomas Walsh', username: 'thomas_w', rep: 5430, answers: 211, reviews: 76, change: '+29', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=48&h=48&fit=crop&crop=face', badge: 'Contributor', skills: ['React', 'TypeScript', 'Testing'] },
-];
-
-const periods = ['This Week', 'This Month', 'All Time'];
-
-// Mock function to simulate period change (in real app, fetch data based on period)
-const getLeaderboardData = (period: string) => {
-  return devs; // static for demo
+// Mock data for different time periods
+const allPeriodData = {
+  'This Week': [
+    { rank: 1, name: "Alex Chen", username: "alexc", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face", rep: 1240, answers: 45, reviews: 28, change: "+12", badge: "Rising Star", skills: ["React", "TypeScript", "Node.js"] },
+    { rank: 2, name: "Priya Nair", username: "priyan", avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face", rep: 1180, answers: 38, reviews: 32, change: "+8", badge: "Top Answerer", skills: ["Python", "AWS", "System Design"] },
+    { rank: 3, name: "Samir Patel", username: "samirp", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face", rep: 990, answers: 30, reviews: 22, change: "+5", badge: "Active Reviewer", skills: ["Go", "Kubernetes", "Docker"] },
+    { rank: 4, name: "Elena Rodriguez", username: "elenar", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face", rep: 820, answers: 25, reviews: 18, change: "+3", badge: "Contributor", skills: ["Rust", "C++", "WASM"] },
+    { rank: 5, name: "David Kim", username: "davidk", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face", rep: 710, answers: 20, reviews: 15, change: "+7", badge: "Contributor", skills: ["Vue", "CSS", "UI/UX"] },
+  ],
+  'This Month': [
+    { rank: 1, name: "Priya Nair", username: "priyan", avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face", rep: 42150, answers: 980, reviews: 1100, change: "+15", badge: "Master", skills: ["Python", "AWS", "System Design"] },
+    { rank: 2, name: "Alex Chen", username: "alexc", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face", rep: 39800, answers: 1100, reviews: 620, change: "+10", badge: "Pro", skills: ["React", "TypeScript", "Node.js"] },
+    { rank: 3, name: "Samir Patel", username: "samirp", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face", rep: 38200, answers: 850, reviews: 930, change: "+8", badge: "Pro", skills: ["Go", "Kubernetes", "Docker"] },
+    { rank: 4, name: "Elena Rodriguez", username: "elenar", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face", rep: 35100, answers: 720, reviews: 580, change: "+5", badge: "Expert", skills: ["Rust", "C++", "WASM"] },
+    { rank: 5, name: "David Kim", username: "davidk", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face", rep: 28900, answers: 610, reviews: 480, change: "+12", badge: "Contributor", skills: ["Vue", "CSS", "UI/UX"] },
+  ],
+  'All Time': [
+    { rank: 1, name: "Alex Chen", username: "alexc", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face", rep: 45200, answers: 1240, reviews: 840, change: "+2", badge: "Expert", skills: ["React", "TypeScript", "Node.js"] },
+    { rank: 2, name: "Priya Nair", username: "priyan", avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face", rep: 42150, answers: 980, reviews: 1100, change: "-", badge: "Master", skills: ["Python", "AWS", "System Design"] },
+    { rank: 3, name: "Samir Patel", username: "samirp", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face", rep: 39800, answers: 1100, reviews: 620, change: "+1", badge: "Pro", skills: ["Go", "Kubernetes", "Docker"] },
+    { rank: 4, name: "Elena Rodriguez", username: "elenar", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face", rep: 38200, answers: 850, reviews: 930, change: "-1", badge: "Pro", skills: ["Rust", "C++", "WASM"] },
+    { rank: 5, name: "David Kim", username: "davidk", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face", rep: 35100, answers: 720, reviews: 580, change: "+3", badge: "Contributor", skills: ["Vue", "CSS", "UI/UX"] },
+  ],
 };
+
+const periods = Object.keys(allPeriodData);
 
 export default function Leaderboard() {
   useScrollToTop();
   const [search, setSearch] = useState('');
   const [period, setPeriod] = useState('This Week');
+  const [selectedDev, setSelectedDev] = useState(null);
 
-  const data = getLeaderboardData(period);
-  const filtered = data.filter(dev =>
-    !search ||
-    dev.name.toLowerCase().includes(search.toLowerCase()) ||
-    dev.username.toLowerCase().includes(search.toLowerCase()) ||
-    dev.skills.some(skill => skill.toLowerCase().includes(search.toLowerCase()))
-  );
+  // Get data for the selected period
+  const currentData = allPeriodData[period];
+  
+  // Filter based on search
+  const filtered = useMemo(() => {
+    if (!search.trim()) return currentData;
+    const lowerSearch = search.toLowerCase();
+    return currentData.filter(dev =>
+      dev.name.toLowerCase().includes(lowerSearch) ||
+      dev.username.toLowerCase().includes(lowerSearch) ||
+      dev.skills.some(skill => skill.toLowerCase().includes(lowerSearch))
+    );
+  }, [currentData, search]);
+
+  // Top 3 for the podium (from filtered data, but if filtered has less than 3, use first ones)
+  const topThree = filtered.slice(0, 3);
+  // Reorder for podium: second (index 1), first (index 0), third (index 2)
+  const podiumOrder = topThree.length >= 3 
+    ? [topThree[1], topThree[0], topThree[2]]
+    : topThree;
 
   const handlePeriodChange = (newPeriod: string) => {
     setPeriod(newPeriod);
+    setSearch(''); // optional: clear search when period changes
     toast.success(`Showing rankings for ${newPeriod}`);
   };
 
@@ -60,9 +89,11 @@ export default function Leaderboard() {
     return <span className="text-sm font-bold text-muted-foreground">#{rank}</span>;
   };
 
+  const openProfile = (dev) => setSelectedDev(dev);
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar isAuthenticated />
+      <Navbar isAuthenticated={false} />
       <ScrollToTop />
 
       {/* Header */}
@@ -76,33 +107,38 @@ export default function Leaderboard() {
             Rankings based on answer quality, code reviews, and community contributions
           </p>
 
-          {/* Top 3 Podium */}
-          <div className="flex justify-center items-end gap-4 mt-8">
-            {[devs[1], devs[0], devs[2]].map((dev, idx) => (
-              <div key={dev.rank} className={`flex flex-col items-center ${idx === 1 ? 'order-2 -mb-2' : ''}`}>
-                <img
-                  src={dev.avatar}
-                  alt={dev.name}
-                  className={`rounded-full object-cover ring-4 ${
-                    idx === 1 ? 'w-16 h-16 ring-yellow-400' : 'w-12 h-12 ring-slate-400'
-                  }`}
-                />
-                <div
-                  className={`mt-2 flex items-center justify-center ${
-                    idx === 1 ? 'w-14 h-14' : 'w-11 h-11'
-                  } bg-gradient-to-b ${
-                    idx === 1 ? 'from-yellow-400/20' : 'from-slate-400/20'
-                  } rounded-t-lg border-t border-x ${
-                    idx === 1 ? 'border-yellow-400/30' : 'border-slate-400/30'
-                  }`}
-                >
-                  {getRankIcon(dev.rank)}
-                </div>
-                <p className="text-xs text-foreground/80 font-medium mt-1">{dev.name.split(' ')[0]}</p>
-                <p className="text-xs text-muted-foreground">{dev.rep.toLocaleString()}</p>
-              </div>
-            ))}
-          </div>
+          {/* Top 3 Podium - dynamic based on filtered data */}
+          {filtered.length >= 3 && (
+            <div className="flex justify-center items-end gap-4 mt-8">
+              {podiumOrder.map((dev, idx) => {
+                const isFirst = idx === 1; // the middle is first place
+                return (
+                  <div key={dev.rank} className={`flex flex-col items-center ${isFirst ? 'order-2 -mb-2' : ''}`}>
+                    <img
+                      src={dev.avatar}
+                      alt={dev.name}
+                      className={`rounded-full object-cover ring-4 ${
+                        isFirst ? 'w-16 h-16 ring-yellow-400' : 'w-12 h-12 ring-slate-400'
+                      }`}
+                    />
+                    <div
+                      className={`mt-2 flex items-center justify-center ${
+                        isFirst ? 'w-14 h-14' : 'w-11 h-11'
+                      } bg-gradient-to-b ${
+                        isFirst ? 'from-yellow-400/20' : 'from-slate-400/20'
+                      } rounded-t-lg border-t border-x ${
+                        isFirst ? 'border-yellow-400/30' : 'border-slate-400/30'
+                      }`}
+                    >
+                      {getRankIcon(dev.rank)}
+                    </div>
+                    <p className="text-xs text-foreground/80 font-medium mt-1">{dev.name.split(' ')[0]}</p>
+                    <p className="text-xs text-muted-foreground">{dev.rep.toLocaleString()}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
@@ -112,7 +148,7 @@ export default function Leaderboard() {
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search developer..."
+              placeholder="Search by name, username, or skill..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="pl-9 pr-8"
@@ -158,10 +194,10 @@ export default function Leaderboard() {
           </div>
           <div className="divide-y divide-border">
             {filtered.map(dev => (
-              <Link
+              <button
                 key={dev.rank}
-                to={`/profile/${dev.username}`}
-                className={`grid grid-cols-12 gap-4 px-5 py-4 items-center hover:bg-muted/30 transition-colors ${
+                onClick={() => openProfile(dev)}
+                className={`w-full grid grid-cols-12 gap-4 px-5 py-4 items-center hover:bg-muted/30 transition-colors text-left ${
                   dev.rank <= 3 ? 'bg-primary/3' : ''
                 }`}
               >
@@ -192,14 +228,73 @@ export default function Leaderboard() {
                 <div className="col-span-1 text-right">
                   <span className="text-xs font-semibold text-accent">{dev.change}</span>
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
           {filtered.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">No developers match your search.</div>
+            <div className="text-center py-12 text-muted-foreground">
+              No developers match your search.
+            </div>
           )}
         </div>
       </div>
+
+      {/* Profile Dialog */}
+      <Dialog open={!!selectedDev} onOpenChange={(open) => !open && setSelectedDev(null)}>
+        <DialogContent className="sm:max-w-lg">
+          {selectedDev && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  <img src={selectedDev.avatar} alt={selectedDev.name} className="w-10 h-10 rounded-full object-cover" />
+                  <div>
+                    <div>{selectedDev.name}</div>
+                    <div className="text-sm font-normal text-muted-foreground">@{selectedDev.username}</div>
+                  </div>
+                </DialogTitle>
+                <DialogDescription className="sr-only">Developer profile details</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="bg-muted rounded-lg p-2">
+                    <div className="text-lg font-bold text-primary">{selectedDev.rep.toLocaleString()}</div>
+                    <div className="text-xs text-muted-foreground">Reputation</div>
+                  </div>
+                  <div className="bg-muted rounded-lg p-2">
+                    <div className="text-lg font-bold">{selectedDev.answers}</div>
+                    <div className="text-xs text-muted-foreground">Answers</div>
+                  </div>
+                  <div className="bg-muted rounded-lg p-2">
+                    <div className="text-lg font-bold">{selectedDev.reviews}</div>
+                    <div className="text-xs text-muted-foreground">Reviews</div>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Badge</h4>
+                  <Badge className="bg-primary/10 text-primary border-primary/20">
+                    {selectedDev.badge}
+                  </Badge>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Technical Skills</h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedDev.skills.map(skill => (
+                      <Badge key={skill} variant="secondary" className="text-xs">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="pt-2 text-xs text-muted-foreground border-t border-border">
+                  <span className="flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" /> Rank #{selectedDev.rank} this {period.toLowerCase()}
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useThemeContext } from '@/context/ThemeContext';
+import { useAuthContext } from '@/context/AuthContext';
+import NotificationPopup from '@/components/features/NotificationPopup';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,13 +31,23 @@ const communityLinks = [
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
 ];
 
-export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
+export default function Navbar({ isAuthenticated: _propIsAuthenticated = false }: { isAuthenticated?: boolean }) {
+  const { isAuthenticated, userRole, logout } = useAuthContext();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
   const { theme, toggleTheme } = useThemeContext();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const getDashboardUrl = () => {
+    switch(userRole) {
+      case 'admin': return '/dashboard/admin';
+      case 'recruiter': return '/dashboard/recruiter';
+      case 'expert': return '/dashboard/expert';
+      default: return '/dashboard';
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -80,7 +92,7 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
                     {productLinks.map(link => {
                       const Icon = link.icon;
                       return (
-                        <Link key={link.href} to={link.href} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted transition-colors">
+                        <Link key={link.href} to={isAuthenticated ? link.href : '/login'} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted transition-colors">
                           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                             <Icon className="w-4 h-4 text-primary" />
                           </div>
@@ -99,7 +111,7 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
             {communityLinks.map(link => {
               const Icon = link.icon;
               return (
-                <Link key={link.href} to={link.href} className={cn(
+                <Link key={link.href} to={isAuthenticated ? link.href : '/login'} className={cn(
                   'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                   location.pathname === link.href ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                 )}>
@@ -121,10 +133,7 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
             </button>
             {isAuthenticated ? (
               <>
-                <Link to="/notifications" className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors relative">
-                  <Bell className="w-4 h-4" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
-                </Link>
+                <NotificationPopup />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted transition-colors">
@@ -139,11 +148,11 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
                       <Badge variant="secondary" className="text-xs mt-1">4,820 rep</Badge>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')}><LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate(getDashboardUrl())}><LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/profile')}><User className="w-4 h-4 mr-2" />Profile</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/settings')}><Settings className="w-4 h-4 mr-2" />Settings</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/login')} className="text-destructive"><LogOut className="w-4 h-4 mr-2" />Sign Out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => { logout(); navigate('/login'); }} className="text-destructive"><LogOut className="w-4 h-4 mr-2" />Sign Out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
@@ -175,7 +184,7 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
             {productLinks.map(link => {
               const Icon = link.icon;
               return (
-                <Link key={link.href} to={link.href} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <Link key={link.href} to={isAuthenticated ? link.href : '/login'} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                   <Icon className="w-4 h-4" /> {link.label}
                 </Link>
               );
@@ -184,7 +193,7 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
             {communityLinks.map(link => {
               const Icon = link.icon;
               return (
-                <Link key={link.href} to={link.href} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <Link key={link.href} to={isAuthenticated ? link.href : '/login'} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                   <Icon className="w-4 h-4" /> {link.label}
                 </Link>
               );
@@ -193,8 +202,8 @@ export default function Navbar({ isAuthenticated = false }: { isAuthenticated?: 
             <div className="pt-3 flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
-                  <Button variant="ghost" className="justify-start" asChild><Link to="/dashboard"><LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</Link></Button>
-                  <Button variant="ghost" className="justify-start text-destructive hover:text-destructive" asChild><Link to="/login"><LogOut className="w-4 h-4 mr-2" />Sign Out</Link></Button>
+                  <Button variant="ghost" className="justify-start" asChild><Link to={getDashboardUrl()}><LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</Link></Button>
+                  <Button variant="ghost" className="justify-start text-destructive hover:text-destructive" onClick={() => { logout(); navigate('/login'); }}><LogOut className="w-4 h-4 mr-2" />Sign Out</Button>
                 </>
               ) : (
                 <>

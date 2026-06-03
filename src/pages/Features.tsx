@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageSquare, GitBranch, Bot, BookOpen, Users, Monitor, Trophy, BarChart3, CheckCircle } from 'lucide-react';
+import { useAuthContext } from '@/context/AuthContext';
 
 const features = [
   {
@@ -43,6 +44,7 @@ const features = [
 
 export default function Features() {
   useScrollToTop();
+  const { isAuthenticated } = useAuthContext();
 
   return (
     <div className="min-h-screen bg-background">
@@ -98,7 +100,7 @@ export default function Features() {
                     ))}
                   </ul>
                   <Button asChild className="bg-primary hover:bg-primary/90">
-                    <Link to={feat.href}>
+                    <Link to={isAuthenticated ? feat.href : '/login'}>
                       Try {feat.title} <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </Button>
