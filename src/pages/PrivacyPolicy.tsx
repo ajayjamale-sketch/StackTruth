@@ -57,12 +57,12 @@ export default function PrivacyPolicy() {
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-12 section-dark dark">
+      <section className="pt-32 pb-12 section-dark">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Legal</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Privacy Policy</h1>
-          <p className="text-slate-200/70">Last updated: January 15, 2024</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Legal</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Privacy Policy</h1>
+          <p className="text-muted-foreground">Last updated: January 15, 2024</p>
         </div>
       </section>
 

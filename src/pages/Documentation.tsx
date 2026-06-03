@@ -22,11 +22,11 @@ export default function Documentation() {
       <Navbar isAuthenticated />
       <ScrollToTop />
 
-      <div className="pt-20 pb-6 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-6 section-dark border-b border-surface-10">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Documentation</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">StackTruth API Reference</h1>
-          <p className="text-slate-200/70">RESTful API for integrating StackTruth into your applications</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Documentation</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">StackTruth API Reference</h1>
+          <p className="text-muted-foreground">RESTful API for integrating StackTruth into your applications</p>
         </div>
       </div>
 
@@ -53,9 +53,9 @@ export default function Documentation() {
               <p className="text-muted-foreground text-sm mb-4">All API requests must be authenticated using a Bearer token.</p>
               <div className="bg-[hsl(var(--code-bg))] rounded-lg p-4 font-mono text-xs">
                 <p className="text-slate-400"># Base URL</p>
-                <p className="text-green-400">https://api.stacktruth.dev/v1</p>
+                <p className="text-green-600 dark:text-green-400">https://api.stacktruth.dev/v1</p>
                 <p className="text-slate-400 mt-3"># Authentication</p>
-                <p className="text-white/80">Authorization: Bearer {'<your-token>'}</p>
+                <p className="text-foreground">Authorization: Bearer {'<your-token>'}</p>
               </div>
             </div>
 
@@ -72,10 +72,10 @@ export default function Documentation() {
                     return (
                       <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-muted/30 transition-colors">
                         <Badge className={`text-xs font-mono w-14 flex-shrink-0 justify-center ${
-                          method === 'GET' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                          method === 'POST' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                          method === 'PUT' || method === 'PATCH' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                          'bg-red-500/10 text-red-400 border-red-500/20'
+                          method === 'GET' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' :
+                          method === 'POST' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' :
+                          method === 'PUT' || method === 'PATCH' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' :
+                          'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
                         }`}>{method}</Badge>
                         <code className="text-sm font-mono text-foreground">{path}</code>
                       </div>

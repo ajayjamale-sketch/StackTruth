@@ -20,10 +20,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const devAccounts = [
-  { label: 'Developer', icon: Code2, color: 'text-blue-400', bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30', dest: '/dashboard', desc: 'Full developer dashboard' },
-  { label: 'Expert', icon: Star, color: 'text-yellow-400', bg: 'bg-yellow-500/10 hover:bg-yellow-500/20 border-yellow-500/30', dest: '/dashboard/expert', desc: 'Expert review panel' },
-  { label: 'Recruiter', icon: Briefcase, color: 'text-purple-400', bg: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30', dest: '/dashboard/recruiter', desc: 'Hiring & talent dashboard' },
-  { label: 'Admin', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30', dest: '/dashboard/admin', desc: 'Platform admin panel' },
+  { label: 'Developer', icon: Code2, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30', dest: '/dashboard', desc: 'Full developer dashboard' },
+  { label: 'Expert', icon: Star, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/10 hover:bg-yellow-500/20 border-yellow-500/30', dest: '/dashboard/expert', desc: 'Expert review panel' },
+  { label: 'Recruiter', icon: Briefcase, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30', dest: '/dashboard/recruiter', desc: 'Hiring & talent dashboard' },
+  { label: 'Admin', icon: Shield, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30', dest: '/dashboard/admin', desc: 'Platform admin panel' },
 ];
 
 export default function Login() {
@@ -55,7 +55,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-5/12 section-dark relative overflow-hidden flex-col justify-between p-12 dark">
+      <div className="hidden lg:flex lg:w-5/12 section-dark relative overflow-hidden flex-col justify-between p-12">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.2),transparent_60%)]" />
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.1),transparent_60%)]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)`, backgroundSize: '50px 50px' }} />
@@ -64,7 +64,7 @@ export default function Login() {
             <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center">
               <Code2 className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-white text-lg">Stack<span className="text-blue-400">Truth</span></span>
+            <span className="font-bold text-foreground text-lg">Stack<span className="text-blue-600 dark:text-blue-400">Truth</span></span>
           </Link>
 
           {/* Code preview */}
@@ -73,31 +73,31 @@ export default function Login() {
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
               <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-              <span className="text-white/30 ml-2 text-[10px]">solution.ts</span>
+              <span className="text-muted-foreground ml-2 text-[10px]">solution.ts</span>
             </div>
             <div className="space-y-0.5">
-              <p><span className="text-blue-400">async function</span> <span className="text-green-400">validateCode</span><span className="text-white/70">(</span><span className="text-yellow-400">snippet</span><span className="text-white/70">: string) {`{`}</span></p>
-              <p className="pl-4"><span className="text-blue-400">const</span> <span className="text-white/80">result</span> <span className="text-white/50">= await</span> <span className="text-green-400">aiReview</span><span className="text-white/70">(snippet);</span></p>
-              <p className="pl-4"><span className="text-purple-400">return</span> <span className="text-white/70">{`{`}</span></p>
-              <p className="pl-8"><span className="text-yellow-400">score</span><span className="text-white/50">: result.quality,</span></p>
-              <p className="pl-8"><span className="text-yellow-400">issues</span><span className="text-white/50">: result.bugs,</span></p>
-              <p className="pl-4"><span className="text-white/70">{`};`}</span></p>
-              <p><span className="text-white/70">{`}`}</span></p>
+              <p><span className="text-blue-600 dark:text-blue-400">async function</span> <span className="text-green-600 dark:text-green-400">validateCode</span><span className="text-foreground">(</span><span className="text-yellow-600 dark:text-yellow-400">snippet</span><span className="text-foreground">: string) {`{`}</span></p>
+              <p className="pl-4"><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-foreground">result</span> <span className="text-muted-foreground">= await</span> <span className="text-green-600 dark:text-green-400">aiReview</span><span className="text-foreground">(snippet);</span></p>
+              <p className="pl-4"><span className="text-purple-600 dark:text-purple-400">return</span> <span className="text-foreground">{`{`}</span></p>
+              <p className="pl-8"><span className="text-yellow-600 dark:text-yellow-400">score</span><span className="text-muted-foreground">: result.quality,</span></p>
+              <p className="pl-8"><span className="text-yellow-600 dark:text-yellow-400">issues</span><span className="text-muted-foreground">: result.bugs,</span></p>
+              <p className="pl-4"><span className="text-foreground">{`};`}</span></p>
+              <p><span className="text-foreground">{`}`}</span></p>
             </div>
           </div>
 
-          <blockquote className="text-white/70 text-sm leading-relaxed mb-4 italic">
+          <blockquote className="text-muted-foreground text-sm leading-relaxed mb-4 italic">
             &ldquo;StackTruth completely changed how I approach code reviews. The AI catches things even senior engineers miss.&rdquo;
           </blockquote>
           <div className="flex items-center gap-3">
             <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=40&h=40&fit=crop&crop=face" alt="Priya" className="w-10 h-10 rounded-full object-cover ring-2 ring-white/20" />
             <div>
-              <p className="text-white font-medium text-sm">Priya Nair</p>
-              <p className="text-white/40 text-xs">Full-Stack Developer · Vercel</p>
+              <p className="text-foreground font-medium text-sm">Priya Nair</p>
+              <p className="text-muted-foreground text-xs">Full-Stack Developer · Vercel</p>
             </div>
           </div>
         </div>
-        <div className="relative z-10 flex gap-4 text-white/30 text-xs">
+        <div className="relative z-10 flex gap-4 text-muted-foreground text-xs">
           <span>180K+ Developers</span><span>·</span><span>2.4M+ Solutions</span><span>·</span><span>SOC 2 Certified</span>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function Login() {
             {/* Dev Bypass Buttons */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-3.5 h-3.5 text-yellow-400" />
+                <Zap className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Quick Access — No Credentials Needed</span>
               </div>
               <div className="grid grid-cols-2 gap-2">

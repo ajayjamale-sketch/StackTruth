@@ -9,6 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Briefcase, MapPin, DollarSign, Clock, Search, Bookmark, BookmarkCheck, Filter, Building2, ExternalLink, CheckCircle } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const jobs = [
   {
@@ -62,6 +69,7 @@ export default function Jobs() {
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [applying, setApplying] = useState<string | null>(null);
   const [filter, setFilter] = useState('All');
+  const [selectedJob, setSelectedJob] = useState<typeof jobs[0] | null>(null);
 
   const toggleSave = (id: string) => {
     const next = new Set(saved);
@@ -91,12 +99,12 @@ export default function Jobs() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <Badge className="mb-3 bg-primary/20 text-blue-300 border border-primary/30">Job Marketplace</Badge>
-            <h1 className="text-3xl font-bold text-white mb-3">Find Your Next Engineering Role</h1>
-            <p className="text-slate-200/70">Top companies hire directly from StackTruth based on your reputation and code quality</p>
+            <Badge className="mb-3 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Job Marketplace</Badge>
+            <h1 className="text-3xl font-bold text-foreground mb-3">Find Your Next Engineering Role</h1>
+            <p className="text-muted-foreground">Top companies hire directly from StackTruth based on your reputation and code quality</p>
           </div>
           <div className="max-w-2xl mx-auto flex gap-3">
             <div className="relative flex-1">
@@ -184,7 +192,7 @@ export default function Jobs() {
                 >
                   {applying === job.id ? 'Applying...' : 'Quick Apply'}
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 px-3" onClick={() => toast.success('Opening full listing...')}>
+                <Button variant="outline" size="sm" className="h-8 px-3" onClick={() => setSelectedJob(job)}>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -200,6 +208,81 @@ export default function Jobs() {
           </div>
         )}
       </div>
+
+      <Sheet open={!!selectedJob} onOpenChange={(open) => !open && setSelectedJob(null)}>
+        <SheetContent className="sm:max-w-md overflow-y-auto">
+          {selectedJob && (
+            <>
+              <SheetHeader className="mb-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-16 h-16 rounded-xl ${selectedJob.logoColor} flex items-center justify-center text-white font-bold text-2xl flex-shrink-0`}>
+                    {selectedJob.logo}
+                  </div>
+                  <div>
+                    <SheetTitle className="text-xl">{selectedJob.title}</SheetTitle>
+                    <SheetDescription className="text-base">{selectedJob.company}</SheetDescription>
+                  </div>
+                </div>
+              </SheetHeader>
+              
+              <div className="space-y-6">
+                <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{selectedJob.location}</span>
+                  <span className="flex items-center gap-1.5"><DollarSign className="w-4 h-4" />{selectedJob.salary}</span>
+                  <span className="flex items-center gap-1.5"><Briefcase className="w-4 h-4" />{selectedJob.type}</span>
+                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{selectedJob.posted}</span>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">About the role</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedJob.desc}
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-4">
+                    This is a mock detailed description for the purpose of demonstrating the UI. In a real application, this would contain the full job posting details fetched from a database, including responsibilities, requirements, and company culture.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">Required Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedJob.skills.map(s => (
+                      <Badge key={s} variant="secondary">{s}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">Perks & Benefits</h4>
+                  <ul className="space-y-2">
+                    {selectedJob.perks.map(p => (
+                      <li key={p} className="text-sm text-muted-foreground flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-accent" />{p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="pt-4 border-t border-border flex gap-3">
+                  <Button
+                    className="flex-1 bg-primary hover:bg-primary/90"
+                    disabled={applying === selectedJob.id}
+                    onClick={() => {
+                      handleApply(selectedJob.id, selectedJob.title);
+                      setSelectedJob(null);
+                    }}
+                  >
+                    {applying === selectedJob.id ? 'Applying...' : 'Apply Now'}
+                  </Button>
+                  <Button variant="outline" onClick={() => toggleSave(selectedJob.id)}>
+                    {saved.has(selectedJob.id) ? 'Saved' : 'Save'}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
 
       <Footer />
     </div>

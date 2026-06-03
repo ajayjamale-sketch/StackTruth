@@ -39,7 +39,7 @@ export default function BlogPost() {
           </div>
           <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{post.readTime} min read</span>
           <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{post.views.toLocaleString()} views</span>
-          <span className="flex items-center gap-1"><Heart className="w-3.5 h-3.5 text-red-400" />{post.likes} likes</span>
+          <span className="flex items-center gap-1"><Heart className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />{post.likes} likes</span>
           <button onClick={() => toast.success('Link copied!')} className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto">
             <Share2 className="w-3.5 h-3.5" /> Share
           </button>
@@ -62,13 +62,13 @@ export default function BlogPost() {
 
           <div className="bg-muted rounded-xl p-5 font-mono text-xs my-6 overflow-x-auto">
             <p className="text-slate-400 mb-2">// Example implementation</p>
-            <p><span className="text-blue-400">const</span> <span className="text-white">optimizedQuery</span> <span className="text-white/50">= async (</span><span className="text-yellow-400">params</span><span className="text-white/50">: QueryParams</span><span className="text-white/50">) {'=> {'}</span></p>
-            <p className="pl-4"><span className="text-blue-400">const</span> <span className="text-white">cached</span> <span className="text-white/50">= await</span> <span className="text-green-400">cache.get</span><span className="text-white/50">(params.key);</span></p>
-            <p className="pl-4"><span className="text-purple-400">if</span> <span className="text-white/50">(cached)</span> <span className="text-purple-400">return</span> <span className="text-white">cached</span><span className="text-white/50">;</span></p>
-            <p className="pl-4"><span className="text-blue-400">const</span> <span className="text-white">result</span> <span className="text-white/50">= await</span> <span className="text-green-400">db.query</span><span className="text-white/50">(params.sql, params.values);</span></p>
-            <p className="pl-4"><span className="text-white/50">await</span> <span className="text-green-400">cache.set</span><span className="text-white/50">(params.key, result, 300);</span></p>
-            <p className="pl-4"><span className="text-purple-400">return</span> <span className="text-white">result</span><span className="text-white/50">;</span></p>
-            <p><span className="text-white/50">{'};'}</span></p>
+            <p><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-white">optimizedQuery</span> <span className="text-muted-foreground">= async (</span><span className="text-yellow-600 dark:text-yellow-400">params</span><span className="text-muted-foreground">: QueryParams</span><span className="text-muted-foreground">) {'=> {'}</span></p>
+            <p className="pl-4"><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-white">cached</span> <span className="text-muted-foreground">= await</span> <span className="text-green-600 dark:text-green-400">cache.get</span><span className="text-muted-foreground">(params.key);</span></p>
+            <p className="pl-4"><span className="text-purple-600 dark:text-purple-400">if</span> <span className="text-muted-foreground">(cached)</span> <span className="text-purple-600 dark:text-purple-400">return</span> <span className="text-white">cached</span><span className="text-muted-foreground">;</span></p>
+            <p className="pl-4"><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-white">result</span> <span className="text-muted-foreground">= await</span> <span className="text-green-600 dark:text-green-400">db.query</span><span className="text-muted-foreground">(params.sql, params.values);</span></p>
+            <p className="pl-4"><span className="text-muted-foreground">await</span> <span className="text-green-600 dark:text-green-400">cache.set</span><span className="text-muted-foreground">(params.key, result, 300);</span></p>
+            <p className="pl-4"><span className="text-purple-600 dark:text-purple-400">return</span> <span className="text-white">result</span><span className="text-muted-foreground">;</span></p>
+            <p><span className="text-muted-foreground">{'};'}</span></p>
           </div>
 
           <h2 className="text-xl font-bold mt-8 mb-3">Best Practices</h2>

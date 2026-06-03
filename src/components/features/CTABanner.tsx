@@ -4,7 +4,7 @@ import { ArrowRight, Code2 } from 'lucide-react';
 
 export default function CTABanner() {
   return (
-    <section className="py-24 section-dark relative overflow-hidden dark">
+    <section className="py-24 section-dark relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.18),transparent_70%)]" />
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)`, backgroundSize: '60px 60px' }} />
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

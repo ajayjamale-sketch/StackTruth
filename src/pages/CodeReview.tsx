@@ -28,11 +28,11 @@ async function login(username: string, password: string) {
 }`;
 
 const reviewResults = [
-  { type: 'error', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20', line: 'L3', title: 'SQL Injection Vulnerability', message: 'String interpolation in SQL query allows malicious input. Use parameterized queries: db.query("SELECT * FROM users WHERE username = $1", [username])' },
-  { type: 'error', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20', line: 'L6', title: 'Insecure Password Comparison', message: 'Never store or compare plain-text passwords. Use bcrypt.compare() or argon2.verify() for secure hash comparison.' },
-  { type: 'warning', icon: AlertTriangle, color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20', line: 'L8', title: 'Weak Token Generation', message: 'Math.random() is not cryptographically secure. Use crypto.randomBytes(32).toString("hex") or JWT with proper signing.' },
-  { type: 'info', icon: Info, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20', line: 'L1-12', title: 'Missing Rate Limiting', message: 'Authentication endpoints should implement rate limiting to prevent brute force attacks. Consider using express-rate-limit.' },
-  { type: 'success', icon: CheckCircle2, color: 'text-green-400', bg: 'bg-green-500/10 border-green-500/20', line: 'L5', title: 'Null Check Present', message: 'Good: checking for user existence before accessing properties. Consider also handling database errors.' },
+  { type: 'error', icon: Shield, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-500/10 border-red-500/20', line: 'L3', title: 'SQL Injection Vulnerability', message: 'String interpolation in SQL query allows malicious input. Use parameterized queries: db.query("SELECT * FROM users WHERE username = $1", [username])' },
+  { type: 'error', icon: Shield, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-500/10 border-red-500/20', line: 'L6', title: 'Insecure Password Comparison', message: 'Never store or compare plain-text passwords. Use bcrypt.compare() or argon2.verify() for secure hash comparison.' },
+  { type: 'warning', icon: AlertTriangle, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/20', line: 'L8', title: 'Weak Token Generation', message: 'Math.random() is not cryptographically secure. Use crypto.randomBytes(32).toString("hex") or JWT with proper signing.' },
+  { type: 'info', icon: Info, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20', line: 'L1-12', title: 'Missing Rate Limiting', message: 'Authentication endpoints should implement rate limiting to prevent brute force attacks. Consider using express-rate-limit.' },
+  { type: 'success', icon: CheckCircle2, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10 border-green-500/20', line: 'L5', title: 'Null Check Present', message: 'Good: checking for user existence before accessing properties. Consider also handling database errors.' },
 ];
 
 export default function CodeReview() {
@@ -55,6 +55,20 @@ export default function CodeReview() {
     setCode(sampleCode);
     setReviewed(false);
     toast.success('Sample code loaded');
+  };
+
+  const exportReport = () => {
+    const reportText = reviewResults.map(r => `[${r.type.toUpperCase()}] ${r.title} (Line ${r.line})\n${r.message}`).join('\n\n');
+    const blob = new Blob([reportText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'code-review-report.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('Report exported successfully!');
   };
 
   return (
@@ -148,7 +162,7 @@ export default function CodeReview() {
                 <div className="px-5 py-4 border-b border-border bg-muted/30">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-semibold">Review Complete</h3>
-                    <Badge className="bg-red-500/10 text-red-400 border-red-500/20">3 Critical Issues</Badge>
+                    <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20">3 Critical Issues</Badge>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {[
@@ -157,7 +171,7 @@ export default function CodeReview() {
                       { label: 'Quality', score: 71, color: 'bg-blue-500' },
                     ].map(m => (
                       <div key={m.label} className="text-center">
-                        <div className={`text-2xl font-bold ${m.score < 50 ? 'text-red-400' : m.score < 75 ? 'text-yellow-400' : 'text-green-400'}`}>{m.score}</div>
+                        <div className={`text-2xl font-bold ${m.score < 50 ? 'text-red-600 dark:text-red-400' : m.score < 75 ? 'text-yellow-600 dark:text-yellow-400' : 'text-green-600 dark:text-green-400'}`}>{m.score}</div>
                         <div className="text-xs text-muted-foreground mb-1">{m.label}</div>
                         <div className="h-1 bg-muted rounded-full">
                           <div className={`h-full ${m.color} rounded-full`} style={{ width: `${m.score}%` }} />
@@ -192,7 +206,7 @@ export default function CodeReview() {
 
                 <div className="px-5 py-3 border-t border-border bg-muted/20 flex justify-between items-center">
                   <span className="text-xs text-muted-foreground">Analyzed in 2.3s · 5 issues found</span>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => toast.success('Report exported!')}>Export Report</Button>
+                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={exportReport}>Export Report</Button>
                 </div>
               </div>
             )}

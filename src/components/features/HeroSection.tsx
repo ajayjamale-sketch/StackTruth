@@ -17,7 +17,7 @@ export default function HeroSection() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden section-hero dark">
+    <section className="relative min-h-screen flex items-center overflow-hidden section-hero">
       {/* Background */}
       <div className="absolute inset-0">
         <img src={heroBg} alt="Hero" className="w-full h-full object-cover opacity-10 dark:opacity-20" />
@@ -33,7 +33,7 @@ export default function HeroSection() {
           {/* Left */}
           <div className="animate-fade-in">
             <div className="flex items-center gap-2 mb-6">
-              <Badge className="bg-green-500/20 text-green-300 border border-green-500/30 px-3 py-1">
+              <Badge className="bg-green-500/20 text-green-600 dark:text-green-300 border border-green-500/30 px-3 py-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block mr-1.5 animate-pulse" />
                 180K+ developers trust StackTruth
               </Badge>
@@ -47,12 +47,12 @@ export default function HeroSection() {
               Validated.
             </h1>
 
-            <p className="text-lg text-slate-200 leading-relaxed mb-8 max-w-lg">
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-lg">
               Ask technical questions, get AI-powered code reviews, collaborate with expert engineers, and grow your reputation in the world's most rigorous developer community.
             </p>
 
             <div className="flex flex-wrap gap-3 mb-10">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 btn-glow h-12 px-6" onClick={() => navigate('/register')}>
+              <Button size="lg" className="bg-primary text-white hover:bg-primary/90 btn-glow h-12 px-6" onClick={() => navigate('/register')}>
                 Join Community Free <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               <Button size="lg" variant="outline" className="border-surface-10 text-foreground hover:bg-surface-8 hover:border-surface-10 h-12 px-6" onClick={() => navigate('/questions')}>
@@ -65,7 +65,7 @@ export default function HeroSection() {
               {stats.map(stat => (
                 <div key={stat.label}>
                   <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                  <div className="text-xs text-slate-300">{stat.label}</div>
+                  <div className="text-xs text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -82,24 +82,24 @@ export default function HeroSection() {
                 <div className="flex-1 flex items-center justify-center">
                   <span className="text-muted-foreground/40 text-xs font-mono">ai-review.ts</span>
                 </div>
-                <Badge className="text-[10px] bg-green-500/20 text-green-400 border-green-500/30">AI Reviewing...</Badge>
+                <Badge className="text-[10px] bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30">AI Reviewing...</Badge>
               </div>
 
               {/* Code */}
               <div className="p-5 font-mono text-xs leading-relaxed">
                 <div className="space-y-1">
                   <p><span className="text-slate-500">// PostgreSQL concurrent transaction handler</span></p>
-                  <p><span className="text-blue-400">async function</span> <span className="text-green-400">handleTransaction</span><span className="text-white/70">(</span></p>
-                  <p className="pl-4"><span className="text-yellow-400">db</span><span className="text-white/50">: Pool,</span></p>
-                  <p className="pl-4"><span className="text-yellow-400">fn</span><span className="text-white/50">: TransactionFn</span></p>
-                  <p><span className="text-white/70">) {`{`}</span></p>
-                  <p className="pl-4"><span className="text-blue-400">const</span> <span className="text-white/80">client</span> <span className="text-white/50">= await</span> <span className="text-white/80">db</span><span className="text-white/50">.</span><span className="text-green-400">connect</span><span className="text-white/50">();</span></p>
-                  <p className="pl-4"><span className="text-purple-400">try</span> <span className="text-white/70">{`{`}</span></p>
-                  <p className="pl-8"><span className="text-white/80">await client</span><span className="text-white/50">.</span><span className="text-green-400">query</span><span className="text-white/50">('BEGIN');</span></p>
-                  <p className="pl-8"><span className="text-blue-400">const</span> <span className="text-white/80">result</span> <span className="text-white/50">= await</span> <span className="text-green-400">fn</span><span className="text-white/50">(client);</span></p>
-                  <p className="pl-8"><span className="text-white/80">await client</span><span className="text-white/50">.</span><span className="text-green-400">query</span><span className="text-white/50">('COMMIT');</span></p>
-                  <p className="pl-8"><span className="text-purple-400">return</span> <span className="text-white/80">result</span><span className="text-white/50">;</span></p>
-                  <p className="pl-4"><span className="text-white/70">{`}`}</span></p>
+                  <p><span className="text-blue-600 dark:text-blue-400">async function</span> <span className="text-green-600 dark:text-green-400">handleTransaction</span><span className="text-foreground">(</span></p>
+                  <p className="pl-4"><span className="text-yellow-600 dark:text-yellow-400">db</span><span className="text-muted-foreground">: Pool,</span></p>
+                  <p className="pl-4"><span className="text-yellow-600 dark:text-yellow-400">fn</span><span className="text-muted-foreground">: TransactionFn</span></p>
+                  <p><span className="text-foreground">) {`{`}</span></p>
+                  <p className="pl-4"><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-foreground">client</span> <span className="text-muted-foreground">= await</span> <span className="text-foreground">db</span><span className="text-muted-foreground">.</span><span className="text-green-600 dark:text-green-400">connect</span><span className="text-muted-foreground">();</span></p>
+                  <p className="pl-4"><span className="text-purple-600 dark:text-purple-400">try</span> <span className="text-foreground">{`{`}</span></p>
+                  <p className="pl-8"><span className="text-foreground">await client</span><span className="text-muted-foreground">.</span><span className="text-green-600 dark:text-green-400">query</span><span className="text-muted-foreground">('BEGIN');</span></p>
+                  <p className="pl-8"><span className="text-blue-600 dark:text-blue-400">const</span> <span className="text-foreground">result</span> <span className="text-muted-foreground">= await</span> <span className="text-green-600 dark:text-green-400">fn</span><span className="text-muted-foreground">(client);</span></p>
+                  <p className="pl-8"><span className="text-foreground">await client</span><span className="text-muted-foreground">.</span><span className="text-green-600 dark:text-green-400">query</span><span className="text-muted-foreground">('COMMIT');</span></p>
+                  <p className="pl-8"><span className="text-purple-600 dark:text-purple-400">return</span> <span className="text-foreground">result</span><span className="text-muted-foreground">;</span></p>
+                  <p className="pl-4"><span className="text-foreground">{`}`}</span></p>
                 </div>
               </div>
 
@@ -110,11 +110,11 @@ export default function HeroSection() {
                     <Zap className="w-3.5 h-3.5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-white/90 text-xs font-medium mb-1">AI Review Complete</p>
-                    <p className="text-white/50 text-[11px] leading-relaxed">✅ Transaction isolation looks good. Consider adding <span className="text-yellow-400">SERIALIZABLE</span> isolation level for concurrent writes. Missing error release for client pool.</p>
+                    <p className="text-foreground text-xs font-medium mb-1">AI Review Complete</p>
+                    <p className="text-muted-foreground text-[11px] leading-relaxed">✅ Transaction isolation looks good. Consider adding <span className="text-yellow-600 dark:text-yellow-400">SERIALIZABLE</span> isolation level for concurrent writes. Missing error release for client pool.</p>
                     <div className="flex items-center gap-3 mt-2">
-                      <span className="text-[10px] text-green-400 font-semibold">Score: 87/100</span>
-                      <span className="text-[10px] text-white/30">2 suggestions</span>
+                      <span className="text-[10px] text-green-600 dark:text-green-400 font-semibold">Score: 87/100</span>
+                      <span className="text-[10px] text-muted-foreground">2 suggestions</span>
                     </div>
                   </div>
                 </div>

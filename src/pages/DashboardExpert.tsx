@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -42,52 +42,20 @@ export default function DashboardExpert() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('reviews');
 
+  const expertUser = {
+    name: 'Priya Nair',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=40&h=40&fit=crop&crop=face',
+    reputation: 18420,
+    role: 'Verified Expert'
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+    <DashboardLayout user={expertUser} navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab}>
       <ScrollToTop />
-
-      <div className="pt-16 flex">
-        <aside className="w-60 hidden lg:flex flex-col bg-card border-r border-border min-h-[calc(100vh-64px)] flex-shrink-0">
-          <div className="p-4 border-b border-border">
-            <div className="flex items-center gap-3">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=40&h=40&fit=crop&crop=face" alt="Expert" className="w-10 h-10 rounded-full object-cover ring-2 ring-yellow-400/40" />
-              <div>
-                <p className="font-semibold text-sm">Priya Nair</p>
-                <div className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-yellow-400" />
-                  <span className="text-xs text-yellow-400 font-medium">Verified Expert</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <nav className="flex-1 p-3 space-y-1">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${activeTab === item.id ? 'bg-yellow-500/10 text-yellow-400' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && <Badge className="text-[10px] h-4 px-1.5 bg-yellow-500 text-white">{item.badge}</Badge>}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-3 border-t border-border space-y-1">
-            <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-              <Settings className="w-4 h-4" /> Settings
-            </button>
-            <button onClick={() => navigate('/login')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
-              <LogOut className="w-4 h-4" /> Sign Out
-            </button>
-          </div>
-        </aside>
-
-        <main className="flex-1 min-w-0 p-5 lg:p-6">
           {/* Expert Stats */}
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h1 className="text-xl font-bold flex items-center gap-2"><Star className="w-5 h-5 text-yellow-400" />Expert Dashboard</h1>
+              <h1 className="text-xl font-bold flex items-center gap-2"><Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />Expert Dashboard</h1>
               <p className="text-muted-foreground text-sm mt-0.5">8 review requests · 12 questions in queue</p>
             </div>
             <div className="flex gap-2">
@@ -98,10 +66,10 @@ export default function DashboardExpert() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             {[
-              { label: 'Reviews Done', value: '341', sub: '+8 today', color: 'text-yellow-400' },
-              { label: 'Answers Given', value: '842', sub: '+22 this week', color: 'text-blue-400' },
+              { label: 'Reviews Done', value: '341', sub: '+8 today', color: 'text-yellow-600 dark:text-yellow-400' },
+              { label: 'Answers Given', value: '842', sub: '+22 this week', color: 'text-blue-600 dark:text-blue-400' },
               { label: 'Reputation', value: '18,420', sub: 'Expert level', color: 'text-primary' },
-              { label: 'Mentees', value: '12', sub: 'Active this month', color: 'text-green-400' },
+              { label: 'Mentees', value: '12', sub: 'Active this month', color: 'text-green-600 dark:text-green-400' },
             ].map((s, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4">
                 <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
@@ -129,7 +97,7 @@ export default function DashboardExpert() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <Badge className={`text-xs ${req.priority === 'high' ? 'bg-red-500/10 text-red-400 border-red-500/20' : req.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-muted text-muted-foreground'}`}>
+                      <Badge className={`text-xs ${req.priority === 'high' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' : req.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' : 'bg-muted text-muted-foreground'}`}>
                         {req.priority}
                       </Badge>
                       <Button size="sm" className="h-7 text-xs bg-yellow-500 hover:bg-yellow-600 text-white" onClick={() => navigate('/code-review')}>
@@ -238,15 +206,13 @@ export default function DashboardExpert() {
                 ].map((s, i) => (
                   <div key={i} className="bg-card border border-border rounded-xl p-4">
                     <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
-                    <p className="text-2xl font-bold text-yellow-400">{s.value}</p>
+                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{s.value}</p>
                     <p className="text-xs text-muted-foreground mt-1">{s.detail}</p>
                   </div>
                 ))}
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

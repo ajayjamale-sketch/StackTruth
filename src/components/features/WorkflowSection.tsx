@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Search, Zap, FileText, Tag, Star, TrendingUp } from 'lucide-react';
 
 const workflows = [
-  { step: '01', title: 'Ask Your Question', desc: 'Write your question with code snippets, tags, and markdown formatting. The richer your question, the better the answers.', icon: Zap, color: 'text-blue-400' },
-  { step: '02', title: 'AI Pre-Analysis', desc: 'Our AI engine analyzes your question for clarity, searches for duplicate solutions, and suggests relevant knowledge base articles.', icon: Search, color: 'text-purple-400' },
-  { step: '03', title: 'Expert Review & Answers', desc: 'Verified experts and community members provide detailed, validated answers with code examples and explanations.', icon: Star, color: 'text-yellow-400' },
-  { step: '04', title: 'Knowledge Validated', desc: 'Accepted answers are peer-reviewed, scored for quality, and added to the searchable knowledge base for future developers.', icon: FileText, color: 'text-green-400' },
+  { step: '01', title: 'Ask Your Question', desc: 'Write your question with code snippets, tags, and markdown formatting. The richer your question, the better the answers.', icon: Zap, color: 'text-blue-600 dark:text-blue-400' },
+  { step: '02', title: 'AI Pre-Analysis', desc: 'Our AI engine analyzes your question for clarity, searches for duplicate solutions, and suggests relevant knowledge base articles.', icon: Search, color: 'text-purple-600 dark:text-purple-400' },
+  { step: '03', title: 'Expert Review & Answers', desc: 'Verified experts and community members provide detailed, validated answers with code examples and explanations.', icon: Star, color: 'text-yellow-600 dark:text-yellow-400' },
+  { step: '04', title: 'Knowledge Validated', desc: 'Accepted answers are peer-reviewed, scored for quality, and added to the searchable knowledge base for future developers.', icon: FileText, color: 'text-green-600 dark:text-green-400' },
 ];
 
 export default function WorkflowSection() {

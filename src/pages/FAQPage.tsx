@@ -29,12 +29,12 @@ export default function FAQPage() {
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 section-dark relative overflow-hidden dark">
+      <section className="pt-32 pb-16 section-dark relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.15),transparent_70%)]" />
         <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">FAQ</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Frequently Asked Questions</h1>
-          <p className="text-xl text-slate-200/80">Everything you need to know about StackTruth</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">FAQ</Badge>
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">Frequently Asked Questions</h1>
+          <p className="text-xl text-muted-foreground">Everything you need to know about StackTruth</p>
         </div>
       </section>
 

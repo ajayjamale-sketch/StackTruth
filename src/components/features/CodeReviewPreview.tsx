@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Zap, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 const reviewItems = [
-  { type: 'error', icon: AlertTriangle, color: 'text-red-400', bg: 'bg-red-500/10', line: 'L14', message: 'Missing transaction rollback on exception — can cause data corruption under load' },
-  { type: 'warning', icon: Zap, color: 'text-yellow-400', bg: 'bg-yellow-500/10', line: 'L22', message: 'N+1 query detected. Consider using JOIN or DataLoader for batch resolution' },
-  { type: 'success', icon: CheckCircle2, color: 'text-green-400', bg: 'bg-green-500/10', line: 'L8', message: 'Good use of parameterized queries. SQL injection protection confirmed' },
-  { type: 'info', icon: Shield, color: 'text-blue-400', bg: 'bg-blue-500/10', line: 'L31', message: 'Consider adding connection pool timeout for high-traffic environments' },
+  { type: 'error', icon: AlertTriangle, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-500/10', line: 'L14', message: 'Missing transaction rollback on exception — can cause data corruption under load' },
+  { type: 'warning', icon: Zap, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/10', line: 'L22', message: 'N+1 query detected. Consider using JOIN or DataLoader for batch resolution' },
+  { type: 'success', icon: CheckCircle2, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10', line: 'L8', message: 'Good use of parameterized queries. SQL injection protection confirmed' },
+  { type: 'info', icon: Shield, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10', line: 'L31', message: 'Consider adding connection pool timeout for high-traffic environments' },
 ];
 
 export default function CodeReviewPreview() {

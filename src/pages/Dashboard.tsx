@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -29,10 +29,10 @@ const navItems = [
 ];
 
 const quickActions = [
-  { label: 'Ask Question', href: '/questions/ask', icon: MessageSquare, color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
-  { label: 'Code Review', href: '/code-review', icon: GitBranch, color: 'bg-green-500/10 text-green-400 border-green-500/20' },
-  { label: 'AI Assistant', href: '/ai-assistant', icon: Bot, color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
-  { label: 'Analytics', href: '/analytics', icon: BarChart3, color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+  { label: 'Ask Question', href: '/questions/ask', icon: MessageSquare, color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' },
+  { label: 'Code Review', href: '/code-review', icon: GitBranch, color: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' },
+  { label: 'AI Assistant', href: '/ai-assistant', icon: Bot, color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' },
+  { label: 'Analytics', href: '/analytics', icon: BarChart3, color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20' },
 ];
 
 const notifications = [
@@ -44,73 +44,22 @@ const notifications = [
 
 export default function Dashboard() {
   useScrollToTop();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || 'overview');
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const user = mockUser;
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+    <DashboardLayout user={user} navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab}>
       <ScrollToTop />
-
-      <div className="pt-16 flex">
-        {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'w-60' : 'w-16'} hidden lg:flex flex-col bg-card border-r border-border min-h-[calc(100vh-64px)] flex-shrink-0 transition-all duration-300`}>
-          {/* Profile */}
-          {sidebarOpen && (
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center gap-3">
-                <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20 flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate">{user.name}</p>
-                  <div className="flex items-center gap-1.5">
-                    <Award className="w-3 h-3 text-yellow-400" />
-                    <span className="text-xs text-primary font-medium">{user.reputation.toLocaleString()} rep</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <nav className="flex-1 p-3 space-y-1">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    activeTab === item.id ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  {sidebarOpen && (
-                    <>
-                      <span className="flex-1 text-left">{item.label}</span>
-                      {item.badge && <Badge className="text-[10px] h-4 px-1.5 bg-primary text-white">{item.badge}</Badge>}
-                    </>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-
-          {sidebarOpen && (
-            <div className="p-3 border-t border-border space-y-1">
-              <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                <Settings className="w-4 h-4" /> Settings
-              </button>
-              <button onClick={() => navigate('/login')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
-                <LogOut className="w-4 h-4" /> Sign Out
-              </button>
-            </div>
-          )}
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 min-w-0 p-5 lg:p-6">
           {activeTab === 'overview' && (
             <div className="space-y-5 max-w-5xl">
               {/* Welcome */}
@@ -128,9 +77,9 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
                   { label: 'Reputation', value: user.reputation.toLocaleString(), sub: '+240 this month', color: 'text-primary' },
-                  { label: 'Questions', value: user.stats.questions, sub: '47 total', color: 'text-blue-400' },
-                  { label: 'Answers', value: user.stats.answers, sub: '183 total', color: 'text-green-400' },
-                  { label: 'Code Reviews', value: user.stats.reviews, sub: '92 completed', color: 'text-purple-400' },
+                  { label: 'Questions', value: user.stats.questions, sub: '47 total', color: 'text-blue-600 dark:text-blue-400' },
+                  { label: 'Answers', value: user.stats.answers, sub: '183 total', color: 'text-green-600 dark:text-green-400' },
+                  { label: 'Code Reviews', value: user.stats.reviews, sub: '92 completed', color: 'text-purple-600 dark:text-purple-400' },
                 ].map((stat, i) => (
                   <div key={i} className="bg-card border border-border rounded-xl p-4">
                     <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
@@ -277,10 +226,10 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <div className={`text-lg font-bold ${review.score >= 85 ? 'text-accent' : review.score >= 70 ? 'text-primary' : 'text-yellow-400'}`}>
+                        <div className={`text-lg font-bold ${review.score >= 85 ? 'text-accent' : review.score >= 70 ? 'text-primary' : 'text-yellow-600 dark:text-yellow-400'}`}>
                           {review.score}/100
                         </div>
-                        <Badge className={`text-xs ${review.status === 'Reviewed' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'}`}>
+                        <Badge className={`text-xs ${review.status === 'Reviewed' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20'}`}>
                           {review.status}
                         </Badge>
                       </div>
@@ -341,7 +290,7 @@ export default function Dashboard() {
                 {mockBlogs.slice(0, 2).map(b => (
                   <Link key={b.id} to={`/blog/${b.id}`} className="block bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all">
                     <div className="flex items-center gap-2 mb-1">
-                      <BarChart3 className="w-3.5 h-3.5 text-green-400" />
+                      <BarChart3 className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                       <Badge variant="secondary" className="text-xs">Article</Badge>
                     </div>
                     <p className="font-medium text-sm">{b.title}</p>
@@ -372,8 +321,6 @@ export default function Dashboard() {
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

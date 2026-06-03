@@ -33,9 +33,9 @@ export default function Leaderboard() {
   );
 
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Trophy className="w-5 h-5 text-yellow-400" />;
+    if (rank === 1) return <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
     if (rank === 2) return <Medal className="w-5 h-5 text-slate-400" />;
-    if (rank === 3) return <Award className="w-5 h-5 text-orange-400" />;
+    if (rank === 3) return <Award className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
     return <span className="text-sm font-bold text-muted-foreground">#{rank}</span>;
   };
 
@@ -45,9 +45,9 @@ export default function Leaderboard() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge className="mb-3 bg-primary/20 text-blue-300 border border-primary/30">Community</Badge>
+          <Badge className="mb-3 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Community</Badge>
           <h1 className="text-3xl font-bold text-foreground mb-3">Developer Leaderboard</h1>
           <p className="text-muted-foreground">Rankings based on answer quality, code reviews, and community contributions</p>
 

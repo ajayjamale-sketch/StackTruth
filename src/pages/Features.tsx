@@ -11,32 +11,32 @@ const features = [
   {
     icon: MessageSquare, title: 'Technical Q&A', href: '/questions',
     features: ['Rich markdown editor', 'Code syntax highlighting', 'Answer voting & acceptance', 'Tag-based discovery', 'Expert verification badges'],
-    color: 'text-blue-400', bg: 'bg-blue-500/10',
+    color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10',
   },
   {
     icon: GitBranch, title: 'Code Review Engine', href: '/code-review',
     features: ['AI security analysis', 'Performance scoring', 'Line-by-line annotations', 'Best practice suggestions', '40+ language support'],
-    color: 'text-green-400', bg: 'bg-green-500/10',
+    color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10',
   },
   {
     icon: Bot, title: 'AI Developer Assistant', href: '/ai-assistant',
     features: ['GPT-4o powered', 'Stack-aware responses', 'Bug detection & fixes', 'Architecture advice', 'Code optimization'],
-    color: 'text-purple-400', bg: 'bg-purple-500/10',
+    color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-500/10',
   },
   {
     icon: BookOpen, title: 'Knowledge Base', href: '/knowledge-base',
     features: ['2.4M+ curated resources', 'API documentation', 'Video tutorials', 'Learning paths', 'Contributor guides'],
-    color: 'text-yellow-400', bg: 'bg-yellow-500/10',
+    color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/10',
   },
   {
     icon: Users, title: 'Team Workspaces', href: '/teams',
     features: ['Private team channels', 'Shared code snippets', 'Collaborative docs', 'Task management', 'Access controls'],
-    color: 'text-pink-400', bg: 'bg-pink-500/10',
+    color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-500/10',
   },
   {
     icon: Monitor, title: 'Live Coding', href: '/live-coding',
     features: ['Real-time collaboration', 'Code execution sandbox', 'Interview mode', 'Pair programming', 'Session recording'],
-    color: 'text-cyan-400', bg: 'bg-cyan-500/10',
+    color: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-500/10',
   },
 ];
 
@@ -48,12 +48,12 @@ export default function Features() {
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 section-dark relative overflow-hidden dark">
+      <section className="pt-32 pb-20 section-dark relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)]" />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Features</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-5">Everything developers need<br /><span className="text-gradient">to build better</span></h1>
-          <p className="text-xl text-slate-200/80 max-w-2xl mx-auto mb-8">A complete developer ecosystem — from asking questions to shipping production code, together.</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Features</Badge>
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-5">Everything developers need<br /><span className="text-gradient">to build better</span></h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">A complete developer ecosystem — from asking questions to shipping production code, together.</p>
           <Button size="lg" className="bg-primary hover:bg-primary/90 btn-glow" asChild>
             <Link to="/register">Start for Free <ArrowRight className="w-4 h-4 ml-2" /></Link>
           </Button>

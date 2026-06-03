@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -27,10 +27,10 @@ const users = [
   { name: 'Alex Chen', email: 'alex@example.com', rep: 4820, role: 'developer', status: 'active', joined: 'Jun 2023', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face' },
 ];
 
-const reports = [
-  { type: 'Spam', target: 'Low quality answer on Q#4821', reporter: 'priya_n', time: '2h ago', status: 'Pending' },
-  { type: 'Abuse', target: 'Offensive comment by @baduser', reporter: 'marcus_r', time: '4h ago', status: 'Pending' },
-  { type: 'Plagiarism', target: 'Copied answer on Q#3901', reporter: 'sarah_c', time: '1d ago', status: 'Reviewed' },
+const initialReports = [
+  { id: '1', type: 'Spam', target: 'Low quality answer on Q#4821', reporter: 'priya_n', time: '2h ago', status: 'Pending' },
+  { id: '2', type: 'Abuse', target: 'Offensive comment by @baduser', reporter: 'marcus_r', time: '4h ago', status: 'Pending' },
+  { id: '3', type: 'Plagiarism', target: 'Copied answer on Q#3901', reporter: 'sarah_c', time: '1d ago', status: 'Reviewed' },
 ];
 
 export default function DashboardAdmin() {
@@ -40,50 +40,36 @@ export default function DashboardAdmin() {
   const [userSearch, setUserSearch] = useState('');
   const [banned, setBanned] = useState<Set<string>>(new Set());
 
+  const [reports, setReports] = useState(initialReports);
+
   const handleBan = (name: string) => {
     setBanned(prev => new Set([...prev, name]));
     toast.success(`${name} has been suspended`);
   };
 
+  const handleApprove = (id: string) => {
+    setReports(prev => prev.map(r => r.id === id ? { ...r, status: 'Reviewed' } : r));
+    toast.success('Content approved and kept active');
+  };
+
+  const handleRemove = (id: string) => {
+    setReports(prev => prev.filter(r => r.id !== id));
+    toast.success('Content removed successfully');
+  };
+
+  const adminUser = {
+    name: 'Admin Panel',
+    avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?w=32&h=32&fit=crop&crop=face',
+    reputation: 0,
+    role: 'Superadmin'
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+    <DashboardLayout user={adminUser} navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab}>
       <ScrollToTop />
-
-      <div className="pt-16 flex">
-        <aside className="w-60 hidden lg:flex flex-col bg-card border-r border-border min-h-[calc(100vh-64px)] flex-shrink-0">
-          <div className="p-4 border-b border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold flex-shrink-0">A</div>
-              <div>
-                <p className="font-semibold text-sm">Admin Panel</p>
-                <Badge className="text-[10px] bg-red-500/10 text-red-400 border-red-500/20">Superadmin</Badge>
-              </div>
-            </div>
-          </div>
-          <nav className="flex-1 p-3 space-y-1">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${activeTab === item.id ? 'bg-red-500/10 text-red-400' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && <Badge className="text-[10px] h-4 px-1.5 bg-red-500 text-white">{item.badge}</Badge>}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-3 border-t border-border">
-            <button onClick={() => navigate('/login')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
-              <LogOut className="w-4 h-4" /> Sign Out
-            </button>
-          </div>
-        </aside>
-
-        <main className="flex-1 min-w-0 p-5 lg:p-6">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h1 className="text-xl font-bold flex items-center gap-2"><Shield className="w-5 h-5 text-red-400" />Admin Dashboard</h1>
+              <h1 className="text-xl font-bold flex items-center gap-2"><Shield className="w-5 h-5 text-red-600 dark:text-red-400" />Admin Dashboard</h1>
               <p className="text-muted-foreground text-sm mt-0.5">25 flags pending · Platform health: 99.9%</p>
             </div>
           </div>
@@ -91,10 +77,10 @@ export default function DashboardAdmin() {
           {/* Platform Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             {[
-              { label: 'Total Users', value: '180,243', sub: '+1,240 this week', color: 'text-blue-400' },
-              { label: 'Active Today', value: '24,812', sub: '13.8% DAU', color: 'text-green-400' },
-              { label: 'Questions Today', value: '1,847', sub: '+12% vs avg', color: 'text-purple-400' },
-              { label: 'Flags Pending', value: '25', sub: '8 critical', color: 'text-red-400' },
+              { label: 'Total Users', value: '180,243', sub: '+1,240 this week', color: 'text-blue-600 dark:text-blue-400' },
+              { label: 'Active Today', value: '24,812', sub: '13.8% DAU', color: 'text-green-600 dark:text-green-400' },
+              { label: 'Questions Today', value: '1,847', sub: '+12% vs avg', color: 'text-purple-600 dark:text-purple-400' },
+              { label: 'Flags Pending', value: '25', sub: '8 critical', color: 'text-red-600 dark:text-red-400' },
             ].map((s, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4">
                 <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
@@ -140,9 +126,9 @@ export default function DashboardAdmin() {
                       </div>
                       <div className="col-span-2">
                         <Badge className={`text-xs ${
-                          banned.has(u.name) ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                          banned.has(u.name) ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' :
                           u.status === 'active' ? 'bg-accent/10 text-accent border-accent/20' :
-                          'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                          'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20'
                         }`}>
                           {banned.has(u.name) ? 'Banned' : u.status}
                         </Badge>
@@ -166,14 +152,14 @@ export default function DashboardAdmin() {
 
           {activeTab === 'reports' && (
             <div className="max-w-3xl">
-              <h2 className="font-semibold mb-4">Reported Content ({reports.length} pending)</h2>
+              <h2 className="font-semibold mb-4">Reported Content ({reports.filter(r => r.status === 'Pending').length} pending)</h2>
               <div className="space-y-3">
-                {reports.map((r, i) => (
-                  <div key={i} className={`bg-card border rounded-xl p-4 ${r.status === 'Pending' ? 'border-yellow-500/30' : 'border-border'}`}>
+                {reports.map((r) => (
+                  <div key={r.id} className={`bg-card border rounded-xl p-4 ${r.status === 'Pending' ? 'border-yellow-500/30' : 'border-border'}`}>
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <Badge className={`text-xs ${r.type === 'Spam' ? 'bg-yellow-500/10 text-yellow-400' : r.type === 'Abuse' ? 'bg-red-500/10 text-red-400' : 'bg-orange-500/10 text-orange-400'} border border-current/20`}>
+                          <Badge className={`text-xs ${r.type === 'Spam' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400' : r.type === 'Abuse' ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'bg-orange-500/10 text-orange-600 dark:text-orange-400'} border border-current/20`}>
                             {r.type}
                           </Badge>
                           <span className="text-xs text-muted-foreground">by @{r.reporter} · {r.time}</span>
@@ -181,11 +167,11 @@ export default function DashboardAdmin() {
                         <p className="text-sm">{r.target}</p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <Badge className={`text-xs ${r.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-muted text-muted-foreground'}`}>{r.status}</Badge>
+                        <Badge className={`text-xs ${r.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' : 'bg-muted text-muted-foreground'}`}>{r.status}</Badge>
                         {r.status === 'Pending' && (
                           <>
-                            <Button size="sm" className="h-7 text-xs bg-accent hover:bg-accent/90" onClick={() => toast.success('Content approved')}>Approve</Button>
-                            <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => toast.success('Content removed')}>Remove</Button>
+                            <Button size="sm" className="h-7 text-xs bg-accent hover:bg-accent/90" onClick={() => handleApprove(r.id)}>Approve</Button>
+                            <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => handleRemove(r.id)}>Remove</Button>
                           </>
                         )}
                       </div>
@@ -244,8 +230,6 @@ export default function DashboardAdmin() {
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

@@ -188,7 +188,7 @@ export default function Questions() {
             </div>
 
             <div className="bg-card border border-border rounded-xl p-4">
-              <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-400" />Top Contributors</h3>
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><Star className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />Top Contributors</h3>
               <div className="space-y-2">
                 {[
                   { name: 'Priya N.', rep: 18420, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=28&h=28&fit=crop&crop=face' },

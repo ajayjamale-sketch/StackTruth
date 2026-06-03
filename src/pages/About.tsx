@@ -17,10 +17,10 @@ const team = [
 ];
 
 const values = [
-  { icon: Target, title: 'Quality Over Quantity', desc: 'We validate every answer for technical accuracy.', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-  { icon: Eye, title: 'Radical Transparency', desc: 'Open reputation systems and honest moderation.', color: 'text-green-400', bg: 'bg-green-500/10' },
-  { icon: Heart, title: 'Developer First', desc: 'Every feature is designed with the developer in mind.', color: 'text-pink-400', bg: 'bg-pink-500/10' },
-  { icon: Globe, title: 'Inclusive Community', desc: 'Engineers from all backgrounds and skill levels.', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  { icon: Target, title: 'Quality Over Quantity', desc: 'We validate every answer for technical accuracy.', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10' },
+  { icon: Eye, title: 'Radical Transparency', desc: 'Open reputation systems and honest moderation.', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10' },
+  { icon: Heart, title: 'Developer First', desc: 'Every feature is designed with the developer in mind.', color: 'text-pink-600 dark:text-pink-400', bg: 'bg-pink-500/10' },
+  { icon: Globe, title: 'Inclusive Community', desc: 'Engineers from all backgrounds and skill levels.', color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-500/10' },
 ];
 
 export default function About() {
@@ -31,21 +31,21 @@ export default function About() {
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 section-dark relative overflow-hidden dark">
+      <section className="pt-32 pb-20 section-dark relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)]" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <Badge className="mb-5 bg-primary/20 text-blue-300 border border-primary/30">Our Story</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+          <Badge className="mb-5 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Our Story</Badge>
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
             Built by developers,<br /><span className="text-gradient">for developers</span>
           </h1>
-          <p className="text-xl text-slate-200/80 leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-8">
             We started StackTruth because we were tired of outdated answers, inconsistent code reviews, and platforms that didn't truly understand modern engineering.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8">
             {[['2021', 'Founded'], ['180K+', 'Developers'], ['2.4M+', 'Questions solved'], ['40+', 'Countries']].map(([v, l]) => (
               <div key={l} className="text-center">
-                <div className="text-2xl font-bold text-white">{v}</div>
-                <div className="text-sm text-slate-300/70">{l}</div>
+                <div className="text-2xl font-bold text-foreground">{v}</div>
+                <div className="text-sm text-muted-foreground">{l}</div>
               </div>
             ))}
           </div>

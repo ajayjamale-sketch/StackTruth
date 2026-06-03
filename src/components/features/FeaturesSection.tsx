@@ -9,7 +9,7 @@ const features = [
     desc: 'Ask questions with code snippets, markdown support, and syntax highlighting. Get answers from expert engineers.',
     href: '/questions',
     badge: 'Core Feature',
-    color: 'text-blue-400',
+    color: 'text-blue-600 dark:text-blue-400',
     bg: 'bg-blue-500/15',
     border: 'border-blue-500/20',
     hoverBorder: 'hover:border-blue-500/40',
@@ -20,7 +20,7 @@ const features = [
     desc: 'Submit code for AI-powered review. Get security scores, performance notes, and best practice recommendations.',
     href: '/code-review',
     badge: 'AI-Powered',
-    color: 'text-green-400',
+    color: 'text-green-600 dark:text-green-400',
     bg: 'bg-green-500/15',
     border: 'border-green-500/20',
     hoverBorder: 'hover:border-green-500/40',
@@ -31,7 +31,7 @@ const features = [
     desc: 'Context-aware coding assistant that understands your stack. Debug bugs, optimize code, get architecture advice.',
     href: '/ai-assistant',
     badge: 'GPT-4',
-    color: 'text-purple-400',
+    color: 'text-purple-600 dark:text-purple-400',
     bg: 'bg-purple-500/15',
     border: 'border-purple-500/20',
     hoverBorder: 'hover:border-purple-500/40',
@@ -42,7 +42,7 @@ const features = [
     desc: 'Curated tutorials, API documentation, and technical guides organized by language and framework.',
     href: '/knowledge-base',
     badge: '2.4M+ Resources',
-    color: 'text-yellow-400',
+    color: 'text-yellow-600 dark:text-yellow-400',
     bg: 'bg-yellow-500/15',
     border: 'border-yellow-500/20',
     hoverBorder: 'hover:border-yellow-500/40',
@@ -53,7 +53,7 @@ const features = [
     desc: 'Private team environments with shared snippets, docs, task boards, and real-time discussions.',
     href: '/teams',
     badge: 'Pro',
-    color: 'text-pink-400',
+    color: 'text-pink-600 dark:text-pink-400',
     bg: 'bg-pink-500/15',
     border: 'border-pink-500/20',
     hoverBorder: 'hover:border-pink-500/40',
@@ -64,7 +64,7 @@ const features = [
     desc: 'Real-time collaborative coding for pair programming, technical interviews, and execution sandbox.',
     href: '/live-coding',
     badge: 'Real-time',
-    color: 'text-cyan-400',
+    color: 'text-cyan-600 dark:text-cyan-400',
     bg: 'bg-cyan-500/15',
     border: 'border-cyan-500/20',
     hoverBorder: 'hover:border-cyan-500/40',
@@ -73,10 +73,10 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-24 section-dark dark">
+    <section className="py-24 section-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Feature Showcase</Badge>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Feature Showcase</Badge>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Everything a developer team needs
             <br />

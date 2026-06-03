@@ -5,11 +5,11 @@ import { ArrowRight, LayoutDashboard, BarChart3, GitBranch, MessageSquare, Award
 
 export default function DashboardPreview() {
   return (
-    <section className="py-24 section-dark relative overflow-hidden dark">
+    <section className="py-24 section-dark relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.1),transparent_60%)]" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Dashboard Preview</Badge>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Dashboard Preview</Badge>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Your developer command center
           </h2>
@@ -30,7 +30,7 @@ export default function DashboardPreview() {
             </div>
             <div className="flex gap-2">
               {['Overview', 'Questions', 'Reviews', 'AI'].map(t => (
-                <button key={t} className={`text-xs px-2.5 py-1 rounded-lg ${t === 'Overview' ? 'bg-blue-500/20 text-blue-400' : 'text-muted-foreground hover:text-foreground'}`}>{t}</button>
+                <button key={t} className={`text-xs px-2.5 py-1 rounded-lg ${t === 'Overview' ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400' : 'text-muted-foreground hover:text-foreground'}`}>{t}</button>
               ))}
             </div>
           </div>
@@ -47,7 +47,7 @@ export default function DashboardPreview() {
               ].map(item => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs ${item.active ? 'bg-blue-500/20 text-blue-400' : 'text-muted-foreground'}`}>
+                  <div key={item.label} className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs ${item.active ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}`}>
                     <Icon className="w-3.5 h-3.5" />{item.label}
                   </div>
                 );
@@ -58,10 +58,10 @@ export default function DashboardPreview() {
             <div className="flex-1 p-4">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                 {[
-                  { label: 'Reputation', value: '4,820', color: 'text-blue-400' },
-                  { label: 'Questions', value: '47', color: 'text-purple-400' },
-                  { label: 'Answers', value: '183', color: 'text-green-400' },
-                  { label: 'Reviews', value: '92', color: 'text-yellow-400' },
+                  { label: 'Reputation', value: '4,820', color: 'text-blue-600 dark:text-blue-400' },
+                  { label: 'Questions', value: '47', color: 'text-purple-600 dark:text-purple-400' },
+                  { label: 'Answers', value: '183', color: 'text-green-600 dark:text-green-400' },
+                  { label: 'Reviews', value: '92', color: 'text-yellow-600 dark:text-yellow-400' },
                 ].map(s => (
                   <div key={s.label} className="bg-surface-5 border border-surface-10 rounded-xl p-3">
                     <p className="text-muted-foreground/40 text-xs mb-1">{s.label}</p>
@@ -77,7 +77,7 @@ export default function DashboardPreview() {
                   'Memory leak in React useEffect with WebSocket connections',
                 ].map((q, i) => (
                   <div key={i} className="flex items-center gap-2 py-2 border-b border-surface-10 last:border-0">
-                    <div className="w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold flex-shrink-0">{42 - i * 11}</div>
+                    <div className="w-6 h-6 rounded bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold flex-shrink-0">{42 - i * 11}</div>
                     <p className="text-muted-foreground text-xs truncate">{q}</p>
                   </div>
                 ))}

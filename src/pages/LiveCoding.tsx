@@ -8,7 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Monitor, Play, Plus, Users, Clock, Code2, Search, Zap, Video, Lock } from 'lucide-react';
+import { Monitor, Play, Plus, Users, Clock, Code2, Search, Zap, Video, Lock, Loader2, CheckCircle2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const sessions = [
   {
@@ -34,9 +41,9 @@ const sessions = [
 ];
 
 const modes = [
-  { id: 'pair', label: 'Pair Programming', desc: 'Code together in real-time', icon: Users, color: 'text-blue-400' },
-  { id: 'interview', label: 'Interview Mode', desc: 'Technical interview environment', icon: Zap, color: 'text-yellow-400' },
-  { id: 'sandbox', label: 'Execution Sandbox', desc: 'Run code in isolated environment', icon: Play, color: 'text-green-400' },
+  { id: 'pair', label: 'Pair Programming', desc: 'Code together in real-time', icon: Users, color: 'text-blue-600 dark:text-blue-400' },
+  { id: 'interview', label: 'Interview Mode', desc: 'Technical interview environment', icon: Zap, color: 'text-yellow-600 dark:text-yellow-400' },
+  { id: 'sandbox', label: 'Execution Sandbox', desc: 'Run code in isolated environment', icon: Play, color: 'text-green-600 dark:text-green-400' },
 ];
 
 export default function LiveCoding() {
@@ -45,16 +52,27 @@ export default function LiveCoding() {
   const [search, setSearch] = useState('');
   const [activeMode, setActiveMode] = useState('pair');
   const [joining, setJoining] = useState<string | null>(null);
+  const [waitingRoomOpen, setWaitingRoomOpen] = useState(false);
+  const [selectedSessionName, setSelectedSessionName] = useState('');
+  const [inSession, setInSession] = useState(false);
 
-  const handleJoin = async (sessionId: string) => {
+  const handleJoin = async (sessionId: string, title: string) => {
     setJoining(sessionId);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 800));
     setJoining(null);
-    toast.success('Joining live session...');
+    setSelectedSessionName(title);
+    setWaitingRoomOpen(true);
   };
 
   const handleCreate = () => {
-    toast.success('Creating new live coding session...');
+    setSelectedSessionName('New Live Session');
+    setWaitingRoomOpen(true);
+  };
+
+  const enterSession = () => {
+    setWaitingRoomOpen(false);
+    setInSession(true);
+    toast.success(`Joined ${selectedSessionName}!`);
   };
 
   return (
@@ -136,9 +154,9 @@ export default function LiveCoding() {
               <div className="p-4 border-b border-border">
                 <div className="flex items-start justify-between mb-3">
                   <Badge className={`text-xs ${
-                    session.status === 'live' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                    session.status === 'open' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                    'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                    session.status === 'live' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' :
+                    session.status === 'open' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' :
+                    'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
                   }`}>
                     {session.status === 'live' && <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block mr-1 animate-pulse" />}
                     {session.status.toUpperCase()}
@@ -165,7 +183,7 @@ export default function LiveCoding() {
                 <Button
                   className="w-full h-8 text-xs bg-primary hover:bg-primary/90"
                   disabled={session.participants >= session.maxParticipants || joining === session.id}
-                  onClick={() => handleJoin(session.id)}
+                  onClick={() => handleJoin(session.id, session.title)}
                 >
                   {joining === session.id ? 'Joining...' :
                    session.participants >= session.maxParticipants ? 'Session Full' :
@@ -190,6 +208,39 @@ export default function LiveCoding() {
           </button>
         </div>
       </div>
+
+      <Dialog open={waitingRoomOpen} onOpenChange={setWaitingRoomOpen}>
+        <DialogContent className="sm:max-w-md text-center">
+          <DialogHeader>
+            <DialogTitle className="text-center">{selectedSessionName}</DialogTitle>
+            <DialogDescription className="text-center">
+              Waiting for the host to admit you...
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-12 flex flex-col items-center justify-center">
+            <div className="relative mb-6">
+              <div className="w-20 h-20 rounded-full border-4 border-muted flex items-center justify-center">
+                <Video className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center animate-pulse">
+                <Loader2 className="w-3 h-3 text-white animate-spin" />
+              </div>
+            </div>
+            
+            <h3 className="font-semibold text-lg mb-2">Connecting to secure environment</h3>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2 justify-center"><CheckCircle2 className="w-4 h-4 text-green-500" /> Establishing P2P connection</p>
+              <p className="flex items-center gap-2 justify-center"><CheckCircle2 className="w-4 h-4 text-green-500" /> Sandboxing execution environment</p>
+              <p className="flex items-center gap-2 justify-center text-primary animate-pulse"><Loader2 className="w-4 h-4 animate-spin" /> Waiting for host approval</p>
+            </div>
+          </div>
+          
+          <Button className="w-full" onClick={enterSession}>
+            Simulate Entry (Mock)
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

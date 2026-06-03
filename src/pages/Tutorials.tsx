@@ -23,10 +23,10 @@ export default function Tutorials() {
       <Navbar isAuthenticated />
       <ScrollToTop />
 
-      <div className="pt-20 pb-8 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-8 section-dark border-b border-surface-10">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Tutorials</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Learn by Building</h1>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Tutorials</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Learn by Building</h1>
           <p className="text-slate-400 mb-6">Step-by-step tutorials from expert engineers</p>
           <div className="flex flex-wrap justify-center gap-2">
             {['All', 'Beginner', 'Intermediate', 'Advanced', 'React', 'TypeScript', 'Database', 'DevOps'].map(t => (
@@ -44,12 +44,12 @@ export default function Tutorials() {
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="secondary" className="text-xs">{t.category}</Badge>
-                  <Badge className={`text-xs ${t.level === 'Beginner' ? 'bg-green-500/10 text-green-400 border-green-500/20' : t.level === 'Intermediate' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>{t.level}</Badge>
+                  <Badge className={`text-xs ${t.level === 'Beginner' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' : t.level === 'Intermediate' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'}`}>{t.level}</Badge>
                 </div>
                 <h3 className="font-semibold text-sm mb-3 leading-snug">{t.title}</h3>
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{t.duration}</span>
-                  <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />{t.rating}</span>
+                  <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-600 dark:text-yellow-400 fill-yellow-400" />{t.rating}</span>
                 </div>
               </div>
             </div>

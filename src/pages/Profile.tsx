@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
+import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
@@ -33,7 +33,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+      <Navbar isAuthenticated />
       <ScrollToTop />
 
       <div className="pt-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -50,7 +50,7 @@ export default function Profile() {
               <h2 className="text-xl font-bold">{form.name}</h2>
               <p className="text-muted-foreground text-sm">@{mockUser.username}</p>
               <div className="flex items-center justify-center gap-1.5 mt-2">
-                <Award className="w-4 h-4 text-yellow-400" />
+                <Award className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                 <span className="text-sm font-semibold text-primary">{mockUser.reputation.toLocaleString()} reputation</span>
               </div>
               <div className="flex flex-wrap justify-center gap-1.5 mt-3">

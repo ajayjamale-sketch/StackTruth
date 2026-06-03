@@ -9,7 +9,7 @@ const benefits = [
     title: 'Accelerate Your Growth',
     desc: 'Developers who actively participate on StackTruth report 2x faster skill development than those who learn alone.',
     stat: '2x faster growth',
-    color: 'text-blue-400',
+    color: 'text-blue-600 dark:text-blue-400',
     bg: 'bg-blue-500/10',
   },
   {
@@ -17,7 +17,7 @@ const benefits = [
     title: 'Build Real Credibility',
     desc: 'Your StackTruth profile and reputation score is recognized by 500+ hiring companies as a signal of engineering quality.',
     stat: '500+ companies',
-    color: 'text-green-400',
+    color: 'text-green-600 dark:text-green-400',
     bg: 'bg-green-500/10',
   },
   {
@@ -25,7 +25,7 @@ const benefits = [
     title: 'Solve Problems 10x Faster',
     desc: 'Access 2.4M+ validated technical solutions and AI-powered assistance to unblock yourself instantly.',
     stat: '10x faster debug',
-    color: 'text-yellow-400',
+    color: 'text-yellow-600 dark:text-yellow-400',
     bg: 'bg-yellow-500/10',
   },
 ];

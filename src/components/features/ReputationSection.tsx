@@ -10,10 +10,10 @@ const topDevs = [
 ];
 
 const badges = [
-  { name: 'Top Contributor', desc: 'Top 1% of answers', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Trophy },
-  { name: 'Code Reviewer', desc: '100+ code reviews', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20', icon: Star },
-  { name: 'Mentor', desc: 'Guided 50+ devs', color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: Award },
-  { name: 'Early Adopter', desc: 'Joined in 2022', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20', icon: Zap },
+  { name: 'Top Contributor', desc: 'Top 1% of answers', color: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20', icon: Trophy },
+  { name: 'Code Reviewer', desc: '100+ code reviews', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20', icon: Star },
+  { name: 'Mentor', desc: 'Guided 50+ devs', color: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20', icon: Award },
+  { name: 'Early Adopter', desc: 'Joined in 2022', color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20', icon: Zap },
 ];
 
 export default function ReputationSection() {
@@ -35,16 +35,16 @@ export default function ReputationSection() {
           {/* Leaderboard */}
           <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <h3 className="font-semibold flex items-center gap-2"><Trophy className="w-4 h-4 text-yellow-400" /> This Week's Leaderboard</h3>
+              <h3 className="font-semibold flex items-center gap-2"><Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-400" /> This Week's Leaderboard</h3>
               <Link to="/leaderboard" className="text-xs text-primary hover:underline">View all</Link>
             </div>
             <div className="divide-y divide-border">
               {topDevs.map(dev => (
                 <div key={dev.rank} className="flex items-center gap-4 p-4 hover:bg-muted/30 transition-colors">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                    dev.rank === 1 ? 'bg-yellow-500/20 text-yellow-400' :
+                    dev.rank === 1 ? 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400' :
                     dev.rank === 2 ? 'bg-slate-400/20 text-slate-400' :
-                    'bg-orange-500/20 text-orange-400'
+                    'bg-orange-500/20 text-orange-600 dark:text-orange-400'
                   }`}>#{dev.rank}</div>
                   <img src={dev.avatar} alt={dev.name} className="w-10 h-10 rounded-full object-cover" />
                   <div className="flex-1">

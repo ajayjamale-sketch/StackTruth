@@ -42,7 +42,7 @@ function AnimatedNumber({ target, suffix }: { target: number; suffix: string }) 
 
 export default function StatsSection() {
   return (
-    <section className="py-20 section-dark-2 dark">
+    <section className="py-20 section-dark-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">Platform by the numbers</h2>

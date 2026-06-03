@@ -9,14 +9,14 @@ import { Input } from '@/components/ui/input';
 import { BookOpen, Search, ArrowRight, Tag, FileText, Video, Code2, Link } from 'lucide-react';
 
 const categories = [
-  { name: 'Getting Started', count: 42, color: 'bg-blue-500/10 text-blue-400 border-blue-500/20', icon: BookOpen },
-  { name: 'TypeScript', count: 128, color: 'bg-blue-600/10 text-blue-400 border-blue-600/20', icon: Code2 },
-  { name: 'React', count: 94, color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: Code2 },
-  { name: 'Database', count: 87, color: 'bg-green-500/10 text-green-400 border-green-500/20', icon: FileText },
-  { name: 'DevOps', count: 63, color: 'bg-orange-500/10 text-orange-400 border-orange-500/20', icon: Code2 },
-  { name: 'Security', count: 51, color: 'bg-red-500/10 text-red-400 border-red-500/20', icon: FileText },
-  { name: 'Architecture', count: 76, color: 'bg-purple-500/10 text-purple-400 border-purple-500/20', icon: FileText },
-  { name: 'APIs', count: 89, color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: Link },
+  { name: 'Getting Started', count: 42, color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20', icon: BookOpen },
+  { name: 'TypeScript', count: 128, color: 'bg-blue-600/10 text-blue-600 dark:text-blue-400 border-blue-600/20', icon: Code2 },
+  { name: 'React', count: 94, color: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20', icon: Code2 },
+  { name: 'Database', count: 87, color: 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20', icon: FileText },
+  { name: 'DevOps', count: 63, color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20', icon: Code2 },
+  { name: 'Security', count: 51, color: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20', icon: FileText },
+  { name: 'Architecture', count: 76, color: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20', icon: FileText },
+  { name: 'APIs', count: 89, color: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20', icon: Link },
 ];
 
 const articles = [
@@ -44,11 +44,11 @@ export default function KnowledgeBase() {
       <ScrollToTop />
 
       {/* Hero */}
-      <div className="pt-20 pb-10 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-10 section-dark border-b border-surface-10">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Knowledge Base</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Technical Reference & Guides</h1>
-          <p className="text-slate-200/70 mb-6">2.4M+ curated resources for modern software engineers</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Knowledge Base</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Technical Reference & Guides</h1>
+          <p className="text-muted-foreground mb-6">2.4M+ curated resources for modern software engineers</p>
           <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input placeholder="Search tutorials, API docs, guides..." value={search} onChange={e => setSearch(e.target.value)} className="pl-12 h-12 text-base bg-card" />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
+import DashboardLayout from '@/components/layout/DashboardLayout';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
@@ -47,48 +47,19 @@ export default function DashboardRecruiter() {
     c.skills.some(s => s.toLowerCase().includes(search.toLowerCase()))
   );
 
+  const recruiterUser = {
+    name: 'Recruiter Account',
+    avatar: 'https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?w=40&h=40&fit=crop&crop=face',
+    reputation: 0,
+    role: 'Pro Plan'
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+    <DashboardLayout user={recruiterUser} navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab}>
       <ScrollToTop />
-
-      <div className="pt-16 flex">
-        <aside className="w-60 hidden lg:flex flex-col bg-card border-r border-border min-h-[calc(100vh-64px)] flex-shrink-0">
-          <div className="p-4 border-b border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold flex-shrink-0">RD</div>
-              <div>
-                <p className="font-semibold text-sm">Recruiter Account</p>
-                <Badge className="text-[10px] bg-purple-500/10 text-purple-400 border-purple-500/20">Pro Plan</Badge>
-              </div>
-            </div>
-          </div>
-          <nav className="flex-1 p-3 space-y-1">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              return (
-                <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${activeTab === item.id ? 'bg-purple-500/10 text-purple-400' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && <Badge className="text-[10px] h-4 px-1.5 bg-purple-500 text-white">{item.badge}</Badge>}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="p-3 border-t border-border space-y-1">
-            <button onClick={() => navigate('/settings')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-              <Settings className="w-4 h-4" /> Settings
-            </button>
-            <button onClick={() => navigate('/login')} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-destructive hover:bg-destructive/10 transition-colors">
-              <LogOut className="w-4 h-4" /> Sign Out
-            </button>
-          </div>
-        </aside>
-
-        <main className="flex-1 min-w-0 p-5 lg:p-6">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-5 h-5 text-purple-400" />Recruiter Dashboard</h1>
+              <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-5 h-5 text-purple-600 dark:text-purple-400" />Recruiter Dashboard</h1>
               <p className="text-muted-foreground text-sm mt-0.5">3 active job postings · 18 saved developers</p>
             </div>
             <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => navigate('/jobs')}>
@@ -98,10 +69,10 @@ export default function DashboardRecruiter() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             {[
-              { label: 'Active Jobs', value: '3', sub: '51 total applicants', color: 'text-purple-400' },
-              { label: 'Talent Pool', value: '18', sub: 'Saved developers', color: 'text-blue-400' },
-              { label: 'Interviews', value: '3', sub: 'Scheduled this week', color: 'text-yellow-400' },
-              { label: 'Avg Match Score', value: '91%', sub: 'Skills match', color: 'text-green-400' },
+              { label: 'Active Jobs', value: '3', sub: '51 total applicants', color: 'text-purple-600 dark:text-purple-400' },
+              { label: 'Talent Pool', value: '18', sub: 'Saved developers', color: 'text-blue-600 dark:text-blue-400' },
+              { label: 'Interviews', value: '3', sub: 'Scheduled this week', color: 'text-yellow-600 dark:text-yellow-400' },
+              { label: 'Avg Match Score', value: '91%', sub: 'Skills match', color: 'text-green-600 dark:text-green-400' },
             ].map((s, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4">
                 <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
@@ -228,15 +199,13 @@ export default function DashboardRecruiter() {
                 ].map((s, i) => (
                   <div key={i} className="bg-card border border-border rounded-xl p-4">
                     <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
-                    <p className="text-2xl font-bold text-purple-400">{s.value}</p>
+                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{s.value}</p>
                     <p className="text-xs text-accent mt-1">{s.sub}</p>
                   </div>
                 ))}
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }

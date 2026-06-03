@@ -143,6 +143,12 @@
   }
 
   .text-gradient-blue {
+    background: linear-gradient(135deg, hsl(221 83% 40%), hsl(219 91% 50%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .dark .text-gradient-blue {
     background: linear-gradient(135deg, hsl(221 83% 60%), hsl(219 91% 70%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -157,23 +163,23 @@
     background: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 7%));
   }
 
-  /* Dark section utility — forced dark per theme */
+  /* Theme-aware section utilities */
   .section-dark {
-    background-color: hsl(215 50% 12%);
+    background-color: hsl(var(--background));
   }
   .dark .section-dark {
     background-color: hsl(222 47% 4%);
   }
 
   .section-dark-2 {
-    background-color: hsl(215 48% 10%);
+    background-color: hsl(var(--section-alt));
   }
   .dark .section-dark-2 {
     background-color: hsl(222 47% 6%);
   }
 
   .section-hero {
-    background-color: hsl(215 55% 8%);
+    background-color: hsl(var(--background));
   }
   .dark .section-hero {
     background-color: hsl(222 50% 3%);

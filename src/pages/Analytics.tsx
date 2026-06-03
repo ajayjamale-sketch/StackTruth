@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import DashboardNavbar from '@/components/layout/DashboardNavbar';
-import Footer from '@/components/layout/Footer';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import { LayoutDashboard, MessageSquare, GitBranch, Bot, Bookmark, Bell, BarChart3, TrendingUp, Users, Award, ArrowUp, ArrowDown } from 'lucide-react';
+import { mockUser } from '@/lib/mockData';
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BarChart3, TrendingUp, Users, MessageSquare, GitBranch, Award, ArrowUp, ArrowDown } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 const reputationData = [
@@ -37,11 +37,28 @@ const kpis = [
 
 export default function Analytics() {
   useScrollToTop();
+  const navigate = useNavigate();
   const [period, setPeriod] = useState('12M');
+  const [activeTab, setActiveTab] = useState('analytics');
+
+  const handleTabChange = (tab: string) => {
+    if (tab === 'analytics') {
+      setActiveTab(tab);
+    } else {
+      navigate('/dashboard', { state: { activeTab: tab } });
+    }
+  };
+
+  const navItems = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'questions', label: 'My Questions', icon: MessageSquare },
+    { id: 'answers', label: 'My Answers', icon: MessageSquare },
+    { id: 'reviews', label: 'Code Reviews', icon: GitBranch },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNavbar />
+    <DashboardLayout user={mockUser} navItems={navItems} activeTab={activeTab} setActiveTab={handleTabChange}>
       <ScrollToTop />
 
       <div className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -162,7 +179,6 @@ export default function Analytics() {
         </div>
       </div>
 
-      <Footer />
-    </div>
+    </DashboardLayout>
   );
 }

@@ -117,7 +117,7 @@ export default function AIAssistant() {
           </div>
 
           <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-yellow-400" />Quick Prompts</h3>
+            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400" />Quick Prompts</h3>
             <div className="space-y-1.5">
               {suggestions.map(s => (
                 <button key={s} onClick={() => sendMessage(s)} className="w-full text-left text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg px-2.5 py-2 transition-colors leading-relaxed">

@@ -132,7 +132,7 @@ export default function AskQuestion() {
           {/* Tips Sidebar */}
           <div className="space-y-4">
             <div className="bg-card border border-border rounded-xl p-4">
-              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-yellow-400" />Writing Tips</h3>
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />Writing Tips</h3>
               <ul className="space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-1.5"><span className="text-primary mt-0.5">→</span>Summarize the problem in the title</li>
                 <li className="flex items-start gap-1.5"><span className="text-primary mt-0.5">→</span>Include relevant code snippets</li>

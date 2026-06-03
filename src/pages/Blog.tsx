@@ -27,11 +27,11 @@ export default function Blog() {
       <ScrollToTop />
 
       {/* Hero */}
-      <div className="pt-20 pb-10 section-dark border-b border-surface-10 dark">
+      <div className="pt-20 pb-10 section-dark border-b border-surface-10">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <Badge className="mb-4 bg-primary/20 text-blue-300 border border-primary/30">Engineering Blog</Badge>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Technical Insights from Expert Engineers</h1>
-          <p className="text-slate-200/70 mb-6">In-depth tutorials, patterns, and real-world engineering lessons</p>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Engineering Blog</Badge>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Technical Insights from Expert Engineers</h1>
+          <p className="text-muted-foreground mb-6">In-depth tutorials, patterns, and real-world engineering lessons</p>
           <div className="relative max-w-lg mx-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 bg-card" />

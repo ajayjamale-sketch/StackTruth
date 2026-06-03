@@ -57,7 +57,7 @@ export default function Register() {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 section-dark relative overflow-hidden flex-col justify-between p-12 dark">
+      <div className="hidden lg:flex lg:w-1/2 section-dark relative overflow-hidden flex-col justify-between p-12">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.15),transparent_60%)]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)`, backgroundSize: '50px 50px' }} />
         <div className="relative z-10">
@@ -65,25 +65,25 @@ export default function Register() {
             <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center">
               <Code2 className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-white text-lg">Stack<span className="text-blue-400">Truth</span></span>
+            <span className="font-bold text-foreground text-lg">Stack<span className="text-blue-600 dark:text-blue-400">Truth</span></span>
           </Link>
           <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
             Start writing better
             <br />code today. Free.
           </h2>
-          <p className="text-white/60 text-sm mb-8 leading-relaxed">
+          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Join 180,000+ engineers who use StackTruth to ask smarter questions, validate their code, and grow their careers.
           </p>
           <ul className="space-y-3">
             {perks.map(perk => (
-              <li key={perk} className="flex items-center gap-2.5 text-sm text-white/80">
+              <li key={perk} className="flex items-center gap-2.5 text-sm text-foreground">
                 <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" />
                 {perk}
               </li>
             ))}
           </ul>
         </div>
-        <div className="relative z-10 text-white/30 text-xs">© {new Date().getFullYear()} StackTruth, Inc.</div>
+        <div className="relative z-10 text-muted-foreground text-xs">© {new Date().getFullYear()} StackTruth, Inc.</div>
       </div>
 
       {/* Right Panel */}
