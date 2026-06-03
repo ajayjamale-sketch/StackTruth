@@ -1,3 +1,4 @@
+// AIAssistant.tsx (optimized, no team section)
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -7,7 +8,10 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { MessageSquare, User, Send, Copy, ThumbsUp, ThumbsDown, RotateCcw, Zap, Code2, Bug, Settings2, Layers } from 'lucide-react';
+import { 
+  MessageSquare, User, Send, Copy, ThumbsUp, ThumbsDown, 
+  RotateCcw, Zap, Code2, Bug, Settings2, Layers 
+} from 'lucide-react';
 
 const suggestions = [
   'How do I prevent memory leaks in Node.js WebSocket connections?',
@@ -47,6 +51,62 @@ What technical challenge are you facing?`,
   },
 ];
 
+// Simulated AI response (replace with real API call)
+const getAIResponse = async (userMessage: string): Promise<string> => {
+  await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
+
+  if (userMessage.toLowerCase().includes('memory')) {
+    return `Great question about memory leaks! Here are the key patterns:
+
+\`\`\`typescript
+// ✅ Proper cleanup pattern
+class WSService {
+  private connections = new Set<WebSocket>();
+
+  addConnection(ws: WebSocket) {
+    this.connections.add(ws);
+    ws.on('close', () => this.connections.delete(ws));
+    ws.on('error', () => {
+      this.connections.delete(ws);
+      ws.terminate();
+    });
+  }
+}
+\`\`\`
+
+**Key principles:**
+1. Always remove event listeners on close
+2. Use \`Set\` not \`Map\` for connection tracking
+3. Call \`ws.terminate()\` not just \`ws.close()\` on error
+4. Implement heartbeat intervals with cleanup`;
+  }
+
+  return `Here's my analysis based on your question:
+
+**Understanding the Problem**  
+${userMessage}
+
+This is a common challenge in production environments. Let me break it down:
+
+1. **Root Cause** — Typically stems from improper resource cleanup
+2. **Solution Pattern** — Use structured error handling with proper teardown
+3. **Best Practice** — Always implement cleanup functions in finally blocks
+
+\`\`\`typescript
+// Recommended pattern
+async function withResource<T>(fn: () => Promise<T>): Promise<T> {
+  const resource = await acquire();
+  try {
+    return await fn();
+  } finally {
+    await resource.release();
+  }
+}
+\`\`\`
+
+Would you like me to go deeper on any specific aspect?`;
+};
+
 export default function AIAssistant() {
   useScrollToTop();
   const navigate = useNavigate();
@@ -60,25 +120,40 @@ export default function AIAssistant() {
   }, [messages]);
 
   const sendMessage = async (content: string) => {
-    if (!content.trim()) return;
-    const userMsg: Message = { role: 'user', content, id: Date.now().toString() };
+    if (!content.trim() || loading) return;
+
+    const userMsg: Message = {
+      role: 'user',
+      content: content.trim(),
+      id: Date.now().toString(),
+    };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
-    await new Promise(r => setTimeout(r, 1500));
+    try {
+      const aiContent = await getAIResponse(content);
+      const aiMsg: Message = {
+        role: 'ai',
+        content: aiContent,
+        id: (Date.now() + 1).toString(),
+      };
+      setMessages(prev => [...prev, aiMsg]);
+    } catch (error) {
+      toast.error('Failed to get response. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const responses: Record<string, string> = {
-      memory: `Great question about memory leaks! Here are the key patterns:\n\n\`\`\`typescript\n// ✅ Proper cleanup pattern\nclass WSService {\n  private connections = new Set<WebSocket>();\n\n  addConnection(ws: WebSocket) {\n    this.connections.add(ws);\n    ws.on('close', () => this.connections.delete(ws));\n    ws.on('error', () => {\n      this.connections.delete(ws);\n      ws.terminate();\n    });\n  }\n}\n\`\`\`\n\n**Key principles:**\n1. Always remove event listeners on close\n2. Use \`Set\` not \`Map\` for connection tracking\n3. Call \`ws.terminate()\` not just \`ws.close()\` on error\n4. Implement heartbeat intervals with cleanup`,
-    };
+  const clearChat = () => {
+    setMessages(initialMessages);
+    toast.success('Chat cleared');
+  };
 
-    const aiContent = content.toLowerCase().includes('memory')
-      ? responses['memory']
-      : `Here's my analysis based on your question:\n\n**Understanding the Problem**\n${content}\n\nThis is a common challenge in production environments. Let me break it down:\n\n1. **Root Cause** — Typically stems from improper resource cleanup\n2. **Solution Pattern** — Use structured error handling with proper teardown\n3. **Best Practice** — Always implement cleanup functions in finally blocks\n\n\`\`\`typescript\n// Recommended pattern\nasync function withResource<T>(fn: () => Promise<T>): Promise<T> {\n  const resource = await acquire();\n  try {\n    return await fn();\n  } finally {\n    await resource.release();\n  }\n}\n\`\`\`\n\nWould you like me to go deeper on any specific aspect?`;
-
-    const aiMsg: Message = { role: 'ai', content: aiContent, id: (Date.now() + 1).toString() };
-    setMessages(prev => [...prev, aiMsg]);
-    setLoading(false);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Copied to clipboard!');
   };
 
   return (
@@ -91,25 +166,25 @@ export default function AIAssistant() {
         <div className="lg:w-72 space-y-4 flex-shrink-0">
           <div className="bg-card border border-border rounded-xl p-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
                 <MessageSquare className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="font-semibold text-sm">Developer Guidance</h3>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
                   Powered by community expertise
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {features.map(f => {
-                const Icon = f.icon;
+              {features.map(feature => {
+                const Icon = feature.icon;
                 return (
-                  <div key={f.label} className="bg-muted rounded-lg p-2.5 text-center">
+                  <div key={feature.label} className="bg-muted rounded-lg p-2.5 text-center">
                     <Icon className="w-4 h-4 text-primary mx-auto mb-1" />
-                    <p className="text-xs font-medium">{f.label}</p>
-                    <p className="text-[10px] text-muted-foreground">{f.desc}</p>
+                    <p className="text-xs font-medium">{feature.label}</p>
+                    <p className="text-[10px] text-muted-foreground">{feature.desc}</p>
                   </div>
                 );
               })}
@@ -117,11 +192,18 @@ export default function AIAssistant() {
           </div>
 
           <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400" />Quick Prompts</h3>
+            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-yellow-600 dark:text-yellow-400" />
+              Quick Prompts
+            </h3>
             <div className="space-y-1.5">
-              {suggestions.map(s => (
-                <button key={s} onClick={() => sendMessage(s)} className="w-full text-left text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg px-2.5 py-2 transition-colors leading-relaxed">
-                  {s}
+              {suggestions.map(suggestion => (
+                <button
+                  key={suggestion}
+                  onClick={() => sendMessage(suggestion)}
+                  className="w-full text-left text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg px-2.5 py-2 transition-colors leading-relaxed"
+                >
+                  {suggestion}
                 </button>
               ))}
             </div>
@@ -149,7 +231,10 @@ export default function AIAssistant() {
               <span className="font-semibold text-sm">Expert Guidance</span>
               <Badge className="text-xs bg-accent/10 text-accent border-accent/20">Community</Badge>
             </div>
-            <button onClick={() => { setMessages(initialMessages); toast.success('Chat cleared'); }} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={clearChat}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
               <RotateCcw className="w-3.5 h-3.5" /> New Chat
             </button>
           </div>
@@ -159,7 +244,7 @@ export default function AIAssistant() {
             {messages.map(msg => (
               <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                  msg.role === 'ai' ? 'bg-gradient-brand' : 'bg-primary/20'
+                  msg.role === 'ai' ? 'bg-gradient-to-br from-primary to-blue-600' : 'bg-primary/20'
                 }`}>
                   {msg.role === 'ai' ? <MessageSquare className="w-4 h-4 text-white" /> : <User className="w-4 h-4 text-primary" />}
                 </div>
@@ -173,11 +258,15 @@ export default function AIAssistant() {
                   </div>
                   {msg.role === 'ai' && (
                     <div className="flex items-center gap-2 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => { navigator.clipboard.writeText(msg.content); toast.success('Copied!'); }} className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
+                      <button onClick={() => copyToClipboard(msg.content)} className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
                         <Copy className="w-3 h-3" /> Copy
                       </button>
-                      <button onClick={() => toast.success('Feedback submitted!')} className="text-xs text-muted-foreground hover:text-foreground"><ThumbsUp className="w-3 h-3" /></button>
-                      <button onClick={() => toast.success('Feedback submitted!')} className="text-xs text-muted-foreground hover:text-foreground"><ThumbsDown className="w-3 h-3" /></button>
+                      <button onClick={() => toast.success('Thanks for the feedback!')} className="text-xs text-muted-foreground hover:text-foreground">
+                        <ThumbsUp className="w-3 h-3" />
+                      </button>
+                      <button onClick={() => toast.success('Feedback submitted')} className="text-xs text-muted-foreground hover:text-foreground">
+                        <ThumbsDown className="w-3 h-3" />
+                      </button>
                     </div>
                   )}
                 </div>
@@ -185,7 +274,7 @@ export default function AIAssistant() {
             ))}
             {loading && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-brand flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center flex-shrink-0">
                   <MessageSquare className="w-4 h-4 text-white" />
                 </div>
                 <div className="bg-muted rounded-xl px-4 py-3">
@@ -207,7 +296,12 @@ export default function AIAssistant() {
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); }}}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage(input);
+                  }
+                }}
                 placeholder="Ask about code, architecture, debugging, best practices..."
                 className="flex-1 px-4 py-2.5 text-sm bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
                 disabled={loading}
@@ -216,7 +310,9 @@ export default function AIAssistant() {
                 <Send className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">Always verify solutions against your specific requirements before implementation.</p>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              Always verify solutions against your specific requirements before implementation.
+            </p>
           </div>
         </div>
       </div>

@@ -76,7 +76,9 @@ export default function FeaturesSection() {
     <section className="py-24 section-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Feature Showcase</Badge>
+          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">
+            Feature Showcase
+          </Badge>
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Everything a developer team needs
             <br />
@@ -88,24 +90,31 @@ export default function FeaturesSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {features.map(f => {
-            const Icon = f.icon;
+          {features.map(feature => {
+            const Icon = feature.icon;
             return (
               <Link
-                key={f.href}
-                to={f.href}
-                className={`group bg-surface-5 border ${f.border} ${f.hoverBorder} rounded-xl p-6 hover:bg-surface-8 transition-all cursor-pointer block`}
+                key={feature.href}
+                to={feature.href}
+                className={`group bg-surface-5 border ${feature.border} ${feature.hoverBorder} rounded-xl p-6 hover:bg-surface-8 transition-all cursor-pointer block focus:outline-none focus:ring-2 focus:ring-primary/50`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl ${f.bg} flex items-center justify-center`}>
-                    <Icon className={`w-5 h-5 ${f.color}`} />
+                  <div
+                    className={`w-10 h-10 rounded-xl ${feature.bg} flex items-center justify-center`}
+                    aria-hidden="true"
+                  >
+                    <Icon className={`w-5 h-5 ${feature.color}`} aria-hidden="true" />
                   </div>
-                  <Badge className="text-xs bg-surface-5 text-muted-foreground/60 border-surface-10">{f.badge}</Badge>
+                  <Badge className="text-xs bg-surface-5 text-muted-foreground/60 border-surface-10">
+                    {feature.badge}
+                  </Badge>
                 </div>
-                <h3 className="text-foreground font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">{f.desc}</p>
-                <div className={`flex items-center gap-1 text-sm font-medium ${f.color} group-hover:gap-2 transition-all`}>
-                  Explore <ArrowRight className="w-3.5 h-3.5" />
+                <h3 className="text-foreground font-semibold text-lg mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">{feature.desc}</p>
+                <div
+                  className={`flex items-center gap-1 text-sm font-medium ${feature.color} group-hover:gap-2 transition-all`}
+                >
+                  Explore <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </div>
               </Link>
             );

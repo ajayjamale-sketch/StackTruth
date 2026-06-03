@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Bot, User, Copy, ThumbsUp } from 'lucide-react';
+import { ArrowRight, Bot, User } from 'lucide-react';
 
 const messages = [
   {
@@ -36,8 +36,11 @@ export default function AIAssistantPreview() {
     <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left side: text & CTA */}
           <div>
-            <Badge variant="outline" className="mb-4 border-primary/30 text-primary">AI Developer Assistant</Badge>
+            <Badge variant="outline" className="mb-4 border-primary/30 text-primary">
+              AI Developer Assistant
+            </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-5">
               Your AI pair programmer
               <br />
@@ -47,44 +50,68 @@ export default function AIAssistantPreview() {
               Not just a generic chatbot. StackTruth AI understands your technology stack, architecture decisions, and coding style to give you deeply relevant, actionable answers.
             </p>
             <div className="flex flex-wrap gap-2 mb-8">
-              {['Bug Detection', 'Code Optimization', 'Architecture Advice', 'Stack Recommendations', 'Security Audits', 'Performance Analysis'].map(cap => (
-                <Badge key={cap} variant="secondary" className="text-xs">{cap}</Badge>
+              {[
+                'Bug Detection',
+                'Code Optimization',
+                'Architecture Advice',
+                'Stack Recommendations',
+                'Security Audits',
+                'Performance Analysis',
+              ].map(cap => (
+                <Badge key={cap} variant="secondary" className="text-xs">
+                  {cap}
+                </Badge>
               ))}
             </div>
             <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link to="/ai-assistant">Try AI Assistant <ArrowRight className="w-4 h-4 ml-2" /></Link>
+              <Link to="/ai-assistant">
+                Try AI Assistant <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+              </Link>
             </Button>
           </div>
 
-          {/* Chat Preview */}
+          {/* Right side: chat preview */}
           <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl">
             <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
               <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center">
-                <Bot className="w-4 h-4 text-card-foreground" />
+                <Bot className="w-4 h-4 text-card-foreground" aria-hidden="true" />
               </div>
               <div>
                 <p className="text-sm font-semibold">StackTruth AI</p>
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
                   Online · GPT-4o powered
                 </p>
               </div>
-              <Badge className="ml-auto text-xs bg-accent/10 text-accent border-accent/20">Pro</Badge>
+              <Badge className="ml-auto text-xs bg-accent/10 text-accent border-accent/20">
+                Pro
+              </Badge>
             </div>
 
             <div className="p-5 space-y-4 max-h-80 overflow-y-auto">
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                    msg.role === 'ai' ? 'bg-gradient-brand' : 'bg-primary/20'
-                  }`}>
-                    {msg.role === 'ai' ? <Bot className="w-3.5 h-3.5 text-card-foreground" /> : <User className="w-3.5 h-3.5 text-primary" />}
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+                >
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      msg.role === 'ai' ? 'bg-gradient-brand' : 'bg-primary/20'
+                    }`}
+                  >
+                    {msg.role === 'ai' ? (
+                      <Bot className="w-3.5 h-3.5 text-card-foreground" aria-hidden="true" />
+                    ) : (
+                      <User className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
+                    )}
                   </div>
-                  <div className={`max-w-[85%] rounded-xl px-4 py-3 text-sm ${
-                    msg.role === 'user'
-                      ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                      : 'bg-muted text-foreground rounded-tl-sm'
-                  }`}>
+                  <div
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm ${
+                      msg.role === 'user'
+                        ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                        : 'bg-muted text-foreground rounded-tl-sm'
+                    }`}
+                  >
                     <p className="leading-relaxed whitespace-pre-wrap text-xs">{msg.content}</p>
                   </div>
                 </div>
@@ -98,10 +125,11 @@ export default function AIAssistantPreview() {
                   placeholder="Ask anything about your code..."
                   className="flex-1 px-3 py-2 text-xs bg-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
                   readOnly
+                  aria-label="Demo input (read‑only)"
                 />
-                <Link to="/ai-assistant">
-                  <Button size="sm" className="bg-primary hover:bg-primary/90 h-9">Ask</Button>
-                </Link>
+                <Button asChild size="sm" className="bg-primary hover:bg-primary/90 h-9">
+                  <Link to="/ai-assistant">Ask</Link>
+                </Button>
               </div>
             </div>
           </div>

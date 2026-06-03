@@ -1,3 +1,4 @@
+// LiveCoding.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -8,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Monitor, Play, Plus, Users, Clock, Code2, Search, Zap, Video, Lock, Loader2, CheckCircle2 } from 'lucide-react';
+import { Monitor, Play, Plus, Users, Clock, Code2, Search, Zap, Video, Lock, Loader2, CheckCircle2, X } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -50,15 +51,30 @@ export default function LiveCoding() {
   useScrollToTop();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
   const [activeMode, setActiveMode] = useState('pair');
   const [joining, setJoining] = useState<string | null>(null);
   const [waitingRoomOpen, setWaitingRoomOpen] = useState(false);
   const [selectedSessionName, setSelectedSessionName] = useState('');
   const [inSession, setInSession] = useState(false);
 
-  const handleJoin = async (sessionId: string, title: string) => {
+  // Filter sessions by search query and status
+  const filteredSessions = sessions.filter(session => {
+    const matchesSearch = !search ||
+      session.title.toLowerCase().includes(search.toLowerCase()) ||
+      session.lang.toLowerCase().includes(search.toLowerCase()) ||
+      session.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()));
+    const matchesStatus = statusFilter === 'All' || session.status === statusFilter.toLowerCase();
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleJoin = async (sessionId: string, title: string, status: string) => {
+    if (status === 'scheduled') {
+      toast.success(`You registered for "${title}"! You'll be notified when it starts.`);
+      return;
+    }
     setJoining(sessionId);
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise(resolve => setTimeout(resolve, 800));
     setJoining(null);
     setSelectedSessionName(title);
     setWaitingRoomOpen(true);
@@ -72,8 +88,12 @@ export default function LiveCoding() {
   const enterSession = () => {
     setWaitingRoomOpen(false);
     setInSession(true);
-    toast.success(`Joined ${selectedSessionName}!`);
+    toast.success(`Joined ${selectedSessionName}! (Live session environment)`);
+    // In a real app, you would navigate to /live-session/:id
+    navigate('/live-session/mock');
   };
+
+  const clearSearch = () => setSearch('');
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,7 +101,7 @@ export default function LiveCoding() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-6 border-b border-border bg-gradient-to-r from-background to-muted/30">
+      <div className="pt-20 pb-6 border-b border-border bg-gradient-to-b from-background to-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
@@ -122,20 +142,38 @@ export default function LiveCoding() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Search */}
-        <div className="flex gap-3 mb-6">
+        {/* Search and Filters */}
+        <div className="flex flex-wrap gap-3 mb-6">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search sessions by language, topic..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="pl-9"
+              className="pl-9 pr-8"
             />
+            {search && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <div className="flex gap-2">
-            {['All', 'Live', 'Open', 'Scheduled'].map(f => (
-              <button key={f} className="px-3 py-2 rounded-lg text-sm bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/70 transition-colors">{f}</button>
+            {['All', 'Live', 'Open', 'Scheduled'].map(filter => (
+              <button
+                key={filter}
+                onClick={() => setStatusFilter(filter)}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  statusFilter === filter
+                    ? 'bg-primary text-white'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {filter}
+              </button>
             ))}
           </div>
         </div>
@@ -148,52 +186,65 @@ export default function LiveCoding() {
 
         {/* Sessions Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sessions.filter(s => !search || s.title.toLowerCase().includes(search.toLowerCase())).map(session => (
-            <div key={session.id} className="bg-card border border-border rounded-xl overflow-hidden card-hover">
-              {/* Session Header */}
-              <div className="p-4 border-b border-border">
-                <div className="flex items-start justify-between mb-3">
-                  <Badge className={`text-xs ${
-                    session.status === 'live' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' :
-                    session.status === 'open' ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' :
-                    'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
-                  }`}>
-                    {session.status === 'live' && <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block mr-1 animate-pulse" />}
-                    {session.status.toUpperCase()}
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs">{session.lang}</Badge>
+          {filteredSessions.map(session => {
+            const isFull = session.participants >= session.maxParticipants;
+            const isLive = session.status === 'live';
+            const isOpen = session.status === 'open';
+            const isScheduled = session.status === 'scheduled';
+
+            return (
+              <div key={session.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col">
+                <div className="p-4 border-b border-border">
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge className={`text-xs ${
+                      isLive ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' :
+                      isOpen ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20' :
+                      'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
+                    }`}>
+                      {isLive && <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block mr-1 animate-pulse" />}
+                      {session.status.toUpperCase()}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">{session.lang}</Badge>
+                  </div>
+                  <h3 className="font-semibold text-sm leading-snug mb-3 line-clamp-2">{session.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <img src={session.avatar} alt={session.host} className="w-6 h-6 rounded-full object-cover" />
+                    <span className="text-xs text-muted-foreground">{session.host}</span>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-sm leading-snug mb-3">{session.title}</h3>
-                <div className="flex items-center gap-2">
-                  <img src={session.avatar} alt={session.host} className="w-6 h-6 rounded-full object-cover" />
-                  <span className="text-xs text-muted-foreground">{session.host}</span>
+
+                <div className="p-4 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                    <span className="flex items-center gap-1"><Users className="w-3 h-3" />{session.participants}/{session.maxParticipants}</span>
+                    {session.startedAt && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{session.startedAt}</span>}
+                  </div>
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {session.tags.map(tag => (
+                      <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-primary/10 text-primary rounded">{tag}</span>
+                    ))}
+                  </div>
+                  <Button
+                    className="w-full h-8 text-xs mt-auto"
+                    variant={isFull ? 'outline' : 'default'}
+                    disabled={isFull || joining === session.id}
+                    onClick={() => handleJoin(session.id, session.title, session.status)}
+                  >
+                    {joining === session.id ? (
+                      <><Loader2 className="w-3 h-3 mr-1 animate-spin" />Joining...</>
+                    ) : isFull ? (
+                      'Session Full'
+                    ) : isScheduled ? (
+                      'Register'
+                    ) : (
+                      'Join Session'
+                    )}
+                  </Button>
                 </div>
               </div>
+            );
+          })}
 
-              <div className="p-4">
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                  <span className="flex items-center gap-1"><Users className="w-3 h-3" />{session.participants}/{session.maxParticipants}</span>
-                  {session.startedAt && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{session.startedAt}</span>}
-                </div>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {session.tags.map(tag => (
-                    <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-primary/10 text-primary rounded">{tag}</span>
-                  ))}
-                </div>
-                <Button
-                  className="w-full h-8 text-xs bg-primary hover:bg-primary/90"
-                  disabled={session.participants >= session.maxParticipants || joining === session.id}
-                  onClick={() => handleJoin(session.id, session.title)}
-                >
-                  {joining === session.id ? 'Joining...' :
-                   session.participants >= session.maxParticipants ? 'Session Full' :
-                   session.status === 'scheduled' ? 'Register' : 'Join Session'}
-                </Button>
-              </div>
-            </div>
-          ))}
-
-          {/* Create card */}
+          {/* Create session card (always visible, not affected by filters) */}
           <button
             onClick={handleCreate}
             className="bg-card border border-dashed border-border rounded-xl p-6 flex flex-col items-center justify-center gap-3 hover:border-primary/30 hover:bg-primary/5 transition-all text-center"
@@ -207,8 +258,15 @@ export default function LiveCoding() {
             </div>
           </button>
         </div>
+
+        {filteredSessions.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            No sessions match your filters.
+          </div>
+        )}
       </div>
 
+      {/* Waiting Room Dialog */}
       <Dialog open={waitingRoomOpen} onOpenChange={setWaitingRoomOpen}>
         <DialogContent className="sm:max-w-md text-center">
           <DialogHeader>

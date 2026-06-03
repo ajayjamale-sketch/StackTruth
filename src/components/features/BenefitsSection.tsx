@@ -35,49 +35,61 @@ export default function BenefitsSection() {
     <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left column */}
           <div>
-            <Badge variant="outline" className="mb-4 border-primary/30 text-primary">Why StackTruth</Badge>
+            <Badge variant="outline" className="mb-4 border-primary/30 text-primary">
+              Why StackTruth
+            </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-5">
               Not just answers.
-              <br /><span className="text-gradient">Validated knowledge.</span>
+              <br />
+              <span className="text-gradient">Validated knowledge.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               Any platform gives you answers. StackTruth gives you validated, expert-reviewed solutions with real code, real explanations, and real context — from engineers who have actually solved the problem in production.
             </p>
-            <div className="space-y-4 mb-8">
+            <ul className="space-y-4 mb-8">
               {[
                 'AI-validated answer quality scoring',
                 'Expert verification system with reputation tracking',
                 'Code examples tested and reviewed',
                 'Version-aware solutions for your specific stack',
                 'Real-world context, not just syntax explanations',
-              ].map(b => (
-                <div key={b} className="flex items-center gap-2.5 text-sm">
-                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" />
-                  {b}
-                </div>
+              ].map(item => (
+                <li key={item} className="flex items-center gap-2.5 text-sm">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" aria-hidden="true" />
+                  {item}
+                </li>
               ))}
-            </div>
+            </ul>
             <Button asChild className="bg-primary hover:bg-primary/90">
-              <Link to="/register">Start Learning Faster <ArrowRight className="w-4 h-4 ml-2" /></Link>
+              <Link to="/register">
+                Start Learning Faster <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+              </Link>
             </Button>
           </div>
 
+          {/* Right column – benefit cards */}
           <div className="space-y-4">
-            {benefits.map(b => {
-              const Icon = b.icon;
+            {benefits.map(benefit => {
+              const Icon = benefit.icon;
               return (
-                <div key={b.title} className="bg-card border border-border rounded-xl p-6 card-hover">
+                <div key={benefit.title} className="bg-card border border-border rounded-xl p-6 card-hover">
                   <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl ${b.bg} flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`w-6 h-6 ${b.color}`} />
+                    <div
+                      className={`w-12 h-12 rounded-xl ${benefit.bg} flex items-center justify-center flex-shrink-0`}
+                      aria-hidden="true"
+                    >
+                      <Icon className={`w-6 h-6 ${benefit.color}`} aria-hidden="true" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold">{b.title}</h3>
-                        <Badge variant="secondary" className="text-xs">{b.stat}</Badge>
+                        <h3 className="font-semibold">{benefit.title}</h3>
+                        <Badge variant="secondary" className="text-xs">
+                          {benefit.stat}
+                        </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
                     </div>
                   </div>
                 </div>

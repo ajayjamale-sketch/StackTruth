@@ -1,3 +1,4 @@
+// DashboardExpert.tsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -5,6 +6,7 @@ import ScrollToTop from '@/components/layout/ScrollToTop';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 import {
   Star, MessageSquare, GitBranch, BookOpen, Users,
   Award, Settings, LogOut, CheckCircle, Clock, TrendingUp,
@@ -49,170 +51,244 @@ export default function DashboardExpert() {
     role: 'Verified Expert'
   };
 
+  // Helper for showing toast on action
+  const handleAction = (message: string, callback?: () => void) => {
+    toast.success(message);
+    callback?.();
+  };
+
   return (
     <DashboardLayout user={expertUser} navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab}>
       <ScrollToTop />
-          {/* Expert Stats */}
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h1 className="text-xl font-bold flex items-center gap-2"><Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />Expert Dashboard</h1>
-              <p className="text-muted-foreground text-sm mt-0.5">8 review requests · 12 questions in queue</p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => navigate('/code-review')}>Go to Reviews</Button>
-              <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-white">Start Reviewing</Button>
-            </div>
-          </div>
+      {/* Expert Stats Header */}
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h1 className="text-xl font-bold flex items-center gap-2">
+            <Star className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />Expert Dashboard
+          </h1>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            {reviewRequests.length} review requests · {answerQueue.length} questions in queue
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleAction('Navigating to code reviews', () => navigate('/code-review'))}
+          >
+            Go to Reviews
+          </Button>
+          <Button
+            size="sm"
+            className="bg-yellow-500 hover:bg-yellow-600 text-white"
+            onClick={() => handleAction('Starting a review session', () => navigate('/code-review'))}
+          >
+            Start Reviewing
+          </Button>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            {[
-              { label: 'Reviews Done', value: '341', sub: '+8 today', color: 'text-yellow-600 dark:text-yellow-400' },
-              { label: 'Answers Given', value: '842', sub: '+22 this week', color: 'text-blue-600 dark:text-blue-400' },
-              { label: 'Reputation', value: '18,420', sub: 'Expert level', color: 'text-primary' },
-              { label: 'Mentees', value: '12', sub: 'Active this month', color: 'text-green-600 dark:text-green-400' },
-            ].map((s, i) => (
-              <div key={i} className="bg-card border border-border rounded-xl p-4">
-                <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
-                <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{s.sub}</p>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        {[
+          { label: 'Reviews Done', value: '341', sub: '+8 today', color: 'text-yellow-600 dark:text-yellow-400' },
+          { label: 'Answers Given', value: '842', sub: '+22 this week', color: 'text-blue-600 dark:text-blue-400' },
+          { label: 'Reputation', value: '18,420', sub: 'Expert level', color: 'text-primary' },
+          { label: 'Mentees', value: '12', sub: 'Active this month', color: 'text-green-600 dark:text-green-400' },
+        ].map((s, i) => (
+          <div key={i} className="bg-card border border-border rounded-xl p-4">
+            <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
+            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+            <p className="text-xs text-muted-foreground mt-1">{s.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* REVIEW REQUESTS TAB */}
+      {activeTab === 'reviews' && (
+        <div className="max-w-3xl">
+          <h2 className="font-semibold mb-4">Pending Code Reviews ({reviewRequests.length})</h2>
+          <div className="space-y-3">
+            {reviewRequests.map((req) => (
+              <div key={req.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <img src={req.avatar} alt={req.user} className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm truncate">{req.title}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs text-muted-foreground">{req.user}</span>
+                      <Badge variant="secondary" className="text-xs">{req.lang}</Badge>
+                      <span className="text-xs text-muted-foreground">{req.time}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Badge className={`text-xs ${
+                    req.priority === 'high'
+                      ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20'
+                      : req.priority === 'medium'
+                      ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20'
+                      : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {req.priority}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    className="h-7 text-xs bg-yellow-500 hover:bg-yellow-600 text-white"
+                    onClick={() => handleAction(`Starting review of "${req.title}"`, () => navigate('/code-review'))}
+                  >
+                    Review
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
+        </div>
+      )}
 
-          {activeTab === 'reviews' && (
-            <div className="max-w-3xl">
-              <h2 className="font-semibold mb-4">Pending Code Reviews ({reviewRequests.length})</h2>
-              <div className="space-y-3">
-                {reviewRequests.map(req => (
-                  <div key={req.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <img src={req.avatar} alt={req.user} className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-                      <div className="min-w-0">
-                        <p className="font-medium text-sm truncate">{req.title}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-muted-foreground">{req.user}</span>
-                          <Badge variant="secondary" className="text-xs">{req.lang}</Badge>
-                          <span className="text-xs text-muted-foreground">{req.time}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <Badge className={`text-xs ${req.priority === 'high' ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20' : req.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20' : 'bg-muted text-muted-foreground'}`}>
-                        {req.priority}
-                      </Badge>
-                      <Button size="sm" className="h-7 text-xs bg-yellow-500 hover:bg-yellow-600 text-white" onClick={() => navigate('/code-review')}>
-                        Review
-                      </Button>
-                    </div>
+      {/* ANSWER QUEUE TAB */}
+      {activeTab === 'queue' && (
+        <div className="max-w-3xl">
+          <h2 className="font-semibold mb-4">Answer Queue ({answerQueue.length})</h2>
+          <div className="space-y-3">
+            {answerQueue.map((q) => (
+              <Link
+                key={q.id}
+                to={`/questions/${q.id}`}
+                className="block bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all"
+              >
+                <p className="font-medium text-sm mb-2">{q.title}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1">
+                    {q.tags.map((t) => (
+                      <span key={t} className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">{t}</span>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'queue' && (
-            <div className="max-w-3xl">
-              <h2 className="font-semibold mb-4">Answer Queue ({answerQueue.length})</h2>
-              <div className="space-y-3">
-                {answerQueue.map(q => (
-                  <Link key={q.id} to={`/questions/${q.id}`} className="block bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all">
-                    <p className="font-medium text-sm mb-2">{q.title}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-1">{q.tags.map(t => <span key={t} className="text-xs px-1.5 py-0.5 bg-primary/10 text-primary rounded">{t}</span>)}</div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>{q.votes} votes</span>
-                        <span>{q.time}</span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'mentorship' && (
-            <div className="max-w-2xl">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold">Active Mentees ({mentees.length})</h2>
-                <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => navigate('/dashboard')}>Find Mentees</Button>
-              </div>
-              <div className="space-y-3">
-                {mentees.map(m => (
-                  <div key={m.name} className="bg-card border border-border rounded-xl p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <img src={m.avatar} alt={m.name} className="w-9 h-9 rounded-full object-cover" />
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{m.name}</p>
-                        <p className="text-xs text-muted-foreground">Learning {m.skill} · {m.sessions} sessions</p>
-                      </div>
-                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => navigate('/live-coding')}>Schedule</Button>
-                    </div>
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Progress</span>
-                      <span className="font-medium">{m.progress}%</span>
-                    </div>
-                    <div className="h-1.5 bg-muted rounded-full">
-                      <div className="h-full bg-primary rounded-full" style={{ width: `${m.progress}%` }} />
-                    </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>{q.votes} votes</span>
+                    <span>{q.time}</span>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
-          {activeTab === 'tutorials' && (
-            <div className="max-w-3xl">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold">My Tutorials</h2>
-                <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => navigate('/blog')}>
-                  <Plus className="w-3.5 h-3.5 mr-1" /> New Tutorial
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { title: 'TypeScript 5.0 Generic Patterns You Should Know', views: 12300, likes: 445, status: 'Published' },
-                  { title: 'Advanced Rust Error Handling Patterns', views: 8700, likes: 312, status: 'Published' },
-                  { title: 'Building Real-time APIs with WebSockets in Node.js', views: 0, likes: 0, status: 'Draft' },
-                ].map((t, i) => (
-                  <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">{t.title}</p>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                        <span>{t.views.toLocaleString()} views</span>
-                        <span>{t.likes} likes</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                      <Badge className={`text-xs ${t.status === 'Published' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-muted text-muted-foreground'}`}>
-                        {t.status}
-                      </Badge>
-                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => navigate('/blog')}>Edit</Button>
-                    </div>
+      {/* MENTORSHIP TAB */}
+      {activeTab === 'mentorship' && (
+        <div className="max-w-2xl">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold">Active Mentees ({mentees.length})</h2>
+            <Button
+              size="sm"
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => handleAction('Searching for new mentees', () => navigate('/dashboard'))}
+            >
+              Find Mentees
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {mentees.map((m) => (
+              <div key={m.name} className="bg-card border border-border rounded-xl p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <img src={m.avatar} alt={m.name} className="w-9 h-9 rounded-full object-cover" />
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{m.name}</p>
+                    <p className="text-xs text-muted-foreground">Learning {m.skill} · {m.sessions} sessions</p>
                   </div>
-                ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs"
+                    onClick={() => handleAction(`Scheduling session with ${m.name}`, () => navigate('/live-coding'))}
+                  >
+                    Schedule
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Progress</span>
+                  <span className="font-medium">{m.progress}%</span>
+                </div>
+                <div className="h-1.5 bg-muted rounded-full">
+                  <div className="h-full bg-primary rounded-full" style={{ width: `${m.progress}%` }} />
+                </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+        </div>
+      )}
 
-          {activeTab === 'reputation' && (
-            <div className="max-w-2xl">
-              <h2 className="font-semibold mb-4">Reputation Analytics</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: 'This Week', value: '+240', detail: 'From 18 answers' },
-                  { label: 'This Month', value: '+1,240', detail: 'Top 0.1% of experts' },
-                  { label: 'Avg Score', value: '94/100', detail: 'Answer quality' },
-                  { label: 'Accept Rate', value: '68%', detail: 'Accepted answers' },
-                ].map((s, i) => (
-                  <div key={i} className="bg-card border border-border rounded-xl p-4">
-                    <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
-                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{s.value}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{s.detail}</p>
+      {/* TUTORIALS TAB */}
+      {activeTab === 'tutorials' && (
+        <div className="max-w-3xl">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold">My Tutorials</h2>
+            <Button
+              size="sm"
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => handleAction('Create new tutorial', () => navigate('/blog'))}
+            >
+              <Plus className="w-3.5 h-3.5 mr-1" /> New Tutorial
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {[
+              { title: 'TypeScript 5.0 Generic Patterns You Should Know', views: 12300, likes: 445, status: 'Published' },
+              { title: 'Advanced Rust Error Handling Patterns', views: 8700, likes: 312, status: 'Published' },
+              { title: 'Building Real-time APIs with WebSockets in Node.js', views: 0, likes: 0, status: 'Draft' },
+            ].map((t, i) => (
+              <div key={i} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{t.title}</p>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                    <span>{t.views.toLocaleString()} views</span>
+                    <span>{t.likes} likes</span>
                   </div>
-                ))}
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                  <Badge className={`text-xs ${
+                    t.status === 'Published'
+                      ? 'bg-accent/10 text-accent border-accent/20'
+                      : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {t.status}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs"
+                    onClick={() => handleAction(`Editing "${t.title}"`, () => navigate('/blog'))}
+                  >
+                    Edit
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* REPUTATION ANALYTICS TAB */}
+      {activeTab === 'reputation' && (
+        <div className="max-w-2xl">
+          <h2 className="font-semibold mb-4">Reputation Analytics</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: 'This Week', value: '+240', detail: 'From 18 answers' },
+              { label: 'This Month', value: '+1,240', detail: 'Top 0.1% of experts' },
+              { label: 'Avg Score', value: '94/100', detail: 'Answer quality' },
+              { label: 'Accept Rate', value: '68%', detail: 'Accepted answers' },
+            ].map((s, i) => (
+              <div key={i} className="bg-card border border-border rounded-xl p-4">
+                <p className="text-xs text-muted-foreground mb-1">{s.label}</p>
+                <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-1">{s.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

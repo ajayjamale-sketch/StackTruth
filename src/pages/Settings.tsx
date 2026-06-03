@@ -1,4 +1,4 @@
-import { useState } from 'react';
+ import { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -13,11 +13,14 @@ import { useThemeContext } from '@/context/ThemeContext';
 
 const sections = ['Account', 'Notifications', 'Appearance', 'Privacy', 'Integrations'];
 
+type ThemeMode = 'light' | 'dark' | 'system';
+
 export default function Settings() {
   useScrollToTop();
-  const { theme, toggleTheme } = useThemeContext();
+  const { theme: currentTheme, setTheme } = useThemeContext(); // Expect setTheme to accept mode
   const [activeSection, setActiveSection] = useState('Account');
   const [saving, setSaving] = useState(false);
+  const [fontSize, setFontSize] = useState('14px');
   const [notifs, setNotifs] = useState({
     answers: true, upvotes: true, mentions: true, reviews: true,
     teamMessages: false, email: true, push: false,
@@ -26,11 +29,39 @@ export default function Settings() {
     publicProfile: true, showEmail: false, showActivity: true,
   });
 
-  const handleSave = async () => {
+  // Account form state
+  const [account, setAccount] = useState({
+    displayName: 'Alex Chen',
+    username: 'alexchen',
+    email: 'alex@example.com',
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const handleSave = async (section: string, data?: any) => {
     setSaving(true);
     await new Promise(r => setTimeout(r, 1000));
     setSaving(false);
-    toast.success('Settings saved successfully!');
+    toast.success(`${section} settings saved!`);
+  };
+
+  const handleThemeChange = (mode: ThemeMode) => {
+    setTheme(mode);
+    toast.success(`Theme changed to ${mode}`);
+  };
+
+  const handleFontSizeChange = (size: string) => {
+    setFontSize(size);
+    // In a real app, you'd apply this to code blocks via CSS variable or context
+    document.documentElement.style.setProperty('--code-font-size', size);
+    toast.success(`Code font size set to ${size}`);
+  };
+
+  const handleDeleteAccount = () => {
+    if (window.confirm('Are you sure? This action is irreversible.')) {
+      toast.error('Account deletion would be processed here');
+    }
   };
 
   return (
@@ -51,6 +82,7 @@ export default function Settings() {
               {sections.map(s => (
                 <button
                   key={s}
+                  type="button"
                   onClick={() => setActiveSection(s)}
                   className={`w-full px-4 py-3 text-sm font-medium text-left border-b border-border last:border-0 transition-colors ${
                     activeSection === s ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -71,37 +103,62 @@ export default function Settings() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Display Name</Label>
-                      <Input defaultValue="Alex Chen" />
+                      <Input
+                        value={account.displayName}
+                        onChange={e => setAccount({...account, displayName: e.target.value})}
+                      />
                     </div>
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Username</Label>
-                      <Input defaultValue="alexchen" />
+                      <Input
+                        value={account.username}
+                        onChange={e => setAccount({...account, username: e.target.value})}
+                      />
                     </div>
                   </div>
                   <div>
                     <Label className="text-sm font-medium mb-1.5 block">Email Address</Label>
-                    <Input defaultValue="alex@example.com" type="email" />
+                    <Input
+                      type="email"
+                      value={account.email}
+                      onChange={e => setAccount({...account, email: e.target.value})}
+                    />
                   </div>
                   <div>
                     <Label className="text-sm font-medium mb-1.5 block">Current Password</Label>
-                    <Input type="password" placeholder="Enter current password" />
+                    <Input
+                      type="password"
+                      placeholder="Enter current password"
+                      value={account.currentPassword}
+                      onChange={e => setAccount({...account, currentPassword: e.target.value})}
+                    />
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">New Password</Label>
-                      <Input type="password" placeholder="New password" />
+                      <Input
+                        type="password"
+                        placeholder="New password"
+                        value={account.newPassword}
+                        onChange={e => setAccount({...account, newPassword: e.target.value})}
+                      />
                     </div>
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Confirm Password</Label>
-                      <Input type="password" placeholder="Confirm password" />
+                      <Input
+                        type="password"
+                        placeholder="Confirm password"
+                        value={account.confirmPassword}
+                        onChange={e => setAccount({...account, confirmPassword: e.target.value})}
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-border">
-                  <Button variant="destructive" size="sm" onClick={() => toast.error('Deletion requires email confirmation')}>
+                  <Button variant="destructive" size="sm" onClick={handleDeleteAccount}>
                     <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Delete Account
                   </Button>
-                  <Button className="bg-primary hover:bg-primary/90" onClick={handleSave} disabled={saving}>
+                  <Button className="bg-primary hover:bg-primary/90" onClick={() => handleSave('Account')} disabled={saving}>
                     {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving...</> : 'Save Changes'}
                   </Button>
                 </div>
@@ -127,6 +184,7 @@ export default function Settings() {
                         <p className="text-xs text-muted-foreground mt-0.5">{n.desc}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => setNotifs(prev => ({ ...prev, [n.key]: !prev[n.key as keyof typeof prev] }))}
                         className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ${notifs[n.key as keyof typeof notifs] ? 'bg-primary' : 'bg-muted'}`}
                       >
@@ -136,7 +194,7 @@ export default function Settings() {
                   ))}
                 </div>
                 <div className="pt-4">
-                  <Button className="bg-primary hover:bg-primary/90" onClick={handleSave} disabled={saving}>
+                  <Button className="bg-primary hover:bg-primary/90" onClick={() => handleSave('Notifications')} disabled={saving}>
                     {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Saving...</> : 'Save Preferences'}
                   </Button>
                 </div>
@@ -158,9 +216,10 @@ export default function Settings() {
                       return (
                         <button
                           key={t.id}
-                          onClick={toggleTheme}
+                          type="button"
+                          onClick={() => handleThemeChange(t.id as ThemeMode)}
                           className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
-                            theme === t.id ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/30'
+                            currentTheme === t.id ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/30'
                           }`}
                         >
                           <Icon className="w-6 h-6" />
@@ -174,7 +233,16 @@ export default function Settings() {
                   <Label className="text-sm font-medium mb-3 block">Code Font Size</Label>
                   <div className="flex gap-2">
                     {['12px', '14px', '16px'].map(size => (
-                      <button key={size} className="px-4 py-2 rounded-lg border border-border text-sm hover:border-primary/30 transition-colors font-mono">{size}</button>
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => handleFontSizeChange(size)}
+                        className={`px-4 py-2 rounded-lg border text-sm transition-colors font-mono ${
+                          fontSize === size ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/30'
+                        }`}
+                      >
+                        {size}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -196,6 +264,7 @@ export default function Settings() {
                         <p className="text-xs text-muted-foreground mt-0.5">{p.desc}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => setPrivacy(prev => ({ ...prev, [p.key]: !prev[p.key as keyof typeof prev] }))}
                         className={`w-11 h-6 rounded-full transition-colors relative ${privacy[p.key as keyof typeof privacy] ? 'bg-primary' : 'bg-muted'}`}
                       >
@@ -205,7 +274,9 @@ export default function Settings() {
                   ))}
                 </div>
                 <div className="pt-4">
-                  <Button className="bg-primary hover:bg-primary/90" onClick={handleSave} disabled={saving}>Save Privacy Settings</Button>
+                  <Button className="bg-primary hover:bg-primary/90" onClick={() => handleSave('Privacy')} disabled={saving}>
+                    Save Privacy Settings
+                  </Button>
                 </div>
               </div>
             )}
@@ -234,7 +305,9 @@ export default function Settings() {
                         size="sm"
                         variant={int.connected ? 'outline' : 'default'}
                         className={int.connected ? '' : 'bg-primary hover:bg-primary/90'}
-                        onClick={() => toast.success(int.connected ? `${int.name} disconnected` : `${int.name} connected!`)}
+                        onClick={() => {
+                          toast.success(int.connected ? `${int.name} disconnected` : `${int.name} connected!`);
+                        }}
                       >
                         {int.connected ? 'Disconnect' : 'Connect'}
                       </Button>

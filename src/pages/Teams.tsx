@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import {
   Users, Plus, Search, MessageSquare, Code2, FileText,
-  CheckSquare, Settings, MoreHorizontal, Hash, Bell, Lock, X
+  CheckSquare, Settings, MoreHorizontal, Lock, X
 } from 'lucide-react';
 import {
   Dialog,
@@ -43,10 +43,22 @@ const initialTeams = [
 const tabs = ['Discussions', 'Snippets', 'Docs', 'Tasks'];
 
 const initialDiscussions = [
-  { user: 'Sarah K.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=32&h=32&fit=crop&crop=face', time: '10m ago', msg: 'Reviewed the new auth middleware. Found a potential timing attack. PR comment added.' },
-  { user: 'Marcus L.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face', time: '25m ago', msg: 'Pushed fix for the N+1 query in user endpoint. Performance improved 3x in load tests.' },
-  { user: 'Alex C.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face', time: '1h ago', msg: 'Created shared snippet for the Redis cache pattern. Worth adding to our patterns library.' },
-  { user: 'Priya M.', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=32&h=32&fit=crop&crop=face', time: '2h ago', msg: 'Architecture proposal for the new notification service is in the Docs tab. Please review by EOD.' },
+  { id: '1', user: 'Sarah K.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=32&h=32&fit=crop&crop=face', time: '10m ago', msg: 'Reviewed the new auth middleware. Found a potential timing attack. PR comment added.' },
+  { id: '2', user: 'Marcus L.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face', time: '25m ago', msg: 'Pushed fix for the N+1 query in user endpoint. Performance improved 3x in load tests.' },
+  { id: '3', user: 'Alex C.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face', time: '1h ago', msg: 'Created shared snippet for the Redis cache pattern. Worth adding to our patterns library.' },
+  { id: '4', user: 'Priya M.', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=32&h=32&fit=crop&crop=face', time: '2h ago', msg: 'Architecture proposal for the new notification service is in the Docs tab. Please review by EOD.' },
+];
+
+const initialSnippets = [
+  { id: '1', title: 'Redis Cache Pattern', lang: 'TypeScript', author: 'Alex C.', updated: '2h ago', code: 'const cache = await redis.get(key); ...' },
+  { id: '2', title: 'JWT Middleware', lang: 'TypeScript', author: 'Sarah K.', updated: '1d ago', code: 'function verifyToken(req, res, next) { ... }' },
+  { id: '3', title: 'DB Connection Pool', lang: 'Go', author: 'Marcus L.', updated: '3d ago', code: 'pool := pgxpool.New(context.Background(), connString)' },
+];
+
+const initialDocs = [
+  { id: '1', title: 'Architecture Decision Records', author: 'Priya M.', updated: '1h ago', content: '# ADR-001: Use PostgreSQL for primary store\n\nWe decided to use PostgreSQL because ...' },
+  { id: '2', title: 'API Design Guidelines', author: 'Marcus L.', updated: '2d ago', content: '# RESTful Best Practices\n\nUse nouns, not verbs...' },
+  { id: '3', title: 'Onboarding Guide', author: 'Alex C.', updated: '1w ago', content: '# Welcome to the team!\n\nFollow these steps to get started...' },
 ];
 
 const initialTasks = [
@@ -64,6 +76,8 @@ export default function Teams() {
   const [message, setMessage] = useState('');
   const [search, setSearch] = useState('');
   const [discussionsData, setDiscussionsData] = useState(initialDiscussions);
+  const [snippetsData, setSnippetsData] = useState(initialSnippets);
+  const [docsData, setDocsData] = useState(initialDocs);
   const [tasksData, setTasksData] = useState(initialTasks);
   
   // Modals state
@@ -74,45 +88,159 @@ export default function Teams() {
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [newTaskName, setNewTaskName] = useState('');
   const [addTaskCol, setAddTaskCol] = useState('');
+  const [teamSettingsOpen, setTeamSettingsOpen] = useState(false);
+  const [editTeamName, setEditTeamName] = useState('');
+  const [editTeamDesc, setEditTeamDesc] = useState('');
+  const [newSnippetOpen, setNewSnippetOpen] = useState(false);
+  const [newSnippetTitle, setNewSnippetTitle] = useState('');
+  const [newSnippetLang, setNewSnippetLang] = useState('TypeScript');
+  const [newSnippetCode, setNewSnippetCode] = useState('');
+  const [docPreviewOpen, setDocPreviewOpen] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState<typeof initialDocs[0] | null>(null);
+  const [taskItemModal, setTaskItemModal] = useState<{ column: string; item: string } | null>(null);
 
+  // Helper functions
   const sendMessage = () => {
     if (!message.trim()) return;
-    setDiscussionsData([{ user: 'You', avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?w=32&h=32&fit=crop&crop=face', time: 'Just now', msg: message }, ...discussionsData]);
+    const newMsg = {
+      id: Date.now().toString(),
+      user: 'You',
+      avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?w=32&h=32&fit=crop&crop=face',
+      time: 'Just now',
+      msg: message,
+    };
+    setDiscussionsData([newMsg, ...discussionsData]);
     setMessage('');
+    toast.success('Message sent');
   };
 
   const handleCreateTeam = () => {
-    if (!newTeamName) return;
+    if (!newTeamName.trim()) return;
     const newTeam = {
-      id: Math.random().toString(), name: newTeamName, members: 1, description: 'Newly created team',
-      tags: [], active: true, messages: 0, unread: 0,
-      avatar: newTeamName.substring(0, 2).toUpperCase(), color: 'bg-pink-600',
+      id: Math.random().toString(),
+      name: newTeamName,
+      members: 1,
+      description: 'Newly created team',
+      tags: [],
+      active: true,
+      messages: 0,
+      unread: 0,
+      avatar: newTeamName.substring(0, 2).toUpperCase(),
+      color: 'bg-pink-600',
     };
     setTeamsData([...teamsData, newTeam]);
     setSelectedTeam(newTeam);
     setCreateTeamOpen(false);
     setNewTeamName('');
-    toast.success('Team created successfully!');
+    toast.success(`Team "${newTeamName}" created!`);
   };
 
   const handleInvite = () => {
-    if (!inviteEmail) return;
+    if (!inviteEmail.trim()) return;
     setInviteOpen(false);
     setInviteEmail('');
-    toast.success(`Invite sent to ${inviteEmail}`);
+    toast.success(`Invitation sent to ${inviteEmail}`);
   };
 
   const handleAddTask = () => {
-    if (!newTaskName) return;
-    setTasksData(prev => prev.map(col => {
-      if (col.status === addTaskCol) {
-        return { ...col, items: [...col.items, newTaskName] };
-      }
-      return col;
-    }));
+    if (!newTaskName.trim()) return;
+    setTasksData(prev =>
+      prev.map(col => {
+        if (col.status === addTaskCol) {
+          return { ...col, items: [...col.items, newTaskName] };
+        }
+        return col;
+      })
+    );
     setAddTaskOpen(false);
     setNewTaskName('');
     toast.success('Task added!');
+  };
+
+  const handleUpdateTeam = () => {
+    setTeamsData(prev =>
+      prev.map(team =>
+        team.id === selectedTeam.id
+          ? { ...team, name: editTeamName, description: editTeamDesc }
+          : team
+      )
+    );
+    setSelectedTeam(prev => ({ ...prev, name: editTeamName, description: editTeamDesc }));
+    setTeamSettingsOpen(false);
+    toast.success('Team settings updated');
+  };
+
+  const handleCreateSnippet = () => {
+    if (!newSnippetTitle.trim()) return;
+    const newSnippet = {
+      id: Date.now().toString(),
+      title: newSnippetTitle,
+      lang: newSnippetLang,
+      author: 'You',
+      updated: 'Just now',
+      code: newSnippetCode || '// Add your code here',
+    };
+    setSnippetsData([newSnippet, ...snippetsData]);
+    setNewSnippetOpen(false);
+    setNewSnippetTitle('');
+    setNewSnippetCode('');
+    toast.success('Snippet created!');
+  };
+
+  const handleTaskItemClick = (column: string, item: string) => {
+    setTaskItemModal({ column, item });
+  };
+
+  const handleMoveTask = (direction: 'prev' | 'next') => {
+    if (!taskItemModal) return;
+    const columns = ['To Do', 'In Progress', 'Done'];
+    const currentIndex = columns.indexOf(taskItemModal.column);
+    let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+    if (newIndex < 0 || newIndex >= columns.length) {
+      toast.error("Can't move task further");
+      return;
+    }
+    const newColumn = columns[newIndex];
+    // Remove from old column
+    setTasksData(prev =>
+      prev.map(col => {
+        if (col.status === taskItemModal.column) {
+          return { ...col, items: col.items.filter(i => i !== taskItemModal.item) };
+        }
+        return col;
+      })
+    );
+    // Add to new column
+    setTasksData(prev =>
+      prev.map(col => {
+        if (col.status === newColumn) {
+          return { ...col, items: [...col.items, taskItemModal.item] };
+        }
+        return col;
+      })
+    );
+    setTaskItemModal(null);
+    toast.success(`Task moved to ${newColumn}`);
+  };
+
+  const handleDeleteTask = () => {
+    if (!taskItemModal) return;
+    setTasksData(prev =>
+      prev.map(col => {
+        if (col.status === taskItemModal.column) {
+          return { ...col, items: col.items.filter(i => i !== taskItemModal.item) };
+        }
+        return col;
+      })
+    );
+    setTaskItemModal(null);
+    toast.success('Task deleted');
+  };
+
+  const openTeamSettings = () => {
+    setEditTeamName(selectedTeam.name);
+    setEditTeamDesc(selectedTeam.description);
+    setTeamSettingsOpen(true);
   };
 
   return (
@@ -147,6 +275,7 @@ export default function Teams() {
               {teamsData.filter(t => !search || t.name.toLowerCase().includes(search.toLowerCase())).map(team => (
                 <button
                   key={team.id}
+                  type="button"
                   onClick={() => setSelectedTeam(team)}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors ${
                     selectedTeam.id === team.id ? 'bg-primary/10 border border-primary/20' : 'hover:bg-muted'
@@ -171,6 +300,7 @@ export default function Teams() {
               ))}
 
               <button
+                type="button"
                 onClick={() => setCreateTeamOpen(true)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left hover:bg-muted transition-colors border border-dashed border-border"
               >
@@ -205,7 +335,7 @@ export default function Teams() {
                 <Button size="sm" variant="ghost" className="h-8 px-2" onClick={() => setInviteOpen(true)}>
                   <Users className="w-3.5 h-3.5 mr-1" /> Invite
                 </Button>
-                <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={openTeamSettings}>
                   <Settings className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -219,6 +349,7 @@ export default function Teams() {
                 return (
                   <button
                     key={tab}
+                    type="button"
                     onClick={() => setActiveTab(tab)}
                     className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${
                       activeTab === tab ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -234,8 +365,8 @@ export default function Teams() {
             <div className="flex-1 overflow-y-auto p-5">
               {activeTab === 'Discussions' && (
                 <div className="space-y-4 max-w-3xl">
-                  {discussionsData.map((d, i) => (
-                    <div key={i} className="flex gap-3">
+                  {discussionsData.map(d => (
+                    <div key={d.id} className="flex gap-3">
                       <img src={d.avatar} alt={d.user} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -250,12 +381,15 @@ export default function Teams() {
               )}
               {activeTab === 'Snippets' && (
                 <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
-                  {[
-                    { title: 'Redis Cache Pattern', lang: 'TypeScript', author: 'Alex C.', updated: '2h ago' },
-                    { title: 'JWT Middleware', lang: 'TypeScript', author: 'Sarah K.', updated: '1d ago' },
-                    { title: 'DB Connection Pool', lang: 'Go', author: 'Marcus L.', updated: '3d ago' },
-                  ].map(s => (
-                    <div key={s.title} className="bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-colors cursor-pointer">
+                  {snippetsData.map(s => (
+                    <div
+                      key={s.id}
+                      className="bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-colors cursor-pointer"
+                      onClick={() => {
+                        toast.success(`Opening snippet: ${s.title}`);
+                        // Could open a modal here
+                      }}
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium text-sm">{s.title}</h4>
                         <Badge variant="secondary" className="text-xs">{s.lang}</Badge>
@@ -263,19 +397,26 @@ export default function Teams() {
                       <p className="text-xs text-muted-foreground">by {s.author} · {s.updated}</p>
                     </div>
                   ))}
-                  <button onClick={() => toast.success('Create snippet!')} className="border border-dashed border-border rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => setNewSnippetOpen(true)}
+                    className="border border-dashed border-border rounded-xl p-4 flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                  >
                     <Plus className="w-4 h-4" /> New Snippet
                   </button>
                 </div>
               )}
               {activeTab === 'Docs' && (
                 <div className="space-y-3 max-w-3xl">
-                  {[
-                    { title: 'Architecture Decision Records', author: 'Priya M.', updated: '1h ago' },
-                    { title: 'API Design Guidelines', author: 'Marcus L.', updated: '2d ago' },
-                    { title: 'Onboarding Guide', author: 'Alex C.', updated: '1w ago' },
-                  ].map(doc => (
-                    <div key={doc.title} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors cursor-pointer">
+                  {docsData.map(doc => (
+                    <div
+                      key={doc.id}
+                      className="bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/30 transition-colors cursor-pointer"
+                      onClick={() => {
+                        setSelectedDoc(doc);
+                        setDocPreviewOpen(true);
+                      }}
+                    >
                       <div className="flex items-center gap-3">
                         <FileText className="w-5 h-5 text-primary flex-shrink-0" />
                         <div>
@@ -283,7 +424,7 @@ export default function Teams() {
                           <p className="text-xs text-muted-foreground">by {doc.author} · {doc.updated}</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="ghost" onClick={() => toast.success(`Opening ${doc.title}`)}>Open</Button>
+                      <Button size="sm" variant="ghost">Open</Button>
                     </div>
                   ))}
                 </div>
@@ -295,9 +436,19 @@ export default function Teams() {
                       <h4 className="font-semibold text-sm mb-3">{col.status} ({col.items.length})</h4>
                       <div className="space-y-2">
                         {col.items.map(item => (
-                          <div key={item} className="bg-background border border-border rounded-lg p-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer">{item}</div>
+                          <div
+                            key={item}
+                            className="bg-background border border-border rounded-lg p-2.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                            onClick={() => handleTaskItemClick(col.status, item)}
+                          >
+                            {item}
+                          </div>
                         ))}
-                        <button onClick={() => { setAddTaskCol(col.status); setAddTaskOpen(true); }} className="w-full text-xs text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-1 justify-center">
+                        <button
+                          type="button"
+                          onClick={() => { setAddTaskCol(col.status); setAddTaskOpen(true); }}
+                          className="w-full text-xs text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-1 justify-center"
+                        >
                           <Plus className="w-3 h-3" /> Add task
                         </button>
                       </div>
@@ -337,9 +488,7 @@ export default function Teams() {
           </DialogHeader>
           <div className="flex items-center space-x-2 py-4">
             <div className="grid flex-1 gap-2">
-              <Label htmlFor="teamName" className="sr-only">
-                Team Name
-              </Label>
+              <Label htmlFor="teamName">Team Name</Label>
               <Input
                 id="teamName"
                 placeholder="e.g. Frontend Architecture"
@@ -348,13 +497,9 @@ export default function Teams() {
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end">
-            <Button type="button" variant="secondary" onClick={() => setCreateTeamOpen(false)}>
-              Close
-            </Button>
-            <Button type="button" onClick={handleCreateTeam}>
-              Create Team
-            </Button>
+          <DialogFooter>
+            <Button type="button" variant="secondary" onClick={() => setCreateTeamOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={handleCreateTeam}>Create</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -363,15 +508,11 @@ export default function Teams() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Invite to {selectedTeam.name}</DialogTitle>
-            <DialogDescription>
-              Enter their email address to send an invitation.
-            </DialogDescription>
+            <DialogDescription>Enter their email address to send an invitation.</DialogDescription>
           </DialogHeader>
           <div className="flex items-center space-x-2 py-4">
             <div className="grid flex-1 gap-2">
-              <Label htmlFor="email" className="sr-only">
-                Email
-              </Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 placeholder="developer@company.com"
@@ -381,13 +522,9 @@ export default function Teams() {
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end">
-            <Button type="button" variant="secondary" onClick={() => setInviteOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="button" onClick={handleInvite}>
-              Send Invite
-            </Button>
+          <DialogFooter>
+            <Button type="button" variant="secondary" onClick={() => setInviteOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={handleInvite}>Send Invite</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -399,9 +536,7 @@ export default function Teams() {
           </DialogHeader>
           <div className="flex items-center space-x-2 py-4">
             <div className="grid flex-1 gap-2">
-              <Label htmlFor="taskName" className="sr-only">
-                Task Name
-              </Label>
+              <Label htmlFor="taskName">Task Name</Label>
               <Input
                 id="taskName"
                 placeholder="e.g. Refactor API module"
@@ -410,17 +545,123 @@ export default function Teams() {
               />
             </div>
           </div>
-          <DialogFooter className="sm:justify-end">
-            <Button type="button" variant="secondary" onClick={() => setAddTaskOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="button" onClick={handleAddTask}>
-              Add
-            </Button>
+          <DialogFooter>
+            <Button type="button" variant="secondary" onClick={() => setAddTaskOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={handleAddTask}>Add</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* Team Settings Dialog */}
+      <Dialog open={teamSettingsOpen} onOpenChange={setTeamSettingsOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Team</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="editTeamName">Team Name</Label>
+              <Input
+                id="editTeamName"
+                value={editTeamName}
+                onChange={e => setEditTeamName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="editTeamDesc">Description</Label>
+              <Input
+                id="editTeamDesc"
+                value={editTeamDesc}
+                onChange={e => setEditTeamDesc(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="secondary" onClick={() => setTeamSettingsOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={handleUpdateTeam}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* New Snippet Dialog */}
+      <Dialog open={newSnippetOpen} onOpenChange={setNewSnippetOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Create New Snippet</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="snippetTitle">Title</Label>
+              <Input
+                id="snippetTitle"
+                placeholder="e.g. Redis Cache Pattern"
+                value={newSnippetTitle}
+                onChange={e => setNewSnippetTitle(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="snippetLang">Language</Label>
+              <select
+                id="snippetLang"
+                value={newSnippetLang}
+                onChange={e => setNewSnippetLang(e.target.value)}
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option>TypeScript</option>
+                <option>JavaScript</option>
+                <option>Go</option>
+                <option>Python</option>
+                <option>Rust</option>
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="snippetCode">Code</Label>
+              <textarea
+                id="snippetCode"
+                rows={5}
+                className="w-full px-3 py-2 bg-background border border-input rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                placeholder="// Your code here"
+                value={newSnippetCode}
+                onChange={e => setNewSnippetCode(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="secondary" onClick={() => setNewSnippetOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={handleCreateSnippet}>Create Snippet</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Preview Modal */}
+      <Dialog open={docPreviewOpen} onOpenChange={setDocPreviewOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedDoc?.title}</DialogTitle>
+            <DialogDescription>by {selectedDoc?.author} · {selectedDoc?.updated}</DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 prose prose-sm dark:prose-invert">
+            <pre className="whitespace-pre-wrap text-sm text-muted-foreground">{selectedDoc?.content}</pre>
+          </div>
+          <DialogFooter>
+            <Button type="button" onClick={() => setDocPreviewOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Task Item Actions Modal */}
+      <Dialog open={!!taskItemModal} onOpenChange={() => setTaskItemModal(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Task: {taskItemModal?.item}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 py-4">
+            <Button variant="outline" onClick={() => handleMoveTask('prev')}>Move to previous column</Button>
+            <Button variant="outline" onClick={() => handleMoveTask('next')}>Move to next column</Button>
+            <Button variant="destructive" onClick={handleDeleteTask}>Delete task</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

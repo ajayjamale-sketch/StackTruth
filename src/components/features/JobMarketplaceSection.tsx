@@ -44,10 +44,13 @@ export default function JobMarketplaceSection() {
     <section className="py-24 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 border-primary/30 text-primary">Job Marketplace</Badge>
+          <Badge variant="outline" className="mb-4 border-primary/30 text-primary">
+            Job Marketplace
+          </Badge>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             Your reputation opens
-            <br /><span className="text-gradient">the best engineering doors</span>
+            <br />
+            <span className="text-gradient">the best engineering doors</span>
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto">
             Top companies hire directly from StackTruth. Your public profile, code quality scores, and reputation signal your skills before the first interview.
@@ -55,30 +58,47 @@ export default function JobMarketplaceSection() {
         </div>
 
         <div className="grid sm:grid-cols-3 gap-4 mb-8">
-          {jobs.map((job, i) => (
-            <Link key={i} to="/jobs" className="bg-card border border-border rounded-xl p-5 card-hover block">
+          {jobs.map(job => (
+            <Link
+              key={`${job.company}-${job.title}`}
+              to="/jobs"
+              className="bg-card border border-border rounded-xl p-5 card-hover block focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
               <div className="flex items-start justify-between mb-4">
-                <div className={`w-10 h-10 rounded-xl ${job.logoColor} flex items-center justify-center text-white font-bold`}>
+                <div
+                  className={`w-10 h-10 rounded-xl ${job.logoColor} flex items-center justify-center text-white font-bold`}
+                  aria-hidden="true"
+                >
                   {job.logo}
                 </div>
-                <Badge variant="secondary" className="text-xs">{job.type}</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {job.type}
+                </Badge>
               </div>
               <h3 className="font-semibold mb-1">{job.title}</h3>
               <p className="text-sm text-muted-foreground mb-3">{job.company}</p>
               <div className="space-y-1.5 mb-3">
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <MapPin className="w-3 h-3" /> {job.location}
+                  <MapPin className="w-3 h-3" aria-hidden="true" />
+                  {job.location}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <DollarSign className="w-3 h-3" /> {job.salary}
+                  <DollarSign className="w-3 h-3" aria-hidden="true" />
+                  {job.salary}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Clock className="w-3 h-3" /> Posted {job.posted}
+                  <Clock className="w-3 h-3" aria-hidden="true" />
+                  Posted {job.posted}
                 </div>
               </div>
               <div className="flex flex-wrap gap-1">
-                {job.skills.map(s => (
-                  <span key={s} className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-md border border-primary/20">{s}</span>
+                {job.skills.map(skill => (
+                  <span
+                    key={skill}
+                    className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-md border border-primary/20"
+                  >
+                    {skill}
+                  </span>
                 ))}
               </div>
             </Link>
@@ -87,7 +107,9 @@ export default function JobMarketplaceSection() {
 
         <div className="text-center">
           <Button asChild className="bg-primary hover:bg-primary/90">
-            <Link to="/jobs">Browse All Jobs <ArrowRight className="w-4 h-4 ml-2" /></Link>
+            <Link to="/jobs">
+              Browse All Jobs <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+            </Link>
           </Button>
         </div>
       </div>

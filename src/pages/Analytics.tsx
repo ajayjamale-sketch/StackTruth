@@ -1,5 +1,6 @@
+// Analytics.tsx
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { LayoutDashboard, MessageSquare, GitBranch, Bot, Bookmark, Bell, BarChart3, TrendingUp, Users, Award, ArrowUp, ArrowDown } from 'lucide-react';
 import { mockUser } from '@/lib/mockData';
@@ -9,25 +10,81 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
-const reputationData = [
-  { month: 'Jan', rep: 1200 }, { month: 'Feb', rep: 1580 }, { month: 'Mar', rep: 2100 },
-  { month: 'Apr', rep: 2450 }, { month: 'May', rep: 3200 }, { month: 'Jun', rep: 3580 },
-  { month: 'Jul', rep: 3900 }, { month: 'Aug', rep: 4200 }, { month: 'Sep', rep: 4480 },
-  { month: 'Oct', rep: 4600 }, { month: 'Nov', rep: 4750 }, { month: 'Dec', rep: 4820 },
-];
+// ------------- Helper functions to generate dynamic data based on period -------------
+const getReputationData = (period: string) => {
+  // Full yearly data (Jan - Dec)
+  const fullYearData = [
+    { month: 'Jan', rep: 1200 }, { month: 'Feb', rep: 1580 }, { month: 'Mar', rep: 2100 },
+    { month: 'Apr', rep: 2450 }, { month: 'May', rep: 3200 }, { month: 'Jun', rep: 3580 },
+    { month: 'Jul', rep: 3900 }, { month: 'Aug', rep: 4200 }, { month: 'Sep', rep: 4480 },
+    { month: 'Oct', rep: 4600 }, { month: 'Nov', rep: 4750 }, { month: 'Dec', rep: 4820 },
+  ];
 
-const weeklyData = [
-  { day: 'Mon', questions: 3, answers: 8 }, { day: 'Tue', questions: 1, answers: 12 },
-  { day: 'Wed', questions: 4, answers: 6 }, { day: 'Thu', questions: 2, answers: 15 },
-  { day: 'Fri', questions: 5, answers: 9 }, { day: 'Sat', questions: 1, answers: 3 },
-  { day: 'Sun', questions: 0, answers: 4 },
-];
+  // Daily mock data for last 30 days (for 7D and 30D views)
+  const generateDailyRep = (days: number) => {
+    const today = new Date();
+    return Array.from({ length: days }, (_, i) => {
+      const date = new Date();
+      date.setDate(today.getDate() - (days - 1 - i));
+      const value = 1200 + Math.floor(Math.random() * 200) + i * 30;
+      return { month: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), rep: value };
+    });
+  };
 
-const skillsData = [
-  { skill: 'TypeScript', score: 92 }, { skill: 'Rust', score: 78 }, { skill: 'React', score: 88 },
-  { skill: 'PostgreSQL', score: 84 }, { skill: 'Node.js', score: 76 }, { skill: 'Kubernetes', score: 65 },
-];
+  switch (period) {
+    case '7D':
+      return generateDailyRep(7);
+    case '30D':
+      return generateDailyRep(30);
+    case '3M':
+      return fullYearData.slice(-3); // Last 3 months
+    case '12M':
+    default:
+      return fullYearData;
+  }
+};
 
+const getWeeklyData = (period: string) => {
+  const fullWeek = [
+    { day: 'Mon', questions: 3, answers: 8 }, { day: 'Tue', questions: 1, answers: 12 },
+    { day: 'Wed', questions: 4, answers: 6 }, { day: 'Thu', questions: 2, answers: 15 },
+    { day: 'Fri', questions: 5, answers: 9 }, { day: 'Sat', questions: 1, answers: 3 },
+    { day: 'Sun', questions: 0, answers: 4 },
+  ];
+
+  // Generate multi-week data for longer periods
+  const generateMultiWeek = (weeks: number) => {
+    const data = [];
+    for (let w = 0; w < weeks; w++) {
+      for (let d = 0; d < fullWeek.length; d++) {
+        const dayOffset = w * 7 + d;
+        const date = new Date();
+        date.setDate(date.getDate() - (weeks * 7 - dayOffset) + 1);
+        data.push({
+          day: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          questions: Math.floor(Math.random() * 5) + (w === 0 ? fullWeek[d].questions : 2),
+          answers: Math.floor(Math.random() * 15) + (w === 0 ? fullWeek[d].answers : 5)
+        });
+      }
+    }
+    return data;
+  };
+
+  switch (period) {
+    case '7D':
+      return fullWeek; // single week
+    case '30D':
+      return generateMultiWeek(4); // ~4 weeks
+    case '3M':
+      return generateMultiWeek(12); // 12 weeks
+    case '12M':
+      return generateMultiWeek(52); // 52 weeks (truncated for display)
+    default:
+      return fullWeek;
+  }
+};
+
+// KPI data (static but could be made dynamic)
 const kpis = [
   { label: 'Reputation', value: '4,820', change: '+240', up: true, icon: Award },
   { label: 'Questions Asked', value: '47', change: '+5', up: true, icon: MessageSquare },
@@ -35,11 +92,21 @@ const kpis = [
   { label: 'Code Reviews', value: '92', change: '+8', up: true, icon: GitBranch },
 ];
 
+// Static skills data
+const skillsData = [
+  { skill: 'TypeScript', score: 92 }, { skill: 'Rust', score: 78 }, { skill: 'React', score: 88 },
+  { skill: 'PostgreSQL', score: 84 }, { skill: 'Node.js', score: 76 }, { skill: 'Kubernetes', score: 65 },
+];
+
 export default function Analytics() {
   useScrollToTop();
   const navigate = useNavigate();
   const [period, setPeriod] = useState('12M');
   const [activeTab, setActiveTab] = useState('analytics');
+
+  // Dynamically computed data based on period
+  const reputationData = getReputationData(period);
+  const weeklyData = getWeeklyData(period);
 
   const handleTabChange = (tab: string) => {
     if (tab === 'analytics') {
@@ -75,7 +142,9 @@ export default function Analytics() {
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${period === p ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  period === p ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
               >
                 {p}
               </button>
@@ -111,7 +180,9 @@ export default function Analytics() {
           <div className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">Reputation Growth</h3>
-              <Badge variant="secondary" className="text-xs">+300% YoY</Badge>
+              <Badge variant="secondary" className="text-xs">
+                {period === '7D' ? 'Last 7 days' : period === '30D' ? 'Last 30 days' : period === '3M' ? 'Last 3 months' : 'Year to date'}
+              </Badge>
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={reputationData}>
@@ -130,10 +201,10 @@ export default function Analytics() {
             </ResponsiveContainer>
           </div>
 
-          {/* Weekly Activity */}
+          {/* Weekly Contributions */}
           <div className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Weekly Contributions</h3>
+              <h3 className="font-semibold">Contributions</h3>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-primary inline-block" />Questions</span>
                 <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-accent inline-block" />Answers</span>
@@ -178,7 +249,6 @@ export default function Analytics() {
           </div>
         </div>
       </div>
-
     </DashboardLayout>
   );
 }

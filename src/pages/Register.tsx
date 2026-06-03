@@ -7,10 +7,9 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Code2, Github, Eye, EyeOff, ArrowRight, Loader2, CheckCircle } from 'lucide-react';
+import { Code2, Github, Eye, EyeOff, ArrowRight, Loader2, CheckCircle, Sun, Moon } from 'lucide-react';
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { useThemeContext } from '@/context/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -56,37 +55,41 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 section-dark relative overflow-hidden flex-col justify-between p-12">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.15),transparent_60%)]" />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)`, backgroundSize: '50px 50px' }} />
+      {/* Left Panel - fixed text contrast */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-between p-12 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+        {/* Subtle background pattern - removed dark overlay that might hide text */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.1),transparent_60%)]" />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px)`, backgroundSize: '50px 50px' }} />
+        
         <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2 mb-16">
-            <div className="w-8 h-8 rounded-lg bg-gradient-brand flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <Code2 className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-foreground text-lg">Stack<span className="text-blue-600 dark:text-blue-400">Truth</span></span>
+            <span className="font-bold text-white text-lg">Stack<span className="text-blue-400">Truth</span></span>
           </Link>
+          
           <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
             Start writing better
             <br />code today. Free.
           </h2>
-          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+          <p className="text-gray-300 text-sm mb-8 leading-relaxed">
             Join 180,000+ engineers who use StackTruth to ask smarter questions, validate their code, and grow their careers.
           </p>
+          
           <ul className="space-y-3">
             {perks.map(perk => (
-              <li key={perk} className="flex items-center gap-2.5 text-sm text-foreground">
-                <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" />
+              <li key={perk} className="flex items-center gap-2.5 text-sm text-gray-200">
+                <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                 {perk}
               </li>
             ))}
           </ul>
         </div>
-        <div className="relative z-10 text-muted-foreground text-xs">© {new Date().getFullYear()} StackTruth, Inc.</div>
+        <div className="relative z-10 text-gray-400 text-xs">© {new Date().getFullYear()} StackTruth, Inc.</div>
       </div>
 
-      {/* Right Panel */}
+      {/* Right Panel - unchanged, already fine */}
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between p-6">
           <Link to="/" className="flex items-center gap-2 lg:hidden">

@@ -1,3 +1,4 @@
+// Jobs.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -73,24 +74,36 @@ export default function Jobs() {
 
   const toggleSave = (id: string) => {
     const next = new Set(saved);
-    if (next.has(id)) { next.delete(id); toast.success('Removed from saved'); }
-    else { next.add(id); toast.success('Job saved!'); }
+    if (next.has(id)) {
+      next.delete(id);
+      toast.success('Removed from saved');
+    } else {
+      next.add(id);
+      toast.success('Job saved!');
+    }
     setSaved(next);
   };
 
   const handleApply = async (id: string, title: string) => {
     setApplying(id);
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     setApplying(null);
     toast.success(`Application submitted for ${title}!`);
   };
 
-  const filtered = jobs.filter(j => {
-    const matchSearch = !search || j.title.toLowerCase().includes(search.toLowerCase()) ||
-      j.company.toLowerCase().includes(search.toLowerCase()) ||
-      j.skills.some(s => s.toLowerCase().includes(search.toLowerCase()));
-    const matchFilter = filter === 'All' || j.location.includes(filter === 'Remote' ? 'Remote' : filter);
-    return matchSearch && matchFilter;
+  const filtered = jobs.filter(job => {
+    const matchesSearch = !search ||
+      job.title.toLowerCase().includes(search.toLowerCase()) ||
+      job.company.toLowerCase().includes(search.toLowerCase()) ||
+      job.skills.some(skill => skill.toLowerCase().includes(search.toLowerCase()));
+    
+    let matchesFilter = true;
+    if (filter === 'Remote') matchesFilter = job.location === 'Remote';
+    else if (filter === 'Hybrid') matchesFilter = job.location.includes('Hybrid');
+    else if (filter === 'Senior') matchesFilter = job.level === 'Senior';
+    else if (filter === 'Staff') matchesFilter = job.level === 'Staff';
+    
+    return matchesSearch && matchesFilter;
   });
 
   return (
@@ -99,12 +112,18 @@ export default function Jobs() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-surface-10">
+      <div className="pt-20 pb-8 border-b border-border bg-gradient-to-b from-background to-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <Badge className="mb-3 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Job Marketplace</Badge>
-            <h1 className="text-3xl font-bold text-foreground mb-3">Find Your Next Engineering Role</h1>
-            <p className="text-muted-foreground">Top companies hire directly from StackTruth based on your reputation and code quality</p>
+            <Badge className="mb-3 bg-primary/20 text-primary-foreground dark:text-blue-300 border border-primary/30">
+              Job Marketplace
+            </Badge>
+            <h1 className="text-3xl font-bold text-foreground mb-3">
+              Find Your Next Engineering Role
+            </h1>
+            <p className="text-muted-foreground">
+              Top companies hire directly from StackTruth based on your reputation and code quality
+            </p>
           </div>
           <div className="max-w-2xl mx-auto flex gap-3">
             <div className="relative flex-1">
@@ -116,7 +135,12 @@ export default function Jobs() {
                 className="pl-9 bg-background"
               />
             </div>
-            <Button className="bg-primary hover:bg-primary/90"><Filter className="w-4 h-4 mr-2" />Filter</Button>
+            <Button
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => toast.info('Advanced filter options (coming soon)')}
+            >
+              <Filter className="w-4 h-4 mr-2" /> Filter
+            </Button>
           </div>
         </div>
       </div>
@@ -141,7 +165,7 @@ export default function Jobs() {
         {/* Job Grid */}
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
           {filtered.map(job => (
-            <div key={job.id} className="bg-card border border-border rounded-xl overflow-hidden card-hover flex flex-col">
+            <div key={job.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all flex flex-col">
               <div className="p-5 flex-1">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -153,7 +177,10 @@ export default function Jobs() {
                       <p className="text-xs text-muted-foreground">{job.company}</p>
                     </div>
                   </div>
-                  <button onClick={() => toggleSave(job.id)} className="text-muted-foreground hover:text-primary transition-colors mt-0.5">
+                  <button
+                    onClick={() => toggleSave(job.id)}
+                    className="text-muted-foreground hover:text-primary transition-colors mt-0.5"
+                  >
                     {saved.has(job.id) ? <BookmarkCheck className="w-4 h-4 text-primary" /> : <Bookmark className="w-4 h-4" />}
                   </button>
                 </div>
@@ -167,18 +194,22 @@ export default function Jobs() {
                 </div>
 
                 <div className="flex flex-wrap gap-1 mb-3">
-                  {job.skills.slice(0, 3).map(s => (
-                    <span key={s} className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-md border border-primary/20">{s}</span>
+                  {job.skills.slice(0, 3).map(skill => (
+                    <span key={skill} className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-md border border-primary/20">
+                      {skill}
+                    </span>
                   ))}
                   {job.skills.length > 3 && (
-                    <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-md">+{job.skills.length - 3}</span>
+                    <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-md">
+                      +{job.skills.length - 3}
+                    </span>
                   )}
                 </div>
 
                 <div className="flex flex-wrap gap-1">
-                  {job.perks.map(p => (
-                    <span key={p} className="text-[10px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground flex items-center gap-0.5">
-                      <CheckCircle className="w-2.5 h-2.5 text-accent" />{p}
+                  {job.perks.map(perk => (
+                    <span key={perk} className="text-[10px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground flex items-center gap-0.5">
+                      <CheckCircle className="w-2.5 h-2.5 text-accent" />{perk}
                     </span>
                   ))}
                 </div>
@@ -192,7 +223,12 @@ export default function Jobs() {
                 >
                   {applying === job.id ? 'Applying...' : 'Quick Apply'}
                 </Button>
-                <Button variant="outline" size="sm" className="h-8 px-3" onClick={() => setSelectedJob(job)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3"
+                  onClick={() => setSelectedJob(job)}
+                >
                   <ExternalLink className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -209,6 +245,7 @@ export default function Jobs() {
         )}
       </div>
 
+      {/* Job Details Sheet */}
       <Sheet open={!!selectedJob} onOpenChange={(open) => !open && setSelectedJob(null)}>
         <SheetContent className="sm:max-w-md overflow-y-auto">
           {selectedJob && (
@@ -239,15 +276,15 @@ export default function Jobs() {
                     {selectedJob.desc}
                   </p>
                   <p className="text-sm text-muted-foreground leading-relaxed mt-4">
-                    This is a mock detailed description for the purpose of demonstrating the UI. In a real application, this would contain the full job posting details fetched from a database, including responsibilities, requirements, and company culture.
+                    This is a detailed description for demonstration purposes. In a real application, this would contain the full job posting details including responsibilities, requirements, and company culture.
                   </p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold mb-2">Required Skills</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedJob.skills.map(s => (
-                      <Badge key={s} variant="secondary">{s}</Badge>
+                    {selectedJob.skills.map(skill => (
+                      <Badge key={skill} variant="secondary">{skill}</Badge>
                     ))}
                   </div>
                 </div>
@@ -255,9 +292,9 @@ export default function Jobs() {
                 <div>
                   <h4 className="font-semibold mb-2">Perks & Benefits</h4>
                   <ul className="space-y-2">
-                    {selectedJob.perks.map(p => (
-                      <li key={p} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-accent" />{p}
+                    {selectedJob.perks.map(perk => (
+                      <li key={perk} className="text-sm text-muted-foreground flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-accent" />{perk}
                       </li>
                     ))}
                   </ul>
@@ -274,7 +311,10 @@ export default function Jobs() {
                   >
                     {applying === selectedJob.id ? 'Applying...' : 'Apply Now'}
                   </Button>
-                  <Button variant="outline" onClick={() => toggleSave(selectedJob.id)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleSave(selectedJob.id)}
+                  >
                     {saved.has(selectedJob.id) ? 'Saved' : 'Save'}
                   </Button>
                 </div>

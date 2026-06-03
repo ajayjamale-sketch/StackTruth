@@ -9,9 +9,17 @@ export default function TrustedBySection() {
         <p className="text-center text-sm text-muted-foreground mb-8 uppercase tracking-widest font-semibold">
           Trusted by engineers at world-class companies
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
+        <div
+          className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4"
+          role="list"
+          aria-label="Companies that trust StackTruth"
+        >
           {companies.map(company => (
-            <span key={company} className="text-lg font-bold text-muted-foreground/60 hover:text-foreground transition-colors cursor-default select-none">
+            <span
+              key={company}
+              className="text-lg font-bold text-muted-foreground/60 select-none"
+              role="listitem"
+            >
               {company}
             </span>
           ))}

@@ -1,3 +1,4 @@
+// Careers.tsx
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Clock, DollarSign } from 'lucide-react';
+import { toast } from 'sonner'; // optional for feedback
 
 const openings = [
   { title: 'Senior Backend Engineer', dept: 'Engineering', location: 'Remote', type: 'Full-time', level: 'Senior' },
@@ -24,44 +26,82 @@ const values = [
 
 export default function Careers() {
   useScrollToTop();
+
+  const handleApplyClick = (jobTitle: string) => {
+    // Optional: log analytics or show a toast
+    toast.success(`Application started for ${jobTitle}`);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar isAuthenticated={false} /> {/* Assuming Navbar accepts optional prop */}
       <ScrollToTop />
 
-      <section className="pt-32 pb-16 section-dark relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)]" />
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-b from-background via-background to-muted/30">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.15),transparent_70%)] pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <Badge className="mb-4 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">We're Hiring</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-5">Build the future of developer knowledge</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">We are a small, high-impact team building tools that millions of engineers use every day.</p>
+          <Badge className="mb-4 bg-primary/20 text-primary-foreground dark:text-blue-300 border border-primary/30">
+            We're Hiring
+          </Badge>
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-5">
+            Build the future of developer knowledge
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            We are a small, high-impact team building tools that millions of engineers use every day.
+          </p>
         </div>
       </section>
 
+      {/* Values & Open Positions */}
       <section className="py-16 bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Values Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-            {values.map(v => (
-              <div key={v.title} className="bg-card border border-border rounded-xl p-5">
-                <h3 className="font-semibold mb-2">{v.title}</h3>
-                <p className="text-sm text-muted-foreground">{v.desc}</p>
+            {values.map((value) => (
+              <div
+                key={value.title}
+                className="bg-card border border-border rounded-xl p-5 transition-all duration-200 hover:shadow-md"
+              >
+                <h3 className="font-semibold mb-2">{value.title}</h3>
+                <p className="text-sm text-muted-foreground">{value.desc}</p>
               </div>
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold mb-6">Open Positions ({openings.length})</h2>
+          {/* Open Positions */}
+          <h2 className="text-2xl font-bold mb-6">
+            Open Positions ({openings.length})
+          </h2>
           <div className="space-y-3">
-            {openings.map((job, i) => (
-              <div key={i} className="bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-4 hover:border-primary/30 transition-all">
+            {openings.map((job, idx) => (
+              <div
+                key={idx}
+                className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 transition-all duration-200"
+              >
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold">{job.title}</h3>
+                  <h3 className="font-semibold text-lg">{job.title}</h3>
                   <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                    <Badge variant="secondary" className="text-xs">{job.dept}</Badge>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
-                    <Badge className="text-xs bg-primary/10 text-primary border-primary/20">{job.level}</Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {job.dept}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> {job.location}
+                    </span>
+                    <Badge className="text-xs bg-primary/10 text-primary border-primary/20">
+                      {job.level}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {job.type}
+                    </span>
                   </div>
                 </div>
-                <Button size="sm" className="bg-primary hover:bg-primary/90 flex-shrink-0" asChild>
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 flex-shrink-0"
+                  asChild
+                  onClick={() => handleApplyClick(job.title)}
+                >
                   <Link to="/contact">Apply Now</Link>
                 </Button>
               </div>
@@ -70,12 +110,17 @@ export default function Careers() {
         </div>
       </section>
 
-      <section className="py-16 bg-muted/30">
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-b from-muted/30 to-background">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold mb-4">Don't see a fit?</h2>
-          <p className="text-muted-foreground mb-6">We're always looking for exceptional people. Send us your story.</p>
+          <p className="text-muted-foreground mb-6">
+            We're always looking for exceptional people. Send us your story.
+          </p>
           <Button asChild className="bg-primary hover:bg-primary/90">
-            <Link to="/contact">Get In Touch <ArrowRight className="w-4 h-4 ml-2" /></Link>
+            <Link to="/contact">
+              Get In Touch <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
           </Button>
         </div>
       </section>

@@ -1,3 +1,4 @@
+// ForgotPassword.tsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -27,12 +28,17 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    console.log('Password reset for:', data.email);
-    await new Promise(r => setTimeout(r, 1200));
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1200));
     setLoading(false);
     setSentTo(data.email);
     setSent(true);
     toast.success('Password reset link sent!');
+  };
+
+  const handleDifferentEmail = () => {
+    setSent(false);
+    setSentTo('');
   };
 
   return (
@@ -40,10 +46,12 @@ export default function ForgotPassword() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
               <Code2 className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl">Stack<span className="text-primary">Truth</span></span>
+            <span className="font-bold text-xl">
+              Stack<span className="text-primary">Truth</span>
+            </span>
           </Link>
 
           {!sent ? (
@@ -71,7 +79,9 @@ export default function ForgotPassword() {
           {!sent ? (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <Label htmlFor="email" className="text-sm font-medium mb-1.5 block">Email address</Label>
+                <Label htmlFor="email" className="text-sm font-medium mb-1.5 block">
+                  Email address
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -79,25 +89,36 @@ export default function ForgotPassword() {
                   {...register('email')}
                   className={errors.email ? 'border-destructive' : ''}
                 />
-                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="text-xs text-destructive mt-1">{errors.email.message}</p>
+                )}
               </div>
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90 h-11" disabled={loading}>
-                {loading
-                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Sending...</>
-                  : <>Send Reset Link <ArrowRight className="w-4 h-4 ml-2" /></>
-                }
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 h-11"
+                disabled={loading}
+              >
+                {loading ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Sending...</>
+                ) : (
+                  <>Send Reset Link <ArrowRight className="w-4 h-4 ml-2" /></>
+                )}
               </Button>
             </form>
           ) : (
             <div className="space-y-4">
               <div className="bg-accent/10 border border-accent/20 rounded-lg p-4 text-sm text-center">
-                <p className="text-foreground">Link expires in <span className="font-semibold text-accent">15 minutes</span>.</p>
-                <p className="text-muted-foreground mt-1">Check your spam folder if you do not see it.</p>
+                <p className="text-foreground">
+                  Link expires in <span className="font-semibold text-accent">15 minutes</span>.
+                </p>
+                <p className="text-muted-foreground mt-1">
+                  Check your spam folder if you do not see it.
+                </p>
               </div>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => { setSent(false); setSentTo(''); }}
+                onClick={handleDifferentEmail}
               >
                 Try a different email
               </Button>
@@ -106,7 +127,10 @@ export default function ForgotPassword() {
         </div>
 
         <div className="text-center mt-6">
-          <Link to="/login" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Sign In
           </Link>

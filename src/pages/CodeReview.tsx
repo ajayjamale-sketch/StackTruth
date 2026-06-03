@@ -1,3 +1,4 @@
+// CodeReview.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
@@ -10,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import {
   GitBranch, Shield, Zap, AlertTriangle, CheckCircle2,
-  Info, Upload, Code2, Loader2, ChevronDown
+  Info, Upload, Code2, Loader2, Trash2
 } from 'lucide-react';
 
 const languages = ['TypeScript', 'JavaScript', 'Python', 'Rust', 'Go', 'Java', 'C++', 'Ruby', 'PHP', 'Swift'];
@@ -43,9 +44,13 @@ export default function CodeReview() {
   const [loading, setLoading] = useState(false);
 
   const handleReview = async () => {
-    if (!code.trim()) { toast.error('Please enter code to review'); return; }
+    if (!code.trim()) {
+      toast.error('Please enter code to review');
+      return;
+    }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 2500));
+    // Simulate AI processing
+    await new Promise(resolve => setTimeout(resolve, 2500));
     setLoading(false);
     setReviewed(true);
     toast.success('AI code review complete!');
@@ -54,21 +59,33 @@ export default function CodeReview() {
   const loadSample = () => {
     setCode(sampleCode);
     setReviewed(false);
-    toast.success('Sample code loaded');
+    toast.success('Sample code loaded. Click "Run AI Review" to analyze it.');
+  };
+
+  const clearCode = () => {
+    setCode('');
+    setReviewed(false);
+    toast.info('Code cleared');
   };
 
   const exportReport = () => {
-    const reportText = reviewResults.map(r => `[${r.type.toUpperCase()}] ${r.title} (Line ${r.line})\n${r.message}`).join('\n\n');
-    const blob = new Blob([reportText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'code-review-report.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success('Report exported successfully!');
+    try {
+      const reportText = reviewResults.map(r => 
+        `[${r.type.toUpperCase()}] ${r.title} (Line ${r.line})\n${r.message}`
+      ).join('\n\n');
+      const blob = new Blob([reportText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `code-review-report-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success('Report exported successfully!');
+    } catch (error) {
+      toast.error('Failed to export report');
+    }
   };
 
   return (
@@ -84,12 +101,23 @@ export default function CodeReview() {
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 <GitBranch className="w-6 h-6 text-primary" /> Code Review Engine
               </h1>
-              <p className="text-muted-foreground text-sm mt-1">AI-powered security, performance, and quality analysis</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                AI-powered security, performance, and quality analysis
+              </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={loadSample}>Load Sample</Button>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={loadSample}>
+                <Upload className="w-4 h-4 mr-2" /> Load Sample
+              </Button>
+              <Button variant="outline" onClick={clearCode} disabled={loading}>
+                <Trash2 className="w-4 h-4 mr-2" /> Clear
+              </Button>
               <Button className="bg-primary hover:bg-primary/90" onClick={handleReview} disabled={loading}>
-                {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Analyzing...</> : <><Zap className="w-4 h-4 mr-2" />Run AI Review</>}
+                {loading ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing...</>
+                ) : (
+                  <><Zap className="w-4 h-4 mr-2" /> Run AI Review</>
+                )}
               </Button>
             </div>
           </div>
@@ -98,7 +126,7 @@ export default function CodeReview() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Code Input */}
+          {/* Code Input Section */}
           <div>
             <div className="bg-card border border-border rounded-xl overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
@@ -109,16 +137,21 @@ export default function CodeReview() {
                 <div className="flex items-center gap-2">
                   <select
                     value={language}
-                    onChange={e => setLanguage(e.target.value)}
+                    onChange={(e) => setLanguage(e.target.value)}
                     className="text-xs px-2 py-1 rounded-lg bg-background border border-border focus:outline-none focus:ring-1 focus:ring-primary/30"
                   >
-                    {languages.map(l => <option key={l}>{l}</option>)}
+                    {languages.map((lang) => (
+                      <option key={lang}>{lang}</option>
+                    ))}
                   </select>
                 </div>
               </div>
               <Textarea
                 value={code}
-                onChange={e => { setCode(e.target.value); setReviewed(false); }}
+                onChange={(e) => {
+                  setCode(e.target.value);
+                  if (reviewed) setReviewed(false);
+                }}
                 placeholder="Paste your code here for AI review...
 
 // Example: TypeScript, Python, Rust, Go, etc.
@@ -129,16 +162,20 @@ export default function CodeReview() {
             </div>
           </div>
 
-          {/* Review Results */}
+          {/* Review Results Section */}
           <div>
             {!reviewed && !loading ? (
               <div className="bg-card border border-border rounded-xl p-8 text-center h-full flex flex-col items-center justify-center">
                 <GitBranch className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-30" />
                 <h3 className="font-semibold mb-2">Ready to Review</h3>
-                <p className="text-sm text-muted-foreground mb-4">Paste your code on the left and click "Run AI Review" to get instant analysis.</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Paste your code on the left and click "Run AI Review" to get instant analysis.
+                </p>
                 <div className="flex flex-wrap gap-2 justify-center text-xs text-muted-foreground">
-                  {['Security vulnerabilities', 'Performance issues', 'Code quality', 'Best practices'].map(t => (
-                    <Badge key={t} variant="secondary">{t}</Badge>
+                  {['Security vulnerabilities', 'Performance issues', 'Code quality', 'Best practices'].map((t) => (
+                    <Badge key={t} variant="secondary">
+                      {t}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -146,12 +183,18 @@ export default function CodeReview() {
               <div className="bg-card border border-border rounded-xl p-8 text-center h-full flex flex-col items-center justify-center">
                 <Loader2 className="w-10 h-10 text-primary mx-auto mb-4 animate-spin" />
                 <h3 className="font-semibold mb-2">AI is reviewing your code...</h3>
-                <p className="text-sm text-muted-foreground">Analyzing security, performance, and quality metrics</p>
+                <p className="text-sm text-muted-foreground">
+                  Analyzing security, performance, and quality metrics
+                </p>
                 <div className="mt-4 space-y-1.5 w-full max-w-xs">
-                  {['Scanning for vulnerabilities...', 'Checking performance...', 'Analyzing code quality...'].map((s, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+                  {[
+                    'Scanning for vulnerabilities...',
+                    'Checking performance...',
+                    'Analyzing code quality...',
+                  ].map((step, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Loader2 className="w-3 h-3 animate-spin text-primary flex-shrink-0" />
-                      {s}
+                      {step}
                     </div>
                   ))}
                 </div>
@@ -162,41 +205,73 @@ export default function CodeReview() {
                 <div className="px-5 py-4 border-b border-border bg-muted/30">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-semibold">Review Complete</h3>
-                    <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20">3 Critical Issues</Badge>
+                    <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20">
+                      3 Critical Issues
+                    </Badge>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {[
                       { label: 'Security', score: 24, color: 'bg-red-500' },
                       { label: 'Performance', score: 68, color: 'bg-yellow-500' },
                       { label: 'Quality', score: 71, color: 'bg-blue-500' },
-                    ].map(m => (
-                      <div key={m.label} className="text-center">
-                        <div className={`text-2xl font-bold ${m.score < 50 ? 'text-red-600 dark:text-red-400' : m.score < 75 ? 'text-yellow-600 dark:text-yellow-400' : 'text-green-600 dark:text-green-400'}`}>{m.score}</div>
-                        <div className="text-xs text-muted-foreground mb-1">{m.label}</div>
+                    ].map((metric) => (
+                      <div key={metric.label} className="text-center">
+                        <div
+                          className={`text-2xl font-bold ${
+                            metric.score < 50
+                              ? 'text-red-600 dark:text-red-400'
+                              : metric.score < 75
+                              ? 'text-yellow-600 dark:text-yellow-400'
+                              : 'text-green-600 dark:text-green-400'
+                          }`}
+                        >
+                          {metric.score}
+                        </div>
+                        <div className="text-xs text-muted-foreground mb-1">{metric.label}</div>
                         <div className="h-1 bg-muted rounded-full">
-                          <div className={`h-full ${m.color} rounded-full`} style={{ width: `${m.score}%` }} />
+                          <div
+                            className={`h-full ${metric.color} rounded-full transition-all duration-500`}
+                            style={{ width: `${metric.score}%` }}
+                          />
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Issues */}
+                {/* Issues List */}
                 <div className="divide-y divide-border max-h-[500px] overflow-y-auto">
-                  {reviewResults.map((item, i) => {
+                  {reviewResults.map((item, idx) => {
                     const Icon = item.icon;
                     return (
-                      <div key={i} className={`p-4 border-l-4 ${item.type === 'error' ? 'border-l-red-500' : item.type === 'warning' ? 'border-l-yellow-500' : item.type === 'success' ? 'border-l-green-500' : 'border-l-blue-500'}`}>
+                      <div
+                        key={idx}
+                        className={`p-4 border-l-4 ${
+                          item.type === 'error'
+                            ? 'border-l-red-500'
+                            : item.type === 'warning'
+                            ? 'border-l-yellow-500'
+                            : item.type === 'success'
+                            ? 'border-l-green-500'
+                            : 'border-l-blue-500'
+                        }`}
+                      >
                         <div className="flex items-start gap-3">
-                          <div className={`w-7 h-7 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0 mt-0.5 border`}>
+                          <div
+                            className={`w-7 h-7 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0 mt-0.5 border`}
+                          >
                             <Icon className={`w-3.5 h-3.5 ${item.color}`} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-xs font-semibold">{item.title}</span>
-                              <Badge variant="secondary" className="text-[10px] font-mono px-1.5 py-0">{item.line}</Badge>
+                              <Badge variant="secondary" className="text-[10px] font-mono px-1.5 py-0">
+                                {item.line}
+                              </Badge>
                             </div>
-                            <p className="text-xs text-muted-foreground leading-relaxed">{item.message}</p>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
+                              {item.message}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -204,9 +279,14 @@ export default function CodeReview() {
                   })}
                 </div>
 
+                {/* Footer with Export */}
                 <div className="px-5 py-3 border-t border-border bg-muted/20 flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Analyzed in 2.3s · 5 issues found</span>
-                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={exportReport}>Export Report</Button>
+                  <span className="text-xs text-muted-foreground">
+                    Analyzed in 2.3s · 5 issues found
+                  </span>
+                  <Button size="sm" variant="outline" className="text-xs h-7" onClick={exportReport}>
+                    Export Report
+                  </Button>
                 </div>
               </div>
             )}

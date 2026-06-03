@@ -1,4 +1,6 @@
+// Leaderboard.tsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -6,7 +8,8 @@ import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Trophy, Star, Award, Medal, TrendingUp, Filter } from 'lucide-react';
+import { Search, Trophy, Star, Award, Medal, TrendingUp, Filter, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 const devs = [
   { rank: 1, name: 'Priya Nair', username: 'priya_n', rep: 18420, answers: 842, reviews: 341, change: '+240', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=48&h=48&fit=crop&crop=face', badge: 'Expert', skills: ['TypeScript', 'Rust', 'Go'] },
@@ -21,16 +24,34 @@ const devs = [
 
 const periods = ['This Week', 'This Month', 'All Time'];
 
+// Mock function to simulate period change (in real app, fetch data based on period)
+const getLeaderboardData = (period: string) => {
+  return devs; // static for demo
+};
+
 export default function Leaderboard() {
   useScrollToTop();
   const [search, setSearch] = useState('');
   const [period, setPeriod] = useState('This Week');
 
-  const filtered = devs.filter(d =>
-    !search || d.name.toLowerCase().includes(search.toLowerCase()) ||
-    d.username.toLowerCase().includes(search.toLowerCase()) ||
-    d.skills.some(s => s.toLowerCase().includes(search.toLowerCase()))
+  const data = getLeaderboardData(period);
+  const filtered = data.filter(dev =>
+    !search ||
+    dev.name.toLowerCase().includes(search.toLowerCase()) ||
+    dev.username.toLowerCase().includes(search.toLowerCase()) ||
+    dev.skills.some(skill => skill.toLowerCase().includes(search.toLowerCase()))
   );
+
+  const handlePeriodChange = (newPeriod: string) => {
+    setPeriod(newPeriod);
+    toast.success(`Showing rankings for ${newPeriod}`);
+  };
+
+  const handleFilterClick = () => {
+    toast.info('Advanced filter options coming soon');
+  };
+
+  const clearSearch = () => setSearch('');
 
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
@@ -45,18 +66,36 @@ export default function Leaderboard() {
       <ScrollToTop />
 
       {/* Header */}
-      <div className="pt-20 pb-8 section-dark border-b border-surface-10">
+      <div className="pt-20 pb-8 border-b border-border bg-gradient-to-b from-background to-muted/30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge className="mb-3 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Community</Badge>
+          <Badge className="mb-3 bg-primary/20 text-primary-foreground dark:text-blue-300 border border-primary/30">
+            Community
+          </Badge>
           <h1 className="text-3xl font-bold text-foreground mb-3">Developer Leaderboard</h1>
-          <p className="text-muted-foreground">Rankings based on answer quality, code reviews, and community contributions</p>
+          <p className="text-muted-foreground">
+            Rankings based on answer quality, code reviews, and community contributions
+          </p>
 
           {/* Top 3 Podium */}
           <div className="flex justify-center items-end gap-4 mt-8">
-            {[devs[1], devs[0], devs[2]].map((dev, i) => (
-              <div key={dev.rank} className={`flex flex-col items-center ${i === 1 ? 'order-2 -mb-2' : ''}`}>
-                <img src={dev.avatar} alt={dev.name} className={`rounded-full object-cover ring-4 ${i === 1 ? 'w-16 h-16 ring-yellow-400' : 'w-12 h-12 ring-slate-400'}`} />
-                <div className={`mt-2 flex items-center justify-center ${i === 1 ? 'w-14 h-14' : 'w-11 h-11'} bg-gradient-to-b ${i === 1 ? 'from-yellow-400/20' : 'from-slate-400/20'} rounded-t-lg border-t border-x ${i === 1 ? 'border-yellow-400/30' : 'border-slate-400/30'}`}>
+            {[devs[1], devs[0], devs[2]].map((dev, idx) => (
+              <div key={dev.rank} className={`flex flex-col items-center ${idx === 1 ? 'order-2 -mb-2' : ''}`}>
+                <img
+                  src={dev.avatar}
+                  alt={dev.name}
+                  className={`rounded-full object-cover ring-4 ${
+                    idx === 1 ? 'w-16 h-16 ring-yellow-400' : 'w-12 h-12 ring-slate-400'
+                  }`}
+                />
+                <div
+                  className={`mt-2 flex items-center justify-center ${
+                    idx === 1 ? 'w-14 h-14' : 'w-11 h-11'
+                  } bg-gradient-to-b ${
+                    idx === 1 ? 'from-yellow-400/20' : 'from-slate-400/20'
+                  } rounded-t-lg border-t border-x ${
+                    idx === 1 ? 'border-yellow-400/30' : 'border-slate-400/30'
+                  }`}
+                >
                   {getRankIcon(dev.rank)}
                 </div>
                 <p className="text-xs text-foreground/80 font-medium mt-1">{dev.name.split(' ')[0]}</p>
@@ -72,22 +111,42 @@ export default function Leaderboard() {
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input placeholder="Search developer..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+            <Input
+              placeholder="Search developer..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="pl-9 pr-8"
+            />
+            {search && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
           <div className="flex gap-2">
             {periods.map(p => (
               <button
                 key={p}
-                onClick={() => setPeriod(p)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${period === p ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+                onClick={() => handlePeriodChange(p)}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  period === p
+                    ? 'bg-primary text-white'
+                    : 'bg-muted text-muted-foreground hover:text-foreground'
+                }`}
               >
                 {p}
               </button>
             ))}
+            <Button variant="outline" size="sm" onClick={handleFilterClick} className="gap-1">
+              <Filter className="w-3.5 h-3.5" /> Filter
+            </Button>
           </div>
         </div>
 
-        {/* Table */}
+        {/* Leaderboard Table */}
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b border-border bg-muted/30 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             <div className="col-span-1">Rank</div>
@@ -99,7 +158,13 @@ export default function Leaderboard() {
           </div>
           <div className="divide-y divide-border">
             {filtered.map(dev => (
-              <div key={dev.rank} className={`grid grid-cols-12 gap-4 px-5 py-4 items-center hover:bg-muted/30 transition-colors ${dev.rank <= 3 ? 'bg-primary/3' : ''}`}>
+              <Link
+                key={dev.rank}
+                to={`/profile/${dev.username}`}
+                className={`grid grid-cols-12 gap-4 px-5 py-4 items-center hover:bg-muted/30 transition-colors ${
+                  dev.rank <= 3 ? 'bg-primary/3' : ''
+                }`}
+              >
                 <div className="col-span-1 flex items-center justify-center">
                   {getRankIcon(dev.rank)}
                 </div>
@@ -109,7 +174,9 @@ export default function Leaderboard() {
                     <p className="font-semibold text-sm truncate">{dev.name}</p>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-xs text-muted-foreground">@{dev.username}</span>
-                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{dev.badge}</Badge>
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                        {dev.badge}
+                      </Badge>
                     </div>
                   </div>
                 </div>
@@ -125,9 +192,12 @@ export default function Leaderboard() {
                 <div className="col-span-1 text-right">
                   <span className="text-xs font-semibold text-accent">{dev.change}</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
+          {filtered.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">No developers match your search.</div>
+          )}
         </div>
       </div>
 

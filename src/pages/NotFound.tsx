@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/layout/ScrollToTop';
@@ -9,21 +8,21 @@ import { Badge } from '@/components/ui/badge';
 import { Code2, Home, ArrowRight, Search, MessageSquare } from 'lucide-react';
 
 export default function NotFound() {
-  useScrollToTop();
+  useScrollToTop(); // Scrolls to top when component mounts
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <ScrollToTop />
+      <ScrollToTop /> {/* Handles scroll on route changes */}
 
-      <div className="flex items-center justify-center min-h-[80vh] px-4">
+      <main className="flex items-center justify-center min-h-[80vh] px-4">
         <div className="text-center max-w-xl">
           <div className="relative mb-8">
             <div className="text-[120px] font-black text-primary/10 leading-none select-none">404</div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="bg-card border border-border rounded-2xl p-4 shadow-xl">
-                <Code2 className="w-8 h-8 text-primary mx-auto mb-2" />
+                <Code2 className="w-8 h-8 text-primary mx-auto mb-2" aria-hidden="true" />
                 <p className="font-mono text-xs text-muted-foreground">TypeError: page not found</p>
               </div>
             </div>
@@ -36,10 +35,10 @@ export default function NotFound() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button className="bg-primary hover:bg-primary/90" onClick={() => navigate('/')}>
-              <Home className="w-4 h-4 mr-2" /> Go Home
+              <Home className="w-4 h-4 mr-2" aria-hidden="true" /> Go Home
             </Button>
             <Button variant="outline" onClick={() => navigate('/questions')}>
-              <MessageSquare className="w-4 h-4 mr-2" /> Browse Questions
+              <MessageSquare className="w-4 h-4 mr-2" aria-hidden="true" /> Browse Questions
             </Button>
           </div>
 
@@ -53,13 +52,15 @@ export default function NotFound() {
                 { label: 'Jobs', href: '/jobs' },
               ].map(link => (
                 <Link key={link.href} to={link.href}>
-                  <Badge variant="secondary" className="cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors">{link.label}</Badge>
+                  <Badge variant="secondary" className="cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors">
+                    {link.label}
+                  </Badge>
                 </Link>
               ))}
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>

@@ -1,3 +1,4 @@
+// Contact.tsx
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,7 +35,7 @@ export default function Contact() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    console.log('Contact form:', data);
+    // Simulate API call
     await new Promise(r => setTimeout(r, 1500));
     setLoading(false);
     setSent(true);
@@ -42,18 +43,31 @@ export default function Contact() {
     toast.success('Message sent! We will respond within 24 hours.');
   };
 
+  // Social media URLs (replace with actual links)
+  const socialLinks = {
+    github: 'https://github.com/stacktruth',
+    twitter: 'https://twitter.com/stacktruth',
+    linkedin: 'https://linkedin.com/company/stacktruth',
+  };
+
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <div className="min-h-screen bg-background">
+      <Navbar isAuthenticated={false} />
       <ScrollToTop />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 section-dark relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.15),transparent_70%)]" />
+      <section className="pt-32 pb-16 relative overflow-hidden bg-gradient-to-b from-background via-background to-muted/30">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.15),transparent_70%)] pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
-          <Badge className="mb-5 bg-primary/20 text-blue-600 dark:text-blue-300 border border-primary/30">Contact Us</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">Get in touch</h1>
-          <p className="text-xl text-muted-foreground">We respond to every message within 24 hours, usually much faster.</p>
+          <Badge className="mb-5 bg-primary/20 text-primary-foreground dark:text-blue-300 border border-primary/30">
+            Contact Us
+          </Badge>
+          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+            Get in touch
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            We respond to every message within 24 hours, usually much faster.
+          </p>
         </div>
       </section>
 
@@ -61,7 +75,7 @@ export default function Contact() {
       <section className="py-16 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-10">
-            {/* Info */}
+            {/* Info Sidebar */}
             <div className="space-y-6">
               <div>
                 <h2 className="text-xl font-bold mb-4">We are here to help</h2>
@@ -76,7 +90,7 @@ export default function Contact() {
                   { icon: MessageSquare, title: 'Support', value: 'support@stacktruth.dev', sub: 'For product & billing' },
                   { icon: MapPin, title: 'Location', value: 'San Francisco, CA', sub: 'United States' },
                   { icon: Clock, title: 'Response Time', value: 'Under 24 hours', sub: 'Usually within 2 hours' },
-                ].map(item => {
+                ].map((item) => {
                   const Icon = item.icon;
                   return (
                     <div key={item.title} className="flex gap-3 p-4 bg-card border border-border rounded-xl">
@@ -96,16 +110,35 @@ export default function Contact() {
               <div>
                 <p className="text-sm font-medium mb-3">Follow us</p>
                 <div className="flex gap-2">
-                  {[Github, Twitter, Linkedin].map((Icon, i) => (
-                    <a key={i} href="#" className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-                      <Icon className="w-4 h-4" />
-                    </a>
-                  ))}
+                  <a
+                    href={socialLinks.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  >
+                    <Github className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={socialLinks.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  >
+                    <Twitter className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </a>
                 </div>
               </div>
             </div>
 
-            {/* Form */}
+            {/* Contact Form */}
             <div className="lg:col-span-2">
               {sent ? (
                 <div className="bg-card border border-border rounded-2xl p-10 text-center">
@@ -113,8 +146,12 @@ export default function Contact() {
                     <CheckCircle className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Message sent!</h3>
-                  <p className="text-muted-foreground mb-6">Thanks for reaching out. We will get back to you within 24 hours.</p>
-                  <Button variant="outline" onClick={() => setSent(false)}>Send another message</Button>
+                  <p className="text-muted-foreground mb-6">
+                    Thanks for reaching out. We will get back to you within 24 hours.
+                  </p>
+                  <Button variant="outline" onClick={() => setSent(false)}>
+                    Send another message
+                  </Button>
                 </div>
               ) : (
                 <div className="bg-card border border-border rounded-2xl p-8">
@@ -123,18 +160,35 @@ export default function Contact() {
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <Label className="text-sm font-medium mb-1.5 block">Full Name</Label>
-                        <Input placeholder="Alex Chen" {...register('name')} className={errors.name ? 'border-destructive' : ''} />
-                        {errors.name && <p className="text-xs text-destructive mt-1">{errors.name.message}</p>}
+                        <Input
+                          placeholder="Alex Chen"
+                          {...register('name')}
+                          className={errors.name ? 'border-destructive' : ''}
+                        />
+                        {errors.name && (
+                          <p className="text-xs text-destructive mt-1">{errors.name.message}</p>
+                        )}
                       </div>
                       <div>
                         <Label className="text-sm font-medium mb-1.5 block">Email Address</Label>
-                        <Input type="email" placeholder="alex@company.com" {...register('email')} className={errors.email ? 'border-destructive' : ''} />
-                        {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+                        <Input
+                          type="email"
+                          placeholder="alex@company.com"
+                          {...register('email')}
+                          className={errors.email ? 'border-destructive' : ''}
+                        />
+                        {errors.email && (
+                          <p className="text-xs text-destructive mt-1">{errors.email.message}</p>
+                        )}
                       </div>
                     </div>
+
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Category</Label>
-                      <select {...register('category')} className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                      <select
+                        {...register('category')}
+                        className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      >
                         <option value="">Select a category...</option>
                         <option value="general">General Inquiry</option>
                         <option value="support">Product Support</option>
@@ -143,20 +197,52 @@ export default function Contact() {
                         <option value="partnership">Partnership</option>
                         <option value="press">Press & Media</option>
                       </select>
-                      {errors.category && <p className="text-xs text-destructive mt-1">{errors.category.message}</p>}
+                      {errors.category && (
+                        <p className="text-xs text-destructive mt-1">{errors.category.message}</p>
+                      )}
                     </div>
+
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Subject</Label>
-                      <Input placeholder="How can we help?" {...register('subject')} className={errors.subject ? 'border-destructive' : ''} />
-                      {errors.subject && <p className="text-xs text-destructive mt-1">{errors.subject.message}</p>}
+                      <Input
+                        placeholder="How can we help?"
+                        {...register('subject')}
+                        className={errors.subject ? 'border-destructive' : ''}
+                      />
+                      {errors.subject && (
+                        <p className="text-xs text-destructive mt-1">{errors.subject.message}</p>
+                      )}
                     </div>
+
                     <div>
                       <Label className="text-sm font-medium mb-1.5 block">Message</Label>
-                      <Textarea placeholder="Tell us more about your question or issue..." rows={5} {...register('message')} className={errors.message ? 'border-destructive' : ''} />
-                      {errors.message && <p className="text-xs text-destructive mt-1">{errors.message.message}</p>}
+                      <Textarea
+                        placeholder="Tell us more about your question or issue..."
+                        rows={5}
+                        {...register('message')}
+                        className={errors.message ? 'border-destructive' : ''}
+                      />
+                      {errors.message && (
+                        <p className="text-xs text-destructive mt-1">{errors.message.message}</p>
+                      )}
                     </div>
-                    <Button type="submit" className="w-full h-11 bg-primary hover:bg-primary/90" disabled={loading}>
-                      {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Sending...</> : <><Zap className="w-4 h-4 mr-2" />Send Message</>}
+
+                    <Button
+                      type="submit"
+                      className="w-full h-11 bg-primary hover:bg-primary/90"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4 mr-2" />
+                          Send Message
+                        </>
+                      )}
                     </Button>
                   </form>
                 </div>
@@ -166,12 +252,14 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* ID for status */}
-      <section id="status" className="py-12 bg-muted/30">
+      {/* Status Banner */}
+      <section className="py-12 bg-muted/30">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse-slow" />
-            <span className="text-sm text-accent font-medium">All systems operational — 99.9% uptime</span>
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <span className="text-sm text-accent font-medium">
+              All systems operational — 99.9% uptime
+            </span>
           </div>
         </div>
       </section>
